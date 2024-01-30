@@ -49,7 +49,7 @@ run
 # Make output
 /**makeout
 # IntelliJ junk
-#*.iml
+*.iml
 /**.idea
 /**/src/META-INF
 
