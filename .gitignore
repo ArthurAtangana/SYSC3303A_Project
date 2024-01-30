@@ -1,0 +1,87 @@
+###############################################################################
+# .gitignore
+###############################################################################
+# Description
+# -----------
+# Ignore file or directory by pattern.
+#
+# Usage
+# -----
+# Ignore file or directory by pattern:
+# <pattern>
+#
+# Pattern Operators
+# -----------------
+#      /     - directory designator and separator
+#      *     - wildcard match any number of char except '/'
+#      ?     - match any single char except '/'
+#      !     - negate
+#  [<range>] - range of chars to match
+#     **/    - search all dirs
+#    a/**    - match everything inside a
+#   a/**/b   - match b as any generation child subdir of a
+#
+###############################################################################
+# Author: M. De Santis
+# Last Edited: 2023/10/13
+###############################################################################
+
+###############################################################################
+# MD: Ignores
+# -----------
+# My workflow artifacts.
+
+# objects
+*.o
+# vim swapfiles
+*.swp
+# backups
+*.bak
+# run executables
+run
+# logs
+*.log
+# scratch
+*.scratch
+/**scratch
+# Java bytecode
+*.class
+# Make output
+/**makeout
+# IntelliJ junk
+#*.iml
+#/**.idea
+#/**/src/META-INF
+
+###############################################################################
+# IntelliJ IDEA Default Ignores
+
+### IntelliJ IDEA ###
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
