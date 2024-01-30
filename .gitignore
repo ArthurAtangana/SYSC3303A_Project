@@ -50,8 +50,8 @@ run
 /**makeout
 # IntelliJ junk
 #*.iml
-#/**.idea
-#/**/src/META-INF
+/**.idea
+/**/src/META-INF
 
 ###############################################################################
 # IntelliJ IDEA Default Ignores
