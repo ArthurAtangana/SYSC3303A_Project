@@ -1,5 +1,9 @@
 package FloorSubsystem;
 
-public class Parser {
+import java.util.ArrayList;
 
+public class Parser {
+    ArrayList<InputEvent> getEvents(){
+        return null;
+    }
 }
