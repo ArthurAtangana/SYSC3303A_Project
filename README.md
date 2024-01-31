@@ -6,7 +6,7 @@
 - Victoria Malouf:
 - Michael Desantis: 101213450
 - Braeden Kloke:
-- Alexandre Marquez:
+- Alexandre Marques: 101189743
 
 ## Description
 Elevator Simulator, written in Java.
@@ -39,6 +39,7 @@ Elevator Simulator, written in Java.
 ### Iteration 1
 * Task: Parse Input File to ServiceRequest object
     * Assignee: Michael De Santis
-* Task: 
+* Task: Dispatch (and filter) parsed input data to Floor, Scheduler when appropriate
+  * Assignee: Alexandre Marques
 
 
