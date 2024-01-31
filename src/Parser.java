@@ -3,6 +3,7 @@
  *  Parser class which parses an input text file adherent to system
  * specifications.
  *
+ *
  * @author Michael De Santis
  * @version 20240126
  */
@@ -14,6 +15,7 @@ import java.util.*;
 public class Parser {
 
     /* Instance Variables */
+
     //private File file;
     private String filename;
     private final String DELIMITER = " ";
@@ -25,7 +27,7 @@ public class Parser {
     /**
      * Parametric constructor for this Parser.
      *
-     * @param file Input text file.
+     * @param filename The filename of the input file to operate on.
      * @param floorSubsystem This Parser's invoking FloorSubsystem
      */
     //public Parser(String filename, FloorSubsystem floorSubsystem) {
