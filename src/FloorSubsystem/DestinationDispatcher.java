@@ -13,25 +13,32 @@
 
 package FloorSubsystem;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+
 public class DestinationDispatcher implements Runnable {
-    private final Parser inputHandler;
+    private final ArrayList<InputEvent> eventStack;
     private int lastEventTime;
 
 
-    DestinationDispatcher(Parser parser){
-        inputHandler = parser;
+    DestinationDispatcher(Parser inputHandler){
+        eventStack = inputHandler.getEvents();
+        // Sort based on time int (low to high), TODO: TEST THIS
+         eventStack.sort(Comparator.comparingInt(InputEvent::time));
+        // Set baseline time
+         lastEventTime = eventStack.get(0).time();
     }
 
     /**
      * Wait until the next event by converting the numerical time difference
      * between the next event and the previous event into a concrete delay.
-     *
-     * @param nextEventTime The time until the next event.
      */
-    private void waitNextEvent(int nextEventTime){
+    private void waitEvent(){
+        int curTime = eventStack.get(0).time();
+        int delay = curTime - lastEventTime;
         // TODO: Implement time to delay conversion based on what feels right.
         //      Waiting mechanism: Thread.sleep? Interrupt?
-        lastEventTime = nextEventTime;
+        lastEventTime = curTime;
     }
 
 
@@ -40,6 +47,13 @@ public class DestinationDispatcher implements Runnable {
      */
     @Override
     public void run() {
-
+        while(!eventStack.isEmpty()) {
+            waitEvent();
+            // Could pop from bottom for performance increase... if that's necessary
+            InputEvent curEvent = eventStack.remove(0);
+            // TODO: Dispatch event;
+            //  --> Q how to select floor? How to route across multiple floors?
+            //  --> Q how to select Scheduler? Singleton?
+        }
     }
 }
