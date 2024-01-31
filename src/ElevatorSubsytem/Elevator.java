@@ -1,7 +1,7 @@
 package ElevatorSubsytem;
 
+import Networking.SystemEvent;
 import SchedulerSubsystem.Scheduler;
-import SchedulerSubsystem.SchedulerEvent;
 
 public class Elevator implements Runnable {
     /** Single floor travel time */
@@ -37,7 +37,7 @@ public class Elevator implements Runnable {
      *
      * @param schedulerEvent
      */
-    public void sendArrivedAtFloorMessage(SchedulerEvent schedulerEvent){
+    public void sendArrivedAtFloorMessage(SystemEvent schedulerEvent){
 
     }
     @Override

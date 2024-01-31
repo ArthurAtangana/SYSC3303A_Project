@@ -1,7 +1,7 @@
 package FloorSubsystem;
+import Networking.SystemEvent;
 import SchedulerSubsystem.Scheduler;
-import SchedulerSubsystem.SchedulerEvent;
-import Utlities.Passenger;
+import Networking.Passenger;
 import java.util.ArrayList;
 
 
@@ -33,17 +33,17 @@ public class Floor implements Runnable {
 
     /**
      * Sends floor button request to scheduler.
-     * @param schedulerEvent
+     * @param systemEvent
      */
-    public void sendPassengerRequestToScheduler(SchedulerEvent schedulerEvent) {
+    public void sendPassengerRequestToScheduler(SystemEvent systemEvent) {
 
     }
 
     /**
      * Sends floor button request to specified elevator.
-     * @param schedulerEvent
+     * @param systemEvent
      */
-    public void sendPassengerRequestToElevator(SchedulerEvent schedulerEvent) {
+    public void sendPassengerRequestToElevator(SystemEvent systemEvent) {
         // Note this requires a reference to the specified elevator??
 
     }

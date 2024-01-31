@@ -1,10 +1,11 @@
 package SchedulerSubsystem;
 import ElevatorSubsytem.Elevator;
+import Networking.SystemEvent;
 
 import java.util.ArrayList;
 
 public class Scheduler implements Runnable {
-    private ArrayList<SchedulerEvent> eventQueue;
+    private ArrayList<SystemEvent> eventQueue;
     private ArrayList<Thread> elevators;
     private ArrayList<Thread> floors;
 
@@ -21,10 +22,10 @@ public class Scheduler implements Runnable {
 
     /**
      * Receives passenger event from floor and creates scheduler event
-     * @param schedulerEvent
+     * @param systemEvent
      * @return
      */
-    public SchedulerEvent receivePassengerRequest(SchedulerEvent schedulerEvent) {
+    public SystemEvent receivePassengerRequest(SystemEvent systemEvent) {
         return null;
     }
 
