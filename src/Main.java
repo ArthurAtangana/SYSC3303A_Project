@@ -1,17 +1,57 @@
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+import ElevatorSubsytem.Elevator;
+import FloorSubsystem.Floor;
+import SchedulerSubsystem.Scheduler;
+import java.util.ArrayList;
+/**
+ * Main initializes and maintains track of threads.
+ * Note: For iteration 1, number of floors and elevators are stored as fields.
+ *
+ * @version 1.0
+ */
 public class Main {
+    private static int numFloors = 1;
+    private static int numElevators = 1;
+    private static ArrayList<Thread> floorThreads = new ArrayList<>();
+    private static ArrayList<Thread> elevatorThreads = new ArrayList<>();
+
     public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        // Start floor, elevator, and scheduler threads
+        Scheduler scheduler = new Scheduler();
+        Thread schedulerThread = new Thread(scheduler);
+        for (int i = 1; i < numFloors + 1; ++i) {
+            Thread newFloor = new Thread(new Floor(i, scheduler));
+            floorThreads.add(newFloor);
+            newFloor.start();
+        }
+        for (int i = 1; i < numElevators + 1; ++i) {
+            Thread newElevator = new Thread(new Elevator(scheduler));
+            elevatorThreads.add(newElevator);
+            newElevator.start();
+        }
+        scheduler.setFloors(floorThreads);
+        scheduler.setElevators(elevatorThreads);
+        schedulerThread.start();
 
-        // Press Shift+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
-
-            // Press Shift+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
+        // Join floor, elevator, and scheduler threads
+        for (Thread t: floorThreads) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        for (Thread t: elevatorThreads) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        try {
+            schedulerThread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }
+
