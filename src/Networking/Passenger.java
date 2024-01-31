@@ -1,5 +1,4 @@
-package Utlities;
-import SchedulerSubsystem.SchedulerEvent;
+package Networking;
 
 /**
  * Passenger holds all data related to a passenger
@@ -8,6 +7,6 @@ import SchedulerSubsystem.SchedulerEvent;
  * @param direction The direction a passenger would like to go (UP/DOWN).
  * @param destinationFloor Floor that the passenger would like to arrive at.
  */
-public record Passenger(int arrivalTime, int sourceFloor, SchedulerEvent.Direction direction, int destinationFloor) {
+public record Passenger(int arrivalTime, int sourceFloor, Direction direction, int destinationFloor) {
 
 }
