@@ -6,10 +6,6 @@ import java.util.ArrayList;
 
 public class Scheduler implements Runnable {
     ArrayList<FloorInputEvent> eventQueue;
-    public enum Direction {
-        UP,
-        DOWN
-    }
 
     public Scheduler() {
 
