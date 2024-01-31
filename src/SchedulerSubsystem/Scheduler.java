@@ -1,6 +1,5 @@
 package SchedulerSubsystem;
 import ElevatorSubsytem.Elevator;
-import Utlities.Passenger;
 
 import java.util.ArrayList;
 
@@ -9,27 +8,26 @@ public class Scheduler implements Runnable {
     private ArrayList<Thread> elevators;
     private ArrayList<Thread> floors;
 
-    public Scheduler(ArrayList<Thread> elevators, ArrayList<Thread> floors) {
-        this.elevators = elevators;
+    public Scheduler() {
+    }
+
+    public void setFloors(ArrayList<Thread> floors) {
         this.floors = floors;
+    }
+
+    public void setElevators(ArrayList<Thread> elevators) {
+        this.elevators = elevators;
     }
 
     /**
      * Receives passenger event from floor and creates scheduler event
-     * @param passengerEvent
+     * @param schedulerEvent
      * @return
      */
-    public SchedulerEvent receivePassengerRequest(Passenger passengerEvent) {
+    public SchedulerEvent receivePassengerRequest(SchedulerEvent schedulerEvent) {
         return null;
     }
 
-    /**
-     * Uses scheduler event to further process request
-     * @param schedulerEvent
-     */
-    private void processAndSchedulePassengerRequest(SchedulerEvent schedulerEvent) {
-
-    }
 
     /**
      * Informs elevator to go to a specified floor number.
@@ -43,6 +41,5 @@ public class Scheduler implements Runnable {
     public void run() {
 
     }
-
 
 }

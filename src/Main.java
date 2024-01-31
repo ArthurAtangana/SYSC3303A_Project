@@ -16,18 +16,21 @@ public class Main {
 
     public static void main(String[] args) {
         // Start floor, elevator, and scheduler threads
-        for (int i = 0; i < numFloors; ++i) {
-            Thread newFloor = new Thread(new Floor(), String.valueOf(i));
+        Scheduler scheduler = new Scheduler();
+        Thread schedulerThread = new Thread(scheduler);
+        for (int i = 1; i < numFloors + 1; ++i) {
+            Thread newFloor = new Thread(new Floor(i, scheduler));
             floorThreads.add(newFloor);
             newFloor.start();
         }
-        for (int i = 0; i < numElevators; ++i) {
-            Thread newElevator = new Thread(new Elevator(), String.valueOf(i));
+        for (int i = 1; i < numElevators + 1; ++i) {
+            Thread newElevator = new Thread(new Elevator(scheduler));
             elevatorThreads.add(newElevator);
             newElevator.start();
         }
-        Thread scheduler = new Thread(new Scheduler(elevatorThreads, floorThreads), "Scheduler");
-        scheduler.start();
+        scheduler.setFloors(floorThreads);
+        scheduler.setElevators(elevatorThreads);
+        schedulerThread.start();
 
         // Join floor, elevator, and scheduler threads
         for (Thread t: floorThreads) {
@@ -45,7 +48,7 @@ public class Main {
             }
         }
         try {
-            scheduler.join();
+            schedulerThread.join();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

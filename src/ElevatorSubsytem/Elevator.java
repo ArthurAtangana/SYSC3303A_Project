@@ -9,8 +9,9 @@ public class Elevator implements Runnable {
     private int currentFloor;
     private Scheduler scheduler;
 
-    public Elevator() {
+    public Elevator(Scheduler scheduler) {
         this.currentFloor = 0;
+        this.scheduler = scheduler;
     }
 
     /**
