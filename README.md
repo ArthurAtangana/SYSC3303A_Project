@@ -50,5 +50,19 @@ Elevator Simulator, written in Java.
 |Diagrams|Braeden Kloke|
 |Testing|Braeden Kloke|
 
+## Test
 
+All tests are located in directory `test`.
 
+Tests are categorized in subdirectories labelled:
+
+* `unit`: Tests isolated components.
+* `integration`: Tests interoperability of components. (eg. Floor sending events to Scheduler)
+* `system`: Tests all components working together. (eg. Does the simulation correctly get all passengers to their desired floors?)
+
+All resources for tests (eg. input files) should be put in `test/resources`.
+
+### Troubleshooting
+
+**IntelliJ can't find your tests?**
+Ensure you have directory `test` labelled as your Test Source Folder in Project Structure > Modules.
