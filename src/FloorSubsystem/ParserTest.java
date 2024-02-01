@@ -4,6 +4,9 @@ import Networking.Direction;
 import Networking.Passenger;
 import SchedulerSubsystem.Scheduler;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ParserTest {
@@ -11,11 +14,13 @@ class ParserTest {
     private Scheduler scheduler;
     private String filename = "input-file.txt";
     private Parser parser;
+    private ArrayList<Passenger> passengers;
 
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
         scheduler = new Scheduler();
         parser = new Parser(filename, scheduler);
+        passengers = new ArrayList<Passenger>();
     }
 
     @org.junit.jupiter.api.AfterEach
@@ -115,6 +120,24 @@ class ParserTest {
 
         System.out.println("\n****** END: testStringToPassenger() ******\n");
 
+    }
+
+    @Test
+    void testFileToPassengers() {
+
+        System.out.println("\n****** START: testFileToPassengers() ******\n");
+
+        // The number of input strings in text file
+        int numInputStrings = 20;
+        parser.fileToPassengers();
+
+        // Assert our Parser now has 20 Passengers in its queue
+        assertEquals(numInputStrings, parser.getNumPassengers());
+
+        // Phew!
+        System.out.println("*** All Tests Passed ***");
+
+        System.out.println("\n****** END: testFileToPassengers() ******\n");
     }
 
 }

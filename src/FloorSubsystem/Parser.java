@@ -75,6 +75,10 @@ public class Parser {
         return startTime;
     }
 
+    public int getNumPassengers() {
+        return passengers.size();
+    }
+
 
 
     /**
@@ -189,65 +193,66 @@ public class Parser {
         return passenger;
     }
 
-//    private void parseStringToObject() {
-//        String line;
-//        BufferedReader bufferedReader;
-//
-//        // Check file
-//        try {
-//
-//            // Create reader
-//            bufferedReader = new BufferedReader(new FileReader(this.filename));
-//
-//            // Loop through lines
-//            while ((line = bufferedReader.readLine()) != null) {
-//
-//                // Consume comment lines
-//                while (line.charAt(0) == '#') {
-//                    if (verbose) System.out.println("Ignored comment.");
-//                    line = bufferedReader.readLine();
-//                }
+    /**
+     * Parse an input file, converting each line to a new Passenger record,
+     * and accumulate all Passenger's in this Parser's queue.
+     *
+     * NB: This program does NO validation of strings in the input file.
+     */
+    public void fileToPassengers() {
 
-                    // For first event, need to set reference time
-//
-//                // Split the string into whitespace delimited fields, each as an element in a //String[]
-//                String[] stringArray = line.split(DELIMITER);
-//                assert(stringArray.length == 4);
-//
-//                // Prepare the Passenger record fields
-//                long arrivalTime = timeStringToLong(stringArray[0]);
-//                int sourceFloor = Integer.parseInt(stringArray[1]);
-//                Direction direction;
-//                if (stringArray[2].equals("Up")) {
-//                    direction = Direction.UP;
-//                }
-//                else if (stringArray[2].equals("Down")) {
-//                    direction = Direction.DOWN;
-//                }
-//                else {
-//                    // TODO: clean
-//                    System.exit(1);
-//                }
-//                int destinationFloor = Integer.parseInt(stringArray[3]);
-//
-//                // Create and populate the Passenger record
-//                Passenger passenger = new Passenger(arrivalTime, sourceFloor, direction, //destinationFloor);
-//                if (verbose) System.out.println("Passenger created:\n" + passenger.toString() +
-//                        "\n");
-//
-//
-//            }
-//
-//            // All lines processed, all object added to queuejkkkk
-//        }
-//        catch (IOException e) {
-//            // File not found
-//            e.printStackTrace();
-//            System.exit(1);
-//        }
-//
-        //
-//    }
+        String line;
+        BufferedReader bufferedReader;
+        System.out.println("Reading file: " + filename);
+        // TODO: Investigate pathing - might be an IntelliJ thing
+        String relativeFilename = System.getProperty("user.dir") + "/src/FloorSubsystem/" + filename;
+
+        // Print pwd
+        System.out.println(new File(".").getAbsolutePath());
+        System.out.println(System.getProperty("user.dir"));
+
+        // Check file
+        try {
+
+            // Create reader
+            bufferedReader = new BufferedReader(new FileReader(relativeFilename));
+
+            // Loop through lines
+            while ((line = bufferedReader.readLine()) != null) {
+
+                if (line.length() > 0) {
+                    // Scan past comment lines
+                    if (line.charAt(0) == '#') {
+                        if (verbose) System.out.println("* Ignored comment. *");
+                        //line = bufferedReader.readLine();
+                    }
+                    else {
+                        // Print it
+                        System.out.println("line: " + line + ":: " + line.length());
+
+                        // Ingest this line as a Passenger
+                        Passenger passenger = stringToPassenger(line);
+                        if (verbose) System.out.println("Passenger created:\n" + passenger.toString() +
+                                "\n");
+
+                        // Add to queue
+                        passengers.add(passenger);
+                        if (verbose) System.out.println("Passenger added to list!");
+                    }
+                }
+            }
+
+        }
+        catch (IOException e) {
+            // File not found
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        if (verbose) {
+            System.out.println("Created " + passengers.size() + " Passengers from input file " + filename + ".");
+        }
+    }
 
 
 }
