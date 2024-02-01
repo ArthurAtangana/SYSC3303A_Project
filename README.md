@@ -51,4 +51,8 @@ Elevator Simulator, written in Java.
 |Testing|Braeden Kloke|
 
 
+## UML Diagrams
 
+<img src="./diagrams/system-class-diagram.png" alt="System class diagram" width="500" height="500" />
+
+<img src="./diagrams/sequence-diagram.png" alt="Sequence diagram" width="500" height="500" />
