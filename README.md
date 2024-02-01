@@ -5,7 +5,7 @@
 - Arthur Atangna: 101005197
 - Victoria Malouf:
 - Michael Desantis: 101213450
-- Braeden Kloke:
+- Braeden Kloke: 100895984
 - Alexandre Marques: 101189743
 
 ## Description
