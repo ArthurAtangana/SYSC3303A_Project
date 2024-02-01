@@ -48,7 +48,7 @@ public class Parser {
     private long startTime;
 
     // Hacky --verbose flag
-    private boolean verbose;
+    boolean verbose;
 
     /* Constructors */
 
@@ -64,7 +64,7 @@ public class Parser {
         this.scheduler = scheduler;
         this.passengers = new ArrayList<Passenger>();
         this.startTime = 0;
-        this.verbose = true;
+        this.verbose = false;
     }
 
     /* Methods */
@@ -79,7 +79,7 @@ public class Parser {
         return passengers.size();
     }
 
-
+    /* Involved Methods */
 
     /**
      * Convert a time string, as per the project specification,
@@ -94,53 +94,42 @@ public class Parser {
     public long timeStringToLong(String timeString) {
 
         // Conversions
-        // TODO
+        int hoursToMilliseconds = (1 * 60 * 60 * 1000);
+        int minutesToMilliseconds = (1 * 60 * 1000);
+        int secondsToMilliseconds = (1 * 1000);
 
         // Result
         long totalMilliseconds = 0;
 
-        // Initial string
-        if (verbose) System.out.println("String: " + timeString);
-
         // First split on ':'
         String[] timeStringArr = timeString.split(":");
         if (verbose) {
-            System.out.println("First split:");
             int i = 0;
             for (String s : timeStringArr) {
-                System.out.println("-- item " + i + ": " + s);
                 i++;
             }
         }
 
         // Calculate milliseconds from hours hh
         // 1h * 60m/h * 60s/m * 1000ms/s
-        long hourMilliseconds = Long.parseLong(timeStringArr[0]) * (1 * 60 * 60 * 1000);
+        long hourMilliseconds = Long.parseLong(timeStringArr[0]) * hoursToMilliseconds;
 
         // Calculate milliseconds from minutes mm
         // 1m * 60s/m * 1000ms/s
-        long minuteMilliseconds = Long.parseLong(timeStringArr[1]) * (1 * 60 * 1000);
+        long minuteMilliseconds = Long.parseLong(timeStringArr[1]) * minutesToMilliseconds;
 
         // Need to split on '.' now for seconds and milliseconds, since we have a new delimiter
         String[] secondsMillisecondsStringArr = timeStringArr[2].split("\\.");
 
         // Calculate milliseconds from seconds ss
         // 1s * 1000ms/s
-        long secondsMilliseconds = Long.parseLong(secondsMillisecondsStringArr[0]) * (1 * 1000);
+        long secondsMilliseconds = Long.parseLong(secondsMillisecondsStringArr[0]) * secondsToMilliseconds;
 
         // Calculate milliseconds from milliseconds mmm
         // 1ms
         long millisecondsMilliseconds = Long.parseLong(secondsMillisecondsStringArr[1]);
 
         // Sum
-        if (verbose) {
-            System.out.println("***");
-            System.out.println("hh:  " + hourMilliseconds);
-            System.out.println("mm:  " + minuteMilliseconds);
-            System.out.println("ss:  " + secondsMilliseconds);
-            System.out.println("mmm: " + millisecondsMilliseconds);
-            System.out.println("***");
-        }
         totalMilliseconds = hourMilliseconds + minuteMilliseconds + secondsMilliseconds + millisecondsMilliseconds;
 
         if (verbose) System.out.println("Input Time String:      " + timeString);
@@ -169,7 +158,6 @@ public class Parser {
         long arrivalTime = timeStringToLong(splits[0]);
         // startTime is only gonna be 0 until first line is parsed (hacky)
         if (startTime == 0) {
-            if (verbose) System.out.println("-- SETTING this.startTime to : " + arrivalTime);
             startTime = arrivalTime;
         }
         // Cast it down to int to save on bits
@@ -207,11 +195,7 @@ public class Parser {
         // TODO: Investigate pathing - might be an IntelliJ thing
         String relativeFilename = System.getProperty("user.dir") + "/src/FloorSubsystem/" + filename;
 
-        // Print pwd
-        System.out.println(new File(".").getAbsolutePath());
-        System.out.println(System.getProperty("user.dir"));
-
-        // Check file
+        // Try to read input file
         try {
 
             // Create reader
@@ -220,6 +204,7 @@ public class Parser {
             // Loop through lines
             while ((line = bufferedReader.readLine()) != null) {
 
+                // Avoid empty and/or commented lines
                 if (line.length() > 0) {
                     // Scan past comment lines
                     if (line.charAt(0) == '#') {
@@ -228,7 +213,7 @@ public class Parser {
                     }
                     else {
                         // Print it
-                        System.out.println("line: " + line + ":: " + line.length());
+                        if (verbose) System.out.println("line: " + line);
 
                         // Ingest this line as a Passenger
                         Passenger passenger = stringToPassenger(line);
