@@ -1,8 +1,8 @@
 # README
-* Last Edited: 2024/01/30
+* Last Edited: 2024/02/01
 
 ## Group A1:1
-- Arthur Atangna: 101005197
+- Arthur Atangana: 101005197
 - Victoria Malouf:
 - Michael Desantis: 101213450
 - Braeden Kloke:
