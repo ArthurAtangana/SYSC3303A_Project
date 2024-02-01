@@ -45,7 +45,7 @@ public class Parser {
     private Scheduler scheduler;
 
     // Reference time that will be denoted as t=0 (t nought)
-    private int startTime;
+    private long startTime;
 
     // Hacky --verbose flag
     private boolean verbose;
@@ -68,6 +68,14 @@ public class Parser {
     }
 
     /* Methods */
+
+    /* Getters and Setters */
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+
 
     /**
      * Convert a time string, as per the project specification,
@@ -139,6 +147,48 @@ public class Parser {
 
     }
 
+    /**
+     * Parse a single string to Passenger thing.
+     *
+     * @param string The string to Parse.
+     * @return The created Passenger record.
+     */
+    public Passenger stringToPassenger(String string) {
+
+        // Passenger for return
+        Passenger passenger;
+
+        // Splits on space
+        String[] splits = string.split(DELIMITER);
+
+        // Prepare the Passenger record fields
+        long arrivalTime = timeStringToLong(splits[0]);
+        // startTime is only gonna be 0 until first line is parsed (hacky)
+        if (startTime == 0) {
+            if (verbose) System.out.println("-- SETTING this.startTime to : " + arrivalTime);
+            startTime = arrivalTime;
+        }
+        // Cast it down to int to save on bits
+        long relativeArrivalTime = arrivalTime - startTime;
+        if (verbose) System.out.println("relativeArrivalTime: " + relativeArrivalTime);
+        int sourceFloor = Integer.parseInt(splits[1]);
+        // Assume valid input, can validate later if needed
+        Direction direction = Direction.UP;
+        if (splits[2].equals("Down")) {
+            direction = Direction.DOWN;
+        }
+        int destinationFloor = Integer.parseInt(splits[3]);
+
+        // Create record
+        passenger = new Passenger(relativeArrivalTime, sourceFloor, direction, destinationFloor);
+
+        if (verbose) {
+            System.out.println("Initial String:\n" + string);
+            System.out.println("Passenger Record:\n" + passenger.toString());
+        }
+        return passenger;
+    }
+
 //    private void parseStringToObject() {
 //        String line;
 //        BufferedReader bufferedReader;
@@ -157,6 +207,8 @@ public class Parser {
 //                    if (verbose) System.out.println("Ignored comment.");
 //                    line = bufferedReader.readLine();
 //                }
+
+                    // For first event, need to set reference time
 //
 //                // Split the string into whitespace delimited fields, each as an element in a //String[]
 //                String[] stringArray = line.split(DELIMITER);
