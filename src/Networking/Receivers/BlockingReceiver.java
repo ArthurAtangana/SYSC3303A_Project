@@ -2,7 +2,9 @@ package Networking.Receivers;
 
 import Networking.Events.ElevatorSystemEvent;
 
-public interface Receiver {
+public interface BlockingReceiver {
     // Null msg = discard msg
-    ElevatorSystemEvent receive();
+    ElevatorSystemEvent blockingReceive();
+
+    void notifyMsgReceived();
 }

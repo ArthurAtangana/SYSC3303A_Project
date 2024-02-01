@@ -1,6 +1,6 @@
 package ElevatorSubsytem;
 
-import Networking.SystemEvent;
+import Networking.Events.ElevatorSystemEvent;
 import SchedulerSubsystem.Scheduler;
 
 public class Elevator implements Runnable {
@@ -37,7 +37,7 @@ public class Elevator implements Runnable {
      *
      * @param schedulerEvent
      */
-    public void sendArrivedAtFloorMessage(SystemEvent schedulerEvent){
+    public void sendArrivedAtFloorMessage(ElevatorSystemEvent schedulerEvent){
 
     }
     @Override
