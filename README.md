@@ -37,9 +37,18 @@ Elevator Simulator, written in Java.
 * task
 
 ### Iteration 1
-* Task: Parse Input File to ServiceRequest object
-    * Assignee: Michael De Santis
-* Task: Dispatch (and filter) parsed input data to Floor, Scheduler when appropriate
-  * Assignee: Alexandre Marques
+
+| Task | Assignee|
+|------|---------|
+| Project Structure|Victoria Malouf|
+|Floor Model| Victoria Malouf|
+|Elevator Model|Arthur Atangana|
+|Scheduler Model|Arthur Atangana|
+|Parser|Michael De Santis|
+|Dispatch|Alexandre Marques|
+|Event Handling|Alexandre Marques|
+|Diagrams|Braeden Kloke|
+|Testing|Braeden Kloke|
+
 
 
