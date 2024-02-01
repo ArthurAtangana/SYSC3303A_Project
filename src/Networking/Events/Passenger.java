@@ -1,4 +1,7 @@
-package Networking;
+package Networking.Events;
+
+import Networking.Direction;
+import Networking.Events.ElevatorSystemEvent;
 
 /**
  * Passenger holds all data related to a passenger
@@ -7,6 +10,6 @@ package Networking;
  * @param direction The direction a passenger would like to go (UP/DOWN).
  * @param destinationFloor Floor that the passenger would like to arrive at.
  */
-public record Passenger(int arrivalTime, int sourceFloor, Direction direction, int destinationFloor) {
-
-}
+public record Passenger
+        (int arrivalTime, int sourceFloor, Direction direction, int destinationFloor)
+        implements ElevatorSystemEvent {}
