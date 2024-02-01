@@ -2,27 +2,25 @@ package Networking.Receivers;
 
 import Networking.Events.ElevatorSystemEvent;
 
+import java.util.ArrayList;
+
 // TODO: Docs
-public class DMA_Receiver implements Receiver, BlockingReceiver{
-    private ElevatorSystemEvent msgBuf;
+public class DMA_Receiver implements Receiver{
+    private final ArrayList<ElevatorSystemEvent> msgBuf;
     private final Class<ElevatorSystemEvent> eventFilter;
 
     DMA_Receiver(Class<ElevatorSystemEvent> eventFilter){
         this.eventFilter = eventFilter;
-        msgBuf = null;
+        msgBuf = new ArrayList<>();
+    }
+
+    private synchronized ElevatorSystemEvent consumeMsg() {
+        return msgBuf.isEmpty() ? null : msgBuf.remove(0);
     }
 
     @Override
     public synchronized ElevatorSystemEvent receive() {
-        // TODO: May want to raise errors when overriding, or implement a bigger buffer
-        ElevatorSystemEvent msg = msgBuf;
-        msgBuf = null;
-        return msg;
-    }
-
-    @Override
-    public synchronized ElevatorSystemEvent blockingReceive() {
-        ElevatorSystemEvent msg = receive();
+        ElevatorSystemEvent msg = consumeMsg();
         while(msg == null){
             try {
                 wait();
@@ -30,21 +28,21 @@ public class DMA_Receiver implements Receiver, BlockingReceiver{
                 throw new RuntimeException(e);
             }
             // Notified, test again
-            msg = receive();
+            msg = consumeMsg();
         }
         return msg;
     }
 
     @Override
-    public void notifyMsgReceived() {
+    public synchronized void notifyMsgReceived() {
         // TODO: May need a guard to NOOP if nothing is waiting here
-        notify();
+        notifyAll();
     }
 
     // DMA Receiver asynch receiving method
-    public synchronized void setMessage(ElevatorSystemEvent msg){
+    public void setMessage(ElevatorSystemEvent msg){
         if (eventFilter.isInstance(msg)) {
-            msgBuf = msg;
+            msgBuf.add(msg);
         }
     }
 }
