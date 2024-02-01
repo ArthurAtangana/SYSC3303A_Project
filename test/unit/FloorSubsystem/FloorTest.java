@@ -4,6 +4,9 @@ import FloorSubsystem.Floor;
 import SchedulerSubsystem.Scheduler;
 import org.junit.jupiter.api.*;
 
+/**
+ * Unit tests for class Floor.
+ */
 public class FloorTest {
 
     @Test
