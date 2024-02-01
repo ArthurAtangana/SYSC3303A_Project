@@ -12,7 +12,6 @@ public class FloorTest {
     @Test
     void sampleTest() {
         Floor f = new Floor(1, new Scheduler());
-        assert true;
     }
 
 }
