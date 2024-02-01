@@ -50,5 +50,13 @@ Elevator Simulator, written in Java.
 |Diagrams|Braeden Kloke|
 |Testing|Braeden Kloke|
 
+## Test
 
+All tests are located in directory `test`.
+
+Tests are categorized in subdirectories labelled:
+
+* `unit`: Tests isolated components.
+* `integration`: Tests interoperability of components. (eg. Floor sending events to Scheduler)
+* `system`: Tests all components working together. (eg. Does the simulation correctly get all passengers to their desired floors?)
 
