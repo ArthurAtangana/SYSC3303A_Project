@@ -21,12 +21,12 @@
  * 1. Although time measurements are codified in a 24-hour clock in the input
  *    file, as per specification, the parsed objects maintain only a relative
  *    count of time, in milliseconds, defining their arrangement in the
- *    sequence relative to the first chronological event.
+ *    sequence relative to the first chronological event at t0.
  * 2. The input file should be placed adjacently in the Parser's directory, and
  *    only the file name, and not path, shall be argued to this Parser.
  * 3. Input line format:
  *      hh:mm:ss.mmm n [ Up | Down ] n
- * Example:
+ *    Example:
  *      09:05:22.123 1 Up 7
  *
  * Public Usage:
@@ -58,21 +58,15 @@ public class Parser {
 
     // Delimiter RegEx constants
     private final String WS_DELIMITER = " ";
-    private final String COMMENT_DELIMITER = "#";
     private final String TIME_DELIMITER_ONE = ":";
     private final String TIME_DELIMITER_TWO= "\\.";
+    // Input file comment char
+    private final char COMMENT_CHAR = '#';
 
     /* Instance Variables */
 
-    // ArrayList of Passenger Objects from input file
-    private ArrayList<Passenger> passengers;
-
-    // Reference time [ms] that will be denoted as t0 (t nought)
+    // Reference time [ms] that will be denoted as t0
     private long startTime;
-
-    // Hacky --verbose flag
-    // TODO: REMOVE
-    boolean verbose;
 
     /* Constructors */
 
@@ -82,9 +76,7 @@ public class Parser {
      */
     public Parser() {
         // Initialize fields
-        this.passengers = new ArrayList<Passenger>();
         this.startTime = 0;
-        this.verbose = false;
     }
 
     /* Methods */
@@ -95,16 +87,12 @@ public class Parser {
         return startTime;
     }
 
-    public int getNumPassengers() {
-        return passengers.size();
-    }
-
     /* Other Methods */
 
     /**
-     * Convert a time string, as per the project specification,
-     * to a long representing the total milliseconds elapsed since
-     * the start of the day (00:00:00.000).
+     * Convert a time string, as per the project specification, to a long
+     * representing the total milliseconds elapsed since the start of the
+     * day in a 24-hour clock (00:00:00.000).
      *
      * @param timeString The input time string, as per spec.
      * @return The total milliseconds from 00:00:00.000.
@@ -166,7 +154,7 @@ public class Parser {
         // arrivalTime
         long arrivalTime = timeStringToLong(splits[0]);
         // Case: If this is the first input event chronologically, capture its time
-        //       as our reference start time for the sequence, t0
+        // as our reference start time for the sequence, t0
         if (startTime == 0) {
             startTime = arrivalTime;
         }
@@ -193,15 +181,19 @@ public class Parser {
 
     /**
      * Parse an input file, converting each line to a new Passenger record,
-     * and accumulate all Passenger's in this Parser's queue.
+     * and return an ArrayList<Passenger> of the instantiated records.
      *
-     * NB: This program does NO validation of strings in the input file.
+     * @param filename The file name of the file to parse.
+     * @return The ArrayList of instantiated Passenger records.
      */
-    public void parse(String filename) {
+    public ArrayList<Passenger> parse (String filename) {
 
+        // Local variables
         String line;
         BufferedReader bufferedReader;
+        ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 
+        // File pathing
         System.out.println("Reading file: " + filename);
         // TODO: Investigate pathing - might be an IntelliJ thing
         // Prepend path relative to where IntelliJ executes
@@ -215,11 +207,10 @@ public class Parser {
 
             // While: there are lines in file
             while ((line = bufferedReader.readLine()) != null) {
-
                 // Case: Ignore empty lines
                 if (line.length() > 0) {
                     // Case: Non-comment line
-                    if (!(line.charAt(0) == '#')) {
+                    if (!(line.charAt(0) == COMMENT_CHAR)) {
                         // Ingest this line as a Passenger
                         Passenger passenger = stringToPassenger(line);
                         // Add to queue
@@ -228,14 +219,15 @@ public class Parser {
                 }
             }
         }
+        // Catch: IOException, print trace, and exit abnormally
         catch (IOException e) {
             // File not found
             e.printStackTrace();
             System.exit(1);
         }
 
-        if (verbose) {
-            System.out.println("Created " + passengers.size() + " Passengers from input file " + filename + ".");
-        }
+        System.out.println("Created " + passengers.size() + " Passengers from input file " + filename + ".");
+
+        return passengers;
     }
 }
