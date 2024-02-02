@@ -7,30 +7,19 @@ import java.util.ArrayList;
 // TODO: Docs
 public class DMA_Receiver implements Receiver{
     private final ArrayList<ElevatorSystemEvent> msgBuf;
-    private final Class<ElevatorSystemEvent> eventFilter;
-
-    DMA_Receiver(Class<ElevatorSystemEvent> eventFilter){
-        this.eventFilter = eventFilter;
+    public DMA_Receiver(){
         msgBuf = new ArrayList<>();
     }
-
-    private synchronized ElevatorSystemEvent consumeMsg() {
-        return msgBuf.isEmpty() ? null : msgBuf.remove(0);
-    }
-
     @Override
     public synchronized ElevatorSystemEvent receive() {
-        ElevatorSystemEvent msg = consumeMsg();
-        while(msg == null){
+        while(msgBuf.isEmpty()){
             try {
                 wait();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            // Notified, test again
-            msg = consumeMsg();
         }
-        return msg;
+        return msgBuf.remove(0);
     }
 
     @Override
@@ -40,9 +29,8 @@ public class DMA_Receiver implements Receiver{
     }
 
     // DMA Receiver asynch receiving method
-    public void setMessage(ElevatorSystemEvent msg){
-        if (eventFilter.isInstance(msg)) {
-            msgBuf.add(msg);
-        }
+    public synchronized void setMessage(ElevatorSystemEvent msg){
+        msgBuf.add(msg);
+        notifyAll();
     }
 }
