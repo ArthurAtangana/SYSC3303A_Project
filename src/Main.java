@@ -1,5 +1,6 @@
 import ElevatorSubsytem.Elevator;
 import FloorSubsystem.Floor;
+import Networking.Receivers.DMA_Receiver;
 import SchedulerSubsystem.Scheduler;
 import java.util.ArrayList;
 /**
@@ -13,13 +14,21 @@ public class Main {
     private static int numElevators = 1;
     private static ArrayList<Thread> floorThreads = new ArrayList<>();
     private static ArrayList<Thread> elevatorThreads = new ArrayList<>();
+    private static DMA_Receiver schedulerReceiver;
 
+    /*
+    TODO:
+    - create main models
+    - bind transmitters to receivers
+    - start threads.
+     */
     public static void main(String[] args) {
         // Start floor, elevator, and scheduler threads
+        initializeReceivers();
         Scheduler scheduler = new Scheduler();
         Thread schedulerThread = new Thread(scheduler);
         for (int i = 1; i < numFloors + 1; ++i) {
-            Thread newFloor = new Thread(new Floor(i, scheduler));
+            Thread newFloor = new Thread(new Floor(i, schedulerReceiver));
             floorThreads.add(newFloor);
             newFloor.start();
         }
@@ -52,6 +61,13 @@ public class Main {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Initialize receivers for all subsystems
+     */
+    private static void initializeReceivers() {
+        schedulerReceiver = new DMA_Receiver();
     }
 }
 
