@@ -22,12 +22,6 @@ public class DMA_Receiver implements Receiver{
         return msgBuf.remove(0);
     }
 
-    @Override
-    public synchronized void notifyMsgReceived() {
-        // TODO: May need a guard to NOOP if nothing is waiting here
-        notifyAll();
-    }
-
     // DMA Receiver asynch receiving method
     public synchronized void setMessage(ElevatorSystemEvent msg){
         msgBuf.add(msg);
