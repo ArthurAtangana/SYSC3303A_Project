@@ -63,7 +63,7 @@ class ParserTest {
 
         String inputString;
 
-        // Test: First Passenger, who determines relativeStartTime
+        // Test: First FloorInputEvent, who determines relativeStartTime
         Passenger p0Actual;
         Passenger p0Expected;
         inputString = "10:20:30.123 1 Up 7";

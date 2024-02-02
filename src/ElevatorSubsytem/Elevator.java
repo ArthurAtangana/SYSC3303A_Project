@@ -3,7 +3,7 @@ package ElevatorSubsytem;
 import Networking.Direction;
 import Networking.Events.DestinationEvent;
 import Networking.Events.ElevatorStateEvent;
-import Networking.Events.Passenger;
+import Networking.Events.FloorInputEvent;
 import Networking.Receivers.DMA_Receiver;
 import Networking.Transmitters.DMA_Transmitter;
 
@@ -14,14 +14,14 @@ public class Elevator implements Runnable {
     public final long TRAVEL_TIME = 8500;
     private int currentFloor;
     private Direction direction;
-    private ArrayList<Passenger> passengerList;
+    private ArrayList<FloorInputEvent> floorInputEventList;
     private final DMA_Transmitter transmitterToScheduler;
     private final DMA_Receiver receiver;
 
     public Elevator(DMA_Transmitter transmitter, DMA_Receiver receiver) {
         this.currentFloor = 0;
         this.direction = Direction.STOPPED;
-        this.passengerList = new ArrayList<>();
+        this.floorInputEventList = new ArrayList<>();
         this.transmitterToScheduler = transmitter;
         this.receiver = receiver;
     }
@@ -51,7 +51,7 @@ public class Elevator implements Runnable {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        ElevatorStateEvent arrivedAtFloorEvent = new ElevatorStateEvent(currentFloor,direction,passengerList);
+        ElevatorStateEvent arrivedAtFloorEvent = new ElevatorStateEvent(currentFloor,direction, floorInputEventList);
         transmitterToScheduler.send(arrivedAtFloorEvent);
     }
     @Override
