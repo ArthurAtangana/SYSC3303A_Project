@@ -18,7 +18,7 @@ public class Elevator implements Runnable {
     private final DMA_Transmitter transmitterToScheduler;
     private final DMA_Receiver receiver;
 
-    public Elevator(DMA_Transmitter transmitter, DMA_Receiver receiver) {
+    public Elevator(DMA_Receiver receiver, DMA_Transmitter transmitter) {
         this.currentFloor = 0;
         this.direction = Direction.STOPPED;
         this.floorInputEventList = new ArrayList<>();
