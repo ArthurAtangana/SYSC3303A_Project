@@ -4,10 +4,14 @@ import Networking.Events.ElevatorSystemEvent;
 import Networking.Receivers.DMA_Receiver;
 
 public class DMA_Transmitter implements Transmitter {
-    final private DMA_Receiver destinationReceiver;
+    private DMA_Receiver destinationReceiver;
 
-    public DMA_Transmitter(DMA_Receiver destRcv) {
-        this.destinationReceiver = destRcv;
+    public DMA_Transmitter() {}
+    public void setDestinationReceiver(DMA_Receiver destinationReceiver) {
+        if (this.destinationReceiver != null) {
+            return;
+        }
+        this.destinationReceiver = destinationReceiver;
     }
 
     @Override
