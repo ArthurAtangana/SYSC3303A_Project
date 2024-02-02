@@ -23,10 +23,10 @@
  *    count of time, in milliseconds, defining their arrangement in the
  *    sequence relative to the first chronological event.
  *
- * Input line format:
- *     hh:mm:ss.mmm n [ Up | Down ] n
+ * 2. Input line format:
+ *      hh:mm:ss.mmm n [ Up | Down ] n
  * Example:
- *     09:05:22.123 1 Up 7
+ *      09:05:22.123 1 Up 7
  *
  * Public Usage:
  * ------------
@@ -69,9 +69,6 @@ public class Parser {
     // ArrayList of Passenger Objects from input file
     private ArrayList<Passenger> passengers;
 
-    // The filename of the input file to parse
-    private String filename;
-
     // Reference time that will be denoted as t=0 (t nought)
     private long startTime;
 
@@ -84,11 +81,9 @@ public class Parser {
     /**
      * Parametric constructor for this Parser.
      *
-     * @param filename The filename of the input file to operate on.
      */
-    public Parser(String filename) {
+    public Parser() {
         // Initialize fields
-        this.filename = filename;
         this.passengers = new ArrayList<Passenger>();
         this.startTime = 0;
         this.verbose = false;
@@ -106,7 +101,7 @@ public class Parser {
         return passengers.size();
     }
 
-    /* Involved Methods */
+    /* Other Methods */
 
     /**
      * Convert a time string, as per the project specification,
@@ -115,8 +110,6 @@ public class Parser {
      *
      * @param timeString The input time string, as per spec.
      * @return The total milliseconds from 00:00:00.000.
-     *
-     * TODO: unfuglify before anyone else sees shame shame shame
      */
     public long timeStringToLong(String timeString) {
 
@@ -214,7 +207,7 @@ public class Parser {
      *
      * NB: This program does NO validation of strings in the input file.
      */
-    public void parse() {
+    public void parse(String filename) {
 
         String line;
         BufferedReader bufferedReader;
