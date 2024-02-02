@@ -1,13 +1,18 @@
+/**
+ * Test class for Parser class.
+ *
+ * @author Michael De Santis
+ * @version 20240202
+ */
 package FloorSubsystem;
 
 import Networking.Direction;
 import Networking.Passenger;
-import SchedulerSubsystem.Scheduler;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ParserTest {
 
@@ -28,7 +33,7 @@ class ParserTest {
     @Test
     void testTimeStringToInt() {
 
-        System.out.println("\n****** START: testTimeStringToInt() ******\n");
+        System.out.println("\n****** START: testTimeStringToInt() ******");
 
         String timeString;
         long timeLong;
@@ -50,16 +55,16 @@ class ParserTest {
         assertEquals(timeLong, parser.timeStringToLong(timeString));
 
         // Phew!
-        System.out.println("*** All Tests Passed ***");
+        System.out.println("\n*** All Tests Passed ***");
 
-        System.out.println("\n****** END: testTimeStringToInt() ******\n");
+        System.out.println("\n****** END: testTimeStringToInt() ******");
 
     }
 
     @Test
     void testStringToPassenger() {
 
-        System.out.println("\n****** START: testStringToPassenger() ******\n");
+        System.out.println("\n****** START: testStringToPassenger() ******");
 
         String inputString;
 
@@ -68,9 +73,7 @@ class ParserTest {
         Passenger p0Expected;
         inputString = "10:20:30.123 1 Up 7";
         p0Actual = parser.stringToPassenger(inputString);
-        System.out.println("p0Actual.toString():");
-        System.out.println(p0Actual.toString());
-        // Check our relativeStartTime for this one too!
+        // Check our relativeStartTime
         assertEquals(p0Actual.arrivalTime(), 37230123 - parser.getStartTime());
         p0Expected = new Passenger(0, 1, Direction.UP, 7);
         // Compare fields
@@ -79,15 +82,13 @@ class ParserTest {
         assertEquals(p0Actual.direction(), p0Expected.direction());
         assertEquals(p0Actual.destinationFloor(), p0Expected.destinationFloor());
 
-        // Test: Subsequent Passengers (relative arrival times)
+        // Test: Subsequent Passenger (relative arrival times from t0)
         // Arrival at startTime + 1 min (60,000 ms)
         Passenger p1Actual;
         Passenger p1Expected;
         inputString = "10:21:30.123 6 Down 2";
         p1Actual = parser.stringToPassenger(inputString);
-        System.out.println("p1Actual.toString():");
-        System.out.println(p1Actual.toString());
-        // Check our relativeStartTime for this one too!
+        // Check our relativeStartTime
         assertEquals(p1Actual.arrivalTime(), 37290123 - parser.getStartTime());
         p1Expected = new Passenger(60000, 6, Direction.DOWN, 2);
         // Compare fields
@@ -96,7 +97,7 @@ class ParserTest {
         assertEquals(p1Actual.direction(), p1Expected.direction());
         assertEquals(p1Actual.destinationFloor(), p1Expected.destinationFloor());
 
-        // Test: Subsequent Passengers (relative arrival times)
+        // Test: Subsequent Passenger (relative arrival times from t0)
         // Arrival at startTime + 100s (100,000 ms)
         Passenger p2Actual;
         Passenger p2Expected;
@@ -104,7 +105,7 @@ class ParserTest {
         p2Actual = parser.stringToPassenger(inputString);
         System.out.println("p2Actual.toString():");
         System.out.println(p2Actual.toString());
-        // Check our relativeStartTime for this one too!
+        // Check our relativeStartTime
         assertEquals(p2Actual.arrivalTime() - 100000, 0);
         p2Expected = new Passenger(100000, 3, Direction.UP, 5);
         // Compare fields
@@ -114,30 +115,27 @@ class ParserTest {
         assertEquals(p2Actual.destinationFloor(), p2Expected.destinationFloor());
 
         // Phew!
-        System.out.println("*** All Tests Passed ***");
+        System.out.println("\n*** All Tests Passed ***");
 
-        System.out.println("\n****** END: testStringToPassenger() ******\n");
+        System.out.println("\n****** END: testStringToPassenger() ******");
 
     }
 
     @Test
-    void testFileToPassengers() {
+    void testParse() {
 
-        System.out.println("\n****** START: testFileToPassengers() ******\n");
+        System.out.println("\n****** START: testParse() ******");
 
         String filename = "input-file.txt";
-
-        // The number of input strings in text file
-        int numInputStrings = 20;
+        int expectedPassengers = 20;
         passengers = parser.parse(filename);
-
-        // Assert our Parser now has 20 Passengers in its queue
-        //assertEquals(numInputStrings, parser.getNumPassengers());
+        // Assert our ArrayList now has expected number of Passengers
+        assertEquals(expectedPassengers, passengers.size());
 
         // Phew!
-        System.out.println("*** All Tests Passed ***");
+        System.out.println("\n*** All Tests Passed ***");
 
-        System.out.println("\n****** END: testFileToPassengers() ******\n");
+        System.out.println("\n****** END: testParse() ******");
     }
 
 }
