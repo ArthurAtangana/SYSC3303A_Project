@@ -14,6 +14,13 @@ public class Main {
     private static ArrayList<Thread> floorThreads = new ArrayList<>();
     private static ArrayList<Thread> elevatorThreads = new ArrayList<>();
 
+
+    /*
+    TODO:
+    - create main models
+    - bind transmitters to receivers
+    - start threads.
+     */
     public static void main(String[] args) {
         // Start floor, elevator, and scheduler threads
         Scheduler scheduler = new Scheduler();
