@@ -17,7 +17,7 @@ class ParserTest {
 
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
-        parser = new Parser(filename);
+        parser = new Parser();
         passengers = new ArrayList<Passenger>();
     }
 
@@ -125,9 +125,11 @@ class ParserTest {
 
         System.out.println("\n****** START: testFileToPassengers() ******\n");
 
+        String filename = "input-file.txt";
+
         // The number of input strings in text file
         int numInputStrings = 20;
-        parser.parse();
+        parser.parse(filename);
 
         // Assert our Parser now has 20 Passengers in its queue
         assertEquals(numInputStrings, parser.getNumPassengers());
