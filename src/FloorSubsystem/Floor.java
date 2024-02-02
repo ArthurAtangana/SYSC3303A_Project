@@ -6,7 +6,6 @@ import Networking.Transmitters.DMA_Transmitter;
 import Networking.Events.Passenger;
 import java.util.ArrayList;
 
-
 public class Floor implements Runnable {
     private ArrayList<Passenger> passengers;
     private int floorLamp;

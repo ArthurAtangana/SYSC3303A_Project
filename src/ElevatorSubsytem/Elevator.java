@@ -28,10 +28,10 @@ public class Elevator implements Runnable {
         this.elevatorTransmitter = new DMA_Transmitter();
         this.elevatorReceiver = new DMA_Receiver();
     }
-    public void setSchedulerReceiver(DMA_Receiver schedulerReceiver){
-        elevatorTransmitter.setDestinationReceiver(schedulerReceiver);
+    public void setTransmitterReceiver(DMA_Receiver receiver){
+        elevatorTransmitter.setDestinationReceiver(receiver);
     }
-    public DMA_Receiver getElevatorReceiver(){
+    public DMA_Receiver getReceiver(){
         return this.elevatorReceiver;
     }
 
