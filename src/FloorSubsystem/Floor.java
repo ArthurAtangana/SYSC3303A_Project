@@ -17,6 +17,7 @@ public class Floor implements Runnable {
      */
     private void setLamp(int floorNumber) {
         floorLamp = floorNumber;
+        System.out.println("The floor sets its lamp display to " + floorLamp);
     }
 
     /**
@@ -24,6 +25,7 @@ public class Floor implements Runnable {
      */
     private void receiveEvent(){
         ElevatorStateEvent elevatorStateEvent = (ElevatorStateEvent) receiver.receive();
+        System.out.println("Floor received the information for its lamp from the scheduler.");
         setLamp(elevatorStateEvent.currentFloor());
     }
     @Override
