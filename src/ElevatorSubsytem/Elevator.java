@@ -6,7 +6,6 @@ import Networking.Events.ElevatorStateEvent;
 import Networking.Events.Passenger;
 import Networking.Receivers.DMA_Receiver;
 import Networking.Transmitters.DMA_Transmitter;
-import SchedulerSubsystem.Scheduler;
 
 import java.util.ArrayList;
 
@@ -16,25 +15,16 @@ public class Elevator implements Runnable {
     private int currentFloor;
     private Direction direction;
     private ArrayList<Passenger> passengerList;
-    private Scheduler scheduler;
-    private DMA_Transmitter elevatorTransmitter;
-    private DMA_Receiver elevatorReceiver;
+    private final DMA_Transmitter transmitterToScheduler;
+    private final DMA_Receiver receiver;
 
-    public Elevator(Scheduler scheduler) {
+    public Elevator(DMA_Transmitter transmitter, DMA_Receiver receiver) {
         this.currentFloor = 0;
-        this.scheduler = scheduler;
         this.direction = Direction.STOPPED;
         this.passengerList = new ArrayList<>();
-        this.elevatorTransmitter = new DMA_Transmitter();
-        this.elevatorReceiver = new DMA_Receiver();
+        this.transmitterToScheduler = transmitter;
+        this.receiver = receiver;
     }
-    public void setTransmitterReceiver(DMA_Receiver receiver){
-        elevatorTransmitter.setDestinationReceiver(receiver);
-    }
-    public DMA_Receiver getReceiver(){
-        return this.elevatorReceiver;
-    }
-
     /**
      * Returns the boarding or deboarding time given the numberOfPassengers
      *
@@ -45,7 +35,7 @@ public class Elevator implements Runnable {
         return 1.84 * numberOfPassengers + 6.79;
     }
     public void getScheduling(){
-        DestinationEvent destination = (DestinationEvent) elevatorReceiver.receive();
+        DestinationEvent destination = (DestinationEvent) receiver.receive();
         System.out.println("going in "+ destination.direction() + " direction.");
         this.direction = destination.direction();
         System.out.println("going to " + destination.destinationFloor());
@@ -67,7 +57,7 @@ public class Elevator implements Runnable {
             throw new RuntimeException(e);
         }
         ElevatorStateEvent arrivedAtFloorEvent = new ElevatorStateEvent(currentFloor,direction,passengerList);
-        elevatorTransmitter.send(arrivedAtFloorEvent);
+        transmitterToScheduler.send(arrivedAtFloorEvent);
     }
     @Override
     public void run() {
