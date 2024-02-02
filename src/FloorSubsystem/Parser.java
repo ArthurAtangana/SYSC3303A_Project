@@ -1,14 +1,45 @@
 /**
- * Parser class which parses an input text file adherent to system
- * specifications. As per the specifications, this Parser, as a component
- * of the FloorSubsystem, will pass its parsed objects (Passenger objects)
- * to awaiting queues in the Scheduler thread, and also (as a somewhat
- * redundant exercise, but required by the spec) directly to a Floor thread.
+ * Parser class which parses an input text file to simulate input events to
+ * the system. As per the project requirements, each well-formed line of
+ * the input file will be parsed into a discrete data object containing the
+ * necessary information to model a system input at its boundaries. These 
+ * data objects are accumulated to an array, and are made available to a
+ * relevant dispatcher class that will be responsible for coordinating their
+ * issuance in real-time.
  *
- * How, you might ask? I don't know yet!
+ * Assumptions:
+ * -----------
+ * 1. The input file contains a sequence of simulated events, with each event
+ *    occurring as a string adherent to project specifications on a newline,
+ *    and arranged chronologically.
+ * 2. All input file event strings are assumed to contain information correct
+ *    to the system (ie. no floors out of range) as no validation is performed
+ *    by this parser.
+ *
+ * Notes:
+ * -----
+ * 1. Although time measurements are codified in a 24-hour clock in the input
+ *    file, as per specification, the parsed objects maintain only a relative
+ *    count of time, in milliseconds, defining their arrangement in the
+ *    sequence relative to the first chronological event.
+ *
+ * Input line format:
+ *     hh:mm:ss.mmm n [ Up | Down ] n
+ * Example:
+ *     09:05:22.123 1 Up 7
+ *
+ * Public Usage:
+ * ------------
+ * 1. Instantiate a Parser object.
+ *
+ *      Parser parser = new Parser();
+ *      
+ * 2. Parse an input file and catch the returned ArrayList of objects.
+ *
+ *      ArrayList<Passenger> passengers = parser.parse("input-file.txt");
  *
  * @author Michael De Santis
- * @version 20240126
+ * @version 20240202
  */
 
 package FloorSubsystem;
@@ -41,13 +72,11 @@ public class Parser {
     // The filename of the input file to parse
     private String filename;
 
-    // This Parser's Scheduler
-    private Scheduler scheduler;
-
     // Reference time that will be denoted as t=0 (t nought)
     private long startTime;
 
     // Hacky --verbose flag
+    // TODO: REMOVE
     boolean verbose;
 
     /* Constructors */
@@ -56,12 +85,10 @@ public class Parser {
      * Parametric constructor for this Parser.
      *
      * @param filename The filename of the input file to operate on.
-     * @param scheduler The Scheduler this Parser must dispatch to.
      */
-    public Parser(String filename, Scheduler scheduler) {
+    public Parser(String filename) {
         // Initialize fields
         this.filename = filename;
-        this.scheduler = scheduler;
         this.passengers = new ArrayList<Passenger>();
         this.startTime = 0;
         this.verbose = false;
@@ -187,7 +214,7 @@ public class Parser {
      *
      * NB: This program does NO validation of strings in the input file.
      */
-    public void fileToPassengers() {
+    public void parse() {
 
         String line;
         BufferedReader bufferedReader;
