@@ -53,6 +53,8 @@ Elevator Simulator, written in Java.
 
 ## UML Diagrams
 
-<img src="./diagrams/system-class-diagram.png" alt="System class diagram" width="500" height="500" />
+### Subsystem Communication Sequence Diagram
+The following sequence diagram shows how the Floor subsystem communicates (eg. sends events) to the Scheduler subsystem via transmitters and receivers.
+There are transmitters and receivers between each subsystem to facilitate communication.
+<img src="./diagrams/subsystem-communication-sequence-diagram.png" alt="Subsystem Communication Sequence Diagram" width="500" height="500" />
 
-<img src="./diagrams/sequence-diagram.png" alt="Sequence diagram" width="500" height="500" />
