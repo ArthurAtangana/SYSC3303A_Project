@@ -3,8 +3,7 @@ package unit.FloorSubsystem;
 import FloorSubsystem.Floor;
 import Networking.Direction;
 import Networking.Events.ElevatorSystemEvent;
-import Networking.Events.FloorButtonPressedEvent;
-import Networking.Events.Passenger;
+import Networking.Events.FloorInputEvent;
 import Networking.Receivers.DMA_Receiver;
 import org.junit.jupiter.api.*;
 
@@ -20,16 +19,16 @@ public class FloorTest {
 
     DMA_Receiver receiver;
     Floor f;
-    ArrayList<Passenger> passengers;
-    Passenger p1;
+    ArrayList<FloorInputEvent> floorInputEvents;
+    FloorInputEvent p1;
 
     @BeforeEach
     void setUp() {
         receiver = new DMA_Receiver();
         f = new Floor(1, receiver);
-        passengers = new ArrayList<>();
-        p1 = new Passenger(5, 1, Direction.UP, 3);
-        passengers.add(p1);
+        floorInputEvents = new ArrayList<>();
+        p1 = new FloorInputEvent(5, 1, Direction.UP, 3);
+        floorInputEvents.add(p1);
     }
 
     @Test
@@ -47,7 +46,7 @@ public class FloorTest {
     @Test
     void removeArrivedPassengersTest() {
         // Arrange
-        f.setPassengers(passengers);
+        f.setPassengers(floorInputEvents);
 
         // Act
         f.sendFloorButtonPressedEvent();

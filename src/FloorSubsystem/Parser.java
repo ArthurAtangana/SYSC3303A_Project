@@ -37,7 +37,7 @@
  *      
  * 2. Parse an input file and catch the returned ArrayList of objects.
  *
- *      ArrayList<Passenger> passengers = parser.parse("input-file.txt");
+ *      ArrayList<FloorInputEvent> floorInputEvents = parser.parse("input-file.txt");
  *
  * @author Michael De Santis
  * @version 20240202
@@ -46,7 +46,7 @@
 package FloorSubsystem;
 
 import Networking.Direction;
-import Networking.Passenger;
+import Networking.Events.FloorInputEvent;
 
 import java.io.*;
 import java.util.*;
@@ -64,8 +64,8 @@ public class Parser {
 
     /* Instance Variables */
 
-    // ArrayList of Passenger Objects from input file
-    private ArrayList<Passenger> passengers;
+    // ArrayList of FloorInputEvent Objects from input file
+    private ArrayList<FloorInputEvent> passengers;
 
     // Reference time [ms] that will be denoted as t0 (t nought)
     private long startTime;
@@ -82,7 +82,7 @@ public class Parser {
      */
     public Parser() {
         // Initialize fields
-        this.passengers = new ArrayList<Passenger>();
+        this.passengers = new ArrayList<FloorInputEvent>();
         this.startTime = 0;
         this.verbose = false;
     }
@@ -148,20 +148,20 @@ public class Parser {
     }
 
     /**
-     * Parse a single string to Passenger record.
+     * Parse a single string to FloorInputEvent record.
      *
      * @param string The string to Parse.
-     * @return The created Passenger record.
+     * @return The created FloorInputEvent record.
      */
-    public Passenger stringToPassenger(String string) {
+    public FloorInputEvent stringToPassenger(String string) {
 
-        // Passenger for return
-        Passenger passenger;
+        // FloorInputEvent for return
+        FloorInputEvent passenger;
 
         // Splits on space
         String[] splits = string.split(WS_DELIMITER);
 
-        /* Prepare the Passenger record fields before construction */
+        /* Prepare the FloorInputEvent record fields before construction */
 
         // arrivalTime
         long arrivalTime = timeStringToLong(splits[0]);
@@ -185,15 +185,15 @@ public class Parser {
         // destinationFloor
         int destinationFloor = Integer.parseInt(splits[3]);
 
-        // Create and return Passenger record with the above values as fields
-        passenger = new Passenger(relativeArrivalTime, sourceFloor, direction, destinationFloor);
+        // Create and return FloorInputEvent record with the above values as fields
+        passenger = new FloorInputEvent(relativeArrivalTime, sourceFloor, direction, destinationFloor);
 
         return passenger;
     }
 
     /**
-     * Parse an input file, converting each line to a new Passenger record,
-     * and accumulate all Passenger's in this Parser's queue.
+     * Parse an input file, converting each line to a new FloorInputEvent record,
+     * and accumulate all FloorInputEvent's in this Parser's queue.
      *
      * NB: This program does NO validation of strings in the input file.
      */
@@ -220,8 +220,8 @@ public class Parser {
                 if (line.length() > 0) {
                     // Case: Non-comment line
                     if (!(line.charAt(0) == '#')) {
-                        // Ingest this line as a Passenger
-                        Passenger passenger = stringToPassenger(line);
+                        // Ingest this line as a FloorInputEvent
+                        FloorInputEvent passenger = stringToPassenger(line);
                         // Add to queue
                         passengers.add(passenger);
                     }
@@ -237,5 +237,9 @@ public class Parser {
         if (verbose) {
             System.out.println("Created " + passengers.size() + " Passengers from input file " + filename + ".");
         }
+    }
+
+    public ArrayList<FloorInputEvent> getEvents() {
+        return null;
     }
 }
