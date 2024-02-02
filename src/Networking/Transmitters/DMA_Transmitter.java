@@ -17,6 +17,5 @@ public class DMA_Transmitter implements Transmitter {
     @Override
     public void send(ElevatorSystemEvent event) {
         destinationReceiver.setMessage(event);
-        destinationReceiver.notifyMsgReceived();
     }
 }
