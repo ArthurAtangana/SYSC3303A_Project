@@ -13,18 +13,23 @@
 
 package FloorSubsystem;
 
+import Networking.Events.DestinationEvent;
+import Networking.Events.FloorInputEvent;
+import Networking.Transmitters.DMA_Transmitter;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 
 public class DestinationDispatcher implements Runnable {
-    private final ArrayList<InputEvent> eventStack;
-    private int lastEventTime;
+    private long lastEventTime;
+    private final ArrayList<FloorInputEvent> eventStack;
+    private DMA_Transmitter transmitterToScheduler;
 
 
-    DestinationDispatcher(Parser inputHandler){
+    DestinationDispatcher(Parser inputHandler, DMA_Transmitter transmitter){
         eventStack = inputHandler.getEvents();
         // Sort based on time int (low to high), TODO: TEST THIS
-         eventStack.sort(Comparator.comparingInt(InputEvent::time));
+         eventStack.sort(Comparator.comparingLong(FloorInputEvent::time));
         // Set baseline time
          lastEventTime = eventStack.get(0).time();
     }
@@ -34,10 +39,14 @@ public class DestinationDispatcher implements Runnable {
      * between the next event and the previous event into a concrete delay.
      */
     private void waitEvent(){
-        int curTime = eventStack.get(0).time();
-        int delay = curTime - lastEventTime;
-        // TODO: Implement time to delay conversion based on what feels right.
-        //      Waiting mechanism: Thread.sleep? Interrupt?
+        long curTime = eventStack.get(0).time();
+        long delay = curTime - lastEventTime;
+        System.out.println("Floor subsystem waiting for next event.");
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         lastEventTime = curTime;
     }
 
@@ -50,10 +59,9 @@ public class DestinationDispatcher implements Runnable {
         while(!eventStack.isEmpty()) {
             waitEvent();
             // Could pop from bottom for performance increase... if that's necessary
-            InputEvent curEvent = eventStack.remove(0);
-            // TODO: Dispatch event;
-            //  --> Q how to select floor? How to route across multiple floors?
-            //  --> Q how to select Scheduler? Singleton?
+            FloorInputEvent curEvent = eventStack.remove(0);
+            // Send floor request to scheduler
+            transmitterToScheduler.send(new DestinationEvent(curEvent.destinationFloor(), curEvent.direction()));
         }
     }
 }
