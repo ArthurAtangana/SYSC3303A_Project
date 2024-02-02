@@ -11,5 +11,5 @@ import Networking.Events.ElevatorSystemEvent;
  * @param destinationFloor Floor that the passenger would like to arrive at.
  */
 public record Passenger
-        (long arrivalTime, int sourceFloor, Direction direction, int destinationFloor)
+        (int arrivalTime, int sourceFloor, Direction direction, int destinationFloor)
         implements ElevatorSystemEvent {}
