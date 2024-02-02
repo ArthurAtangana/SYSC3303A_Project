@@ -3,17 +3,21 @@
 
 ## Group A1:1
 - Arthur Atangana: 101005197
-- Victoria Malouf:
+- Victoria Malouf: TODO
 - Michael Desantis: 101213450
-- Braeden Kloke:
+- Braeden Kloke: TODO
 - Alexandre Marques: 101189743
+
+## Usage
+
+TODO: How to run sim
 
 ## Description
 Elevator Simulator, written in Java.
 
-## Contents
+## Design
 
-## Notes
+TODO: Fill this with file structure, and explanation of files/design
 
 ## Scope
 
@@ -31,10 +35,6 @@ Elevator Simulator, written in Java.
   can be implemented with the method we deem most fitting. 
 
 ## Tasks
-
-### Iteration 0
-* task
-* task
 
 ### Iteration 1
 
@@ -66,3 +66,6 @@ All resources for tests (eg. input files) should be put in `test/resources`.
 
 **IntelliJ can't find your tests?**
 Ensure you have directory `test` labelled as your Test Source Folder in Project Structure > Modules.
+
+## Known Issues
+See GitHub project issues for most up-to-date issues
