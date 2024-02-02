@@ -1,6 +1,7 @@
 import ElevatorSubsytem.Elevator;
 import FloorSubsystem.Floor;
 import Networking.Receivers.DMA_Receiver;
+import Networking.Transmitters.DMA_Transmitter;
 import SchedulerSubsystem.Scheduler;
 import java.util.ArrayList;
 /**
@@ -10,35 +11,38 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class Main {
-    private static int numFloors = 1;
-    private static int numElevators = 1;
-    private static ArrayList<Thread> floorThreads = new ArrayList<>();
-    private static ArrayList<Thread> elevatorThreads = new ArrayList<>();
-    private static DMA_Receiver schedulerReceiver;
+    private static final int NUM_FLOORS = 1;
+    private static final int numElevators = 1;
+    private static final ArrayList<Thread> floorThreads = new ArrayList<>();
+    private static final ArrayList<Thread> elevatorThreads = new ArrayList<>();
 
-    /*
-    TODO:
-    - create main models
-    - bind transmitters to receivers
-    - start threads.
-     */
     public static void main(String[] args) {
+        // Create receivers
+        DMA_Receiver schedulerReceiver = new DMA_Receiver();
+        DMA_Receiver elevatorReceiver = new DMA_Receiver();
+        ArrayList<DMA_Receiver> floorReceivers = new ArrayList<DMA_Receiver>();
+        for(int i=0; i < NUM_FLOORS; i++){
+            floorReceivers.add(new DMA_Receiver());
+        }
+
+        // Create Transmitters (composes with receivers)
+        DMA_Transmitter toSchedulerTransmitter = new DMA_Transmitter(schedulerReceiver);
+        DMA_Transmitter toElevatorTransmitter = new DMA_Transmitter(elevatorReceiver);
+        DMA_Transmitter toFloorsTransmitter = new DMA_Transmitter(floorReceivers);
+
         // Start floor, elevator, and scheduler threads
-        initializeReceivers();
-        Scheduler scheduler = new Scheduler();
+        Scheduler scheduler = new Scheduler(schedulerReceiver, toFloorsTransmitter, toElevatorTransmitter);
         Thread schedulerThread = new Thread(scheduler);
-        for (int i = 1; i < numFloors + 1; ++i) {
-            Thread newFloor = new Thread(new Floor(i, schedulerReceiver));
+        for (int i = 1; i < NUM_FLOORS + 1; ++i) {
+            Thread newFloor = new Thread(new Floor(i, floorReceivers.get(i)));
             floorThreads.add(newFloor);
             newFloor.start();
         }
         for (int i = 1; i < numElevators + 1; ++i) {
-            Thread newElevator = new Thread(new Elevator(scheduler));
+            Thread newElevator = new Thread(new Elevator(elevatorReceiver, toSchedulerTransmitter));
             elevatorThreads.add(newElevator);
             newElevator.start();
         }
-        scheduler.setFloors(floorThreads);
-        scheduler.setElevators(elevatorThreads);
         schedulerThread.start();
 
         // Join floor, elevator, and scheduler threads
@@ -61,13 +65,6 @@ public class Main {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * Initialize receivers for all subsystems
-     */
-    private static void initializeReceivers() {
-        schedulerReceiver = new DMA_Receiver();
     }
 }
 
