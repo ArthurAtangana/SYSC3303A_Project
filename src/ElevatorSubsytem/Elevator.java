@@ -27,7 +27,7 @@ public class Elevator implements Runnable {
     }
 
     /**
-     * processes events received from the scheduler
+     * Processes events received from the scheduler
      */
     public void getScheduling(){
         DestinationEvent destination = (DestinationEvent) receiver.receive();
@@ -42,7 +42,6 @@ public class Elevator implements Runnable {
      * @param floorNumber
      */
     public void travelToFloor(int floorNumber) {
-        // Requires use of TRAVEL_TIME
         this.currentFloor = floorNumber;
         System.out.println("elevator is on floor " + this.currentFloor);
         // multiply travel time by num floor
@@ -60,5 +59,4 @@ public class Elevator implements Runnable {
             getScheduling();
         }
     }
-
 }

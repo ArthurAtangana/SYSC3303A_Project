@@ -13,6 +13,10 @@ public class Scheduler implements Runnable {
         this.transmitterToElevator = transmitterToElevator;
         this.transmitterToFloor = transmitterToFloor;
     }
+
+    /**
+     * receives ElevatorSystemEvent from the floor subsystem or elevator subsystem.
+     */
     private void receiveEvent(){
         ElevatorSystemEvent systemEvent = receiver.receive();
         if (systemEvent instanceof ElevatorStateEvent){
@@ -23,6 +27,7 @@ public class Scheduler implements Runnable {
     }
     /**
      * process event received from the floor (up or down request)
+     * and sends it to the elevator.
      * @param destinationEvent a destination event
      */
     private void processDestinationEvent(DestinationEvent destinationEvent) {
@@ -30,6 +35,7 @@ public class Scheduler implements Runnable {
     }
     /**
      *  process elevator event with elevator state (current floor, direction, passengerList)
+     *  and sends it to the floor.
      * @param elevatorStateEvent an elevator state event
      */
     private void processElevatorEvent(ElevatorStateEvent elevatorStateEvent) {
