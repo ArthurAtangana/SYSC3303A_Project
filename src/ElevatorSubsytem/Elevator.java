@@ -25,15 +25,10 @@ public class Elevator implements Runnable {
         this.transmitterToScheduler = transmitter;
         this.receiver = receiver;
     }
+
     /**
-     * Returns the boarding or deboarding time given the numberOfPassengers
-     *
-     * @param numberOfPassengers Amount of passengers boarding/deboarding the elevator.
-     * @return Time in seconds
+     * processes events received from the scheduler
      */
-    private double getBoardingTime(int numberOfPassengers) {
-        return 1.84 * numberOfPassengers + 6.79;
-    }
     public void getScheduling(){
         DestinationEvent destination = (DestinationEvent) receiver.receive();
         System.out.println("going in "+ destination.direction() + " direction.");
