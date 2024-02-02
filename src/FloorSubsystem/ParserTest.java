@@ -11,15 +11,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ParserTest {
 
-    private Scheduler scheduler;
     private String filename = "input-file.txt";
     private Parser parser;
     private ArrayList<Passenger> passengers;
 
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
-        scheduler = new Scheduler();
-        parser = new Parser(filename, scheduler);
+        parser = new Parser(filename);
         passengers = new ArrayList<Passenger>();
     }
 
@@ -129,7 +127,7 @@ class ParserTest {
 
         // The number of input strings in text file
         int numInputStrings = 20;
-        parser.fileToPassengers();
+        parser.parse();
 
         // Assert our Parser now has 20 Passengers in its queue
         assertEquals(numInputStrings, parser.getNumPassengers());
