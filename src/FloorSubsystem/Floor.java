@@ -10,11 +10,14 @@ import Networking.Receivers.DMA_Receiver;
 
 public class Floor implements Runnable {
     private int floorLamp;
+    private final int floorNum;
     private final DMA_Receiver receiver;
 
     public Floor(int floorNumber, DMA_Receiver receiver) {
-        this.floorLamp = floorNumber;
+        this.floorNum = floorNumber;
         this.receiver = receiver;
+        // Start elevator location at 0 until an update is received
+        floorLamp = 0;
     }
     /**
      * Setting the lamp to display which floor the elevator is on.
@@ -22,7 +25,7 @@ public class Floor implements Runnable {
      */
     private void setLamp(int floorNumber) {
         floorLamp = floorNumber;
-        System.out.println("The floor sets its lamp display to " + floorLamp);
+        System.out.println("Floor #"+floorNum+": Lamp display updated to floor#"+ floorLamp + ".");
     }
 
     /**
@@ -30,7 +33,6 @@ public class Floor implements Runnable {
      */
     private void receiveEvent(){
         ElevatorStateEvent elevatorStateEvent = (ElevatorStateEvent) receiver.receive();
-        System.out.println("Floor received the information for its lamp from the scheduler.");
         setLamp(elevatorStateEvent.currentFloor());
     }
     @Override

@@ -15,7 +15,8 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class Main {
-    private static final int NUM_FLOORS = 7;
+    // Note: our system starts counting floors at 0 :)
+    private static final int NUM_FLOORS = 8;
     private static final int NUM_ELEVATORS = 1;
     private static final ArrayList<Thread> floorThreads = new ArrayList<>();
     private static final ArrayList<Thread> elevatorThreads = new ArrayList<>();
@@ -50,10 +51,12 @@ public class Main {
         schedulerThread.start();
 
         // Instantiate Parser and parse input file to FloorInputEvents
+        System.out.println("\n****** Generating System Input Events ******\n");
         Parser parser = new Parser();
         ArrayList<FloorInputEvent> inputEvents = parser.parse("input-file.txt");
 
         // Start dispatcher (want all systems to be ready before sending events)
+        System.out.println("\n****** Begin Real-Time System Operation ******\n");
         new Thread(new DestinationDispatcher(inputEvents, toSchedulerTransmitter)).start();
 
         // Join floor, elevator, and scheduler threads

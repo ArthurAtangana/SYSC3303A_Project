@@ -3,14 +3,14 @@
 
 ## Table of Contents
 
-[Authors](#authors)<br>
-[Usage](#usage)<br>
-[Description](#description)<br>
-[Files](#files)<br>
-[Scope](#scope)<br>
-[Tasks](#tasks)<br>
-[Test](#test)<br>
-[Known Issues](#known-issues)<br>
+1. [Authors](#authors)
+2. [Usage](#usage)
+3. [Description](#description)
+4. [Source Files](#source-files)
+5. [Scope](#scope)
+6. [Tasks](#tasks)
+7. [Test](#test)
+8. [Known Issues](#known-issues)
 
 ## Authors 
 Group A1:1
@@ -32,6 +32,8 @@ Note: Compiled using JDK - 21 Oracle OpenJDK version 21.0.1
 2. Open Main.java
 3. Run the main function
 
+For test execution, see [test section](#test).
+
 ## Description
 
 This project is being produced for SYSC 3303 - Real Time Concurrent Systems. 
@@ -44,8 +46,9 @@ The project model is designed using the "ELEV - 1" elevator in Carleton's Canal 
 Raw data was collected and analyzed during iteration 0 to model elevator 
 travel time and passenger (de)boarding time.
 
-## Files
-The file structure is organized using Java packages.
+## Source Files
+The source file structure is organized using Java packages under the src/ folder. 
+See test README for test file structure.
 
 [Main](#main.java)<br>
 [ElevatorSubsystem](#elevatorsubsystem)<br>
@@ -165,10 +168,15 @@ The file structure is organized using Java packages.
 - Assumption 2: "It is only necessary to create a test case showing that your program can read the input
   file and pass the data back and forth." = The MVP for full marks. 
   If these properties can be tested and demonstrated to work the system is at least fully functional for iteration 1.
+  For our testing strategy, this is covered by "system" tests.
 - Assumption 3: "The elevators will make calls to the Scheduler which will then reply when there is work to be
   done." Is the only statement which describes how the communication occurs. 
   We can implement this behavior with thread blocking on a monitor but all other communications 
   can be implemented with the method we deem most fitting. 
+- Assumption 4: "Unit tests for all classes" only refers to classes which can be unit tested. 
+  More specifically, unit tests covering all public methods defined (excluding constructors, and run). 
+  Run methods being tested through system tests only because they depend on, and affect the overall system.
+  Constructors cannot be tested without getters which most classes don't implement.
 
 ## Tasks
 
@@ -193,10 +201,10 @@ All tests are located in directory `test`.
 Tests are categorized in subdirectories labelled:
 
 * `unit`: Tests isolated components.
-* `integration`: Tests interoperability of components. (eg. Floor sending events to Scheduler)
 * `system`: Tests all components working together. (eg. Does the simulation correctly get all passengers to their desired floors?)
 
-All resources for tests (eg. input files) should be put in `test/resources`.
+All resources for tests (eg. input files) are in `test/resources`.
+For detailed test layout, see test README.
 
 ### Troubleshooting
 
