@@ -16,4 +16,4 @@ import java.util.ArrayList;
  */
 public record ElevatorStateEvent
         (int currentFloor, Direction direction, ArrayList<DestinationEvent> destinationEvents)
-        implements ElevatorSystemEvent {}
+        implements SystemEvent {}
