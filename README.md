@@ -1,7 +1,19 @@
 # README
 * Last Edited: 2024/02/03
 
-## Group A1:1
+## Table of Contents
+
+1. [Authors](#authors)
+2. [Usage](#usage)
+3. [Description](#description)
+4. [Files](#files)
+5. [Scope](#scope)
+6. [Tasks](#tasks)
+7. [Test](#test)
+8. [Known Issues](#known-issues)
+
+## Authors 
+Group A1:1
 - Arthur Atangana: 101005197
 - Victoria Malouf: 101179986
 - Michael Desantis: 101213450
@@ -32,76 +44,77 @@ The project model is designed using the "ELEV - 1" elevator in Carleton's Canal 
 Raw data was collected and analyzed during iteration 0 to model elevator 
 travel time and passenger (de)boarding time.
 
-## Design
+## Files
+The file structure is organized using Java packages.
 
-The file structure is organized using Java packages. The src and test folder file structures are shown below:
-```
-src
-    ElevatorSubsystem
-        Elevator
-    FloorSubsystem
-        Floor
-        Parser
-        input-file.txt
-        DestinationDispatcher
-    SchedulerSubsystem
-        Scheduler
-    Networking
-        Events
-            ElevatorSystemEvent (interface)
-            DestinationEvent (record)
-            ElevatorStateEvent (record)
-            FloorInputEvent (record)
-        Receivers
-            Receiver (interface)
-            DMA_Receiver
-        Transmitters
-            Transmitter (interface)
-            DMA_Transmitter 
-        Direction (enum)
-    Main
-test
-    integration
-        SendEventFromFloorToSchedulerTest
-    resources
-        input-file.txt
-    system
-        OnePassengerTest
-    unit
-        ElevatorSubsystem
-            ElevatorTest
-        FloorSubsystem
-            FloorTest
-            ParserTest   
-        SchedulerSubsystem
-            SchedulerTest
- ```         
+### Main.java
+- Initializes and maintains track of threads
 
-The three main subsystems are the FloorSubsystem, ElevatorSubsystem, and SchedulerSubsystem. 
+### <u>ElevatorSubsystem (Package)</u>
 
-The subsystems communicate with each other using classes from the Networking package.
+**Elevator.java**
+- Receives DestinationEvent records from Scheduler
+- Travels to floors
+- Sends ElevatorStateEvent records to Scheduler
 
-The following is a typical workflow from the floor to the scheduler to the elevator and then back.
+### <u>FloorSubsystem (Package)</u>
 
-1. The DestinationDispatcher class (FloorSubsystem) is responsible for sending FloorInputEvent records 
-to the Scheduler via a DMA_Transmitter. 
+**Floor.java**
+- Receives ElevatorStateEvent records from Scheduler
+- Sets lamp
 
-2. The Scheduler receives the FloorInputEvent records (via it's DMA_Receiver). 
+**Parser.java**
+- Parses input-file.txt to simulate input events to the system
 
-3. The Scheduler sends DestinationEvent records (via it's DMA_Transmitter) to the Elevator's DMA_Receiver. 
+**input-file.txt**
+- Input file used to provide inputs to the system
 
-4. The Elevator sends ElevatorStateEvent records (via it's DMA_Transmitter) to the Scheduler's DMA_Receiver. 
+**DestinationDispatcher**
+- Sends DestinationEvent records to the scheduler
 
-5. The Scheduler receives DestinationEvent records (via it's DMA_Receiver).
+### <u>SchedulerSubsystem (Package)</u>
 
-6. The Scheduler sends ElevatorStateEvent records (via it's DMA_Transmitter) to the Floor's DMA_Receiver.
+**Scheduler.java**
+- Receives ElevatorStateEvent records from the Elevator
+- Receives DestinationEvent records from the DestinationDispatcher
+- Sends DestinationEvent records to the Elevator
+- Sends ElevatorStateEvent records to the Floor
 
-In summary:
-The floor receives data from the scheduler.
-The scheduler receives data from the elevator and dispatcher and sends data to the floor and elevator.
-The elevator receives data from the scheduler and sends data to the scheduler. 
 
-The scheduler acts as a communication channel between the floor and elevator subsystems. 
+### <u>Networking (Package)</u>
+
+#### <u>Events</u>
+
+**ElevatorSystemEvent.java** 
+- Interface for elevator system events
+
+**DestinationEvent.java**
+- Holds destination floor and direction
+
+**ElevatorStateEvent.java**
+- Holds currentFloor, direction, and FloorInputEvents
+
+**FloorInputEvent.java**
+- Holds arrival time, source floor, direction, and destination floor
+
+#### <u>Receivers</u>
+
+**Receiver.java**
+- Interface for receivers
+
+**DMA_Receiver.java**
+- Receives ElevatorSystemEvent records and stores them in a buffer
+
+#### <u>Transmitters</u>
+
+**Transmitter.java**
+- Interface for transmitters
+
+**DMA_Transmitter.java**
+- Sends ElevatorSystemEvent records to DMA_Receiver objects
+
+**Direction.java**
+- Enum of directions (UP, DOWN, STOPPED)
 
 ## Scope
 
