@@ -46,7 +46,7 @@ public class DestinationDispatcher implements Runnable {
     private void waitEvent(){
         long curTime = eventQueue.get(0).time();
         long delay = curTime - lastEventTime;
-        System.out.println("Floor: Waiting for next event.");
+        System.out.println("Floor: Waiting for next floor request.");
         try {
             Thread.sleep(delay);
         } catch (InterruptedException e) {
@@ -59,7 +59,7 @@ public class DestinationDispatcher implements Runnable {
     /**
      * Dispatcher runs until there are no events left to be sent.
      *
-     * Run state machine:
+     * Run sequence (loops):
      * 1. Wait for next event time
      * 2. Get next FloorInputEvent
      * 3. Parse FloorInputEvent, create DestinationEvent
@@ -73,7 +73,9 @@ public class DestinationDispatcher implements Runnable {
             // Could pop from bottom for performance increase... if that's necessary
             FloorInputEvent curEvent = eventQueue.remove(0);
             // Send floor request to scheduler
-            transmitterToScheduler.send(new DestinationEvent(curEvent.destinationFloor(), curEvent.direction()));
+            DestinationEvent dest = new DestinationEvent(curEvent.destinationFloor(), curEvent.direction());
+            System.out.println("Floor: Sending destination, "+dest);
+            transmitterToScheduler.send(dest);
         }
     }
 }
