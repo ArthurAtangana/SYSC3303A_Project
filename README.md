@@ -216,5 +216,7 @@ For detailed test layout, see test README.
 **IntelliJ can't find your tests?**
 Ensure you have directory `test` labelled as your Test Source Folder in Project Structure > Modules.
 
+** Test classes don't compile due to missing imports (red squiggles)?**
+Alt-enter on the invalid imports, and select add JUnit 5.8.1 to classpath, select OK.
 ## Known Issues
 See GitHub project issues for most up-to-date issues
