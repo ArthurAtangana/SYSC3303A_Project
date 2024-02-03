@@ -20,8 +20,7 @@
  * -----
  * 1. Although time measurements are codified in a 24-hour clock in the input
  *    file, as per specification, the parsed objects maintain only a relative
- *    count of time, in milliseconds, defining their arrangement in the
- *    sequence relative to the first chronological event at t0.
+ *    count of time, in milliseconds, from the start of a day.
  * 2. The input file should be placed adjacently in the Parser's directory, and
  *    only the file name, and not path, shall be argued to this Parser.
  * 3. Input line format:
@@ -83,7 +82,7 @@ public class Parser {
      * @param timeString The input time string, as per spec.
      * @return The total milliseconds from 00:00:00.000.
      */
-    public long timeStringToLong(String timeString) {
+    private long timeStringToLong(String timeString) {
 
         /* Conversion factors */
         // Hours to milliseconds: 1h * 60m/h * 60s/m * 1000ms/s
@@ -127,11 +126,8 @@ public class Parser {
      * @param string The string to Parse.
      * @return The created FloorInputEvent record.
      */
-    public FloorInputEvent stringToFloorInputEvent(String string) {
+    private FloorInputEvent stringToFloorInputEvent(String string) {
         
-        // Initialize start time to 0 for t0
-        long startTime = 0;
-
         // FloorInputEvent for return
         FloorInputEvent floorInputEvent;
 
@@ -142,13 +138,6 @@ public class Parser {
 
         // arrivalTime
         long arrivalTime = timeStringToLong(splits[0]);
-        // Case: If this is the first input event chronologically, capture its time
-        // as our reference start time for the sequence, t0
-        if (startTime == 0) {
-            startTime = arrivalTime;
-        }
-        // Calculate and record the delta from t0
-        long relativeArrivalTime = arrivalTime - startTime;
 
         // sourceFloor
         int sourceFloor = Integer.parseInt(splits[1]);
@@ -163,7 +152,7 @@ public class Parser {
         int destinationFloor = Integer.parseInt(splits[3]);
 
         // Create and return FloorInputEvent record with the above values as fields
-        floorInputEvent = new FloorInputEvent(relativeArrivalTime, sourceFloor, direction, destinationFloor);
+        floorInputEvent = new FloorInputEvent(arrivalTime, sourceFloor, direction, destinationFloor);
 
         return floorInputEvent;
     }
@@ -180,7 +169,6 @@ public class Parser {
         // Local variables
         String line;
         BufferedReader bufferedReader;
-        long startTime;
         ArrayList<FloorInputEvent> floorInputEvents = new ArrayList<FloorInputEvent>();
 
         // File pathing
