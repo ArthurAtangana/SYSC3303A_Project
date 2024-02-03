@@ -171,6 +171,9 @@ public class Parser {
         BufferedReader bufferedReader;
         ArrayList<FloorInputEvent> floorInputEvents = new ArrayList<FloorInputEvent>();
 
+        // TODO: should have variable file path.
+        //   Should be able to specify folders other than /src/FloorSubsystem
+        //   such as; /test/resources/input-file.txt, /src/resources/input-file.txt ...
         // File pathing
         System.out.println("Reading file: " + filename);
         // TODO: Investigate pathing - might be an IntelliJ thing
