@@ -1,0 +1,367 @@
+****** Generating System Input Events ******
+
+Parser: Reading input file: input-file.txt
+Parser: Created 20 FloorInputEvents from input file input-file.txt.
+
+****** Begin Real-Time System Operation ******
+
+Floor: Waiting for next event.
+Floor: Waiting for next event.
+Elevator: Going in UP direction.
+Elevator: Going to floor 7.
+Elevator: Elevator is on floor 7.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 7.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 7.
+Floor: Setting lamp display to 7.
+Floor: Setting lamp display to 7.
+Floor: Setting lamp display to 7.
+Floor: Setting lamp display to 7.
+Floor: Setting lamp display to 7.
+Floor: Waiting for next event.
+Elevator: Going in UP direction.
+Elevator: Going to floor 3.
+Elevator: Elevator is on floor 3.
+Floor: Waiting for next event.
+Elevator: Going in UP direction.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 3.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 3.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 3.
+Floor: Received information for lamp display from Scheduler.
+Elevator: Going to floor 6.
+Elevator: Elevator is on floor 6.
+Floor: Setting lamp display to 3.
+Floor: Setting lamp display to 3.
+Floor: Setting lamp display to 3.
+Floor: Setting lamp display to 3.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Floor: Waiting for next event.
+Elevator: Going in DOWN direction.
+Elevator: Going to floor 4.
+Elevator: Elevator is on floor 4.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 4.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 4.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 4.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 4.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 4.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 4.
+Floor: Setting lamp display to 4.
+Floor: Waiting for next event.
+Elevator: Going in UP direction.
+Elevator: Going to floor 5.
+Elevator: Elevator is on floor 5.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 5.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 5.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 5.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 5.
+Floor: Setting lamp display to 5.
+Floor: Setting lamp display to 5.
+Floor: Setting lamp display to 5.
+Floor: Waiting for next event.
+Elevator: Going in DOWN direction.
+Elevator: Going to floor 2.
+Elevator: Elevator is on floor 2.
+Floor: Waiting for next event.
+Floor: Waiting for next event.
+Elevator: Going in DOWN direction.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Elevator: Going to floor 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Elevator: Elevator is on floor 1.
+Floor: Setting lamp display to 2.
+Floor: Waiting for next event.
+Elevator: Going in DOWN direction.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Elevator: Going to floor 1.
+Elevator: Elevator is on floor 1.
+Floor: Setting lamp display to 1.
+Floor: Waiting for next event.
+Floor: Waiting for next event.
+Elevator: Going in UP direction.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Elevator: Going to floor 7.
+Elevator: Elevator is on floor 7.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Setting lamp display to 1.
+Floor: Setting lamp display to 1.
+Elevator: Going in DOWN direction.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 7.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 7.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 7.
+Elevator: Going to floor 1.
+Elevator: Elevator is on floor 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 7.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 7.
+Floor: Setting lamp display to 7.
+Floor: Setting lamp display to 7.
+Floor: Waiting for next event.
+Floor: Waiting for next event.
+Floor: Waiting for next event.
+Elevator: Going in UP direction.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Elevator: Going to floor 2.
+Elevator: Elevator is on floor 2.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Setting lamp display to 1.
+Floor: Waiting for next event.
+Elevator: Going in UP direction.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Floor: Setting lamp display to 2.
+Elevator: Going to floor 7.
+Elevator: Elevator is on floor 7.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Floor: Waiting for next event.
+Floor: Waiting for next event.
+Elevator: Going in DOWN direction.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 7.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 7.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 7.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 7.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 7.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 7.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 7.
+Elevator: Going to floor 1.
+Elevator: Elevator is on floor 1.
+Floor: Waiting for next event.
+Elevator: Going in DOWN direction.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Elevator: Going to floor 2.
+Elevator: Elevator is on floor 2.
+Floor: Setting lamp display to 1.
+Floor: Setting lamp display to 1.
+Floor: Waiting for next event.
+Elevator: Going in DOWN direction.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 2.
+Elevator: Going to floor 1.
+Elevator: Elevator is on floor 1.
+Floor: Setting lamp display to 2.
+Elevator: Going in UP direction.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Elevator: Going to floor 6.
+Elevator: Elevator is on floor 6.
+Floor: Setting lamp display to 1.
+Floor: Setting lamp display to 1.
+Floor: Setting lamp display to 1.
+Floor: Setting lamp display to 1.
+Elevator: Going in UP direction.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Elevator: Going to floor 6.
+Floor: Setting lamp display to 6.
+Floor: Setting lamp display to 6.
+Elevator: Elevator is on floor 6.
+Elevator: Going in DOWN direction.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 6.
+Elevator: Going to floor 1.
+Elevator: Elevator is on floor 1.
+Floor: Setting lamp display to 6.
+Elevator: Going in DOWN direction.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Elevator: Going to floor 4.
+Elevator: Elevator is on floor 4.
+Floor: Setting lamp display to 1.
+Elevator: Going in DOWN direction.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 4.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 4.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 4.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 4.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 4.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 4.
+Elevator: Going to floor 1.
+Elevator: Elevator is on floor 1.
+Floor: Setting lamp display to 4.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Received information for lamp display from Scheduler.
+Floor: Setting lamp display to 1.
+Floor: Setting lamp display to 1.
