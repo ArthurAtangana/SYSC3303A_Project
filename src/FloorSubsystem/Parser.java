@@ -65,9 +65,6 @@ public class Parser {
 
     /* Instance Variables */
 
-    // Reference time [ms] that will be denoted as t0
-    private long startTime;
-
     /* Constructors */
 
     /**
@@ -191,6 +188,7 @@ public class Parser {
         // Local variables
         String line;
         BufferedReader bufferedReader;
+        long startTime;
         ArrayList<Passenger> passengers = new ArrayList<Passenger>();
 
         // File pathing
