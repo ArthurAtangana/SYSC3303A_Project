@@ -20,13 +20,12 @@
  * -----
  * 1. Although time measurements are codified in a 24-hour clock in the input
  *    file, as per specification, the parsed objects maintain only a relative
- *    count of time, in milliseconds, defining their arrangement in the
- *    sequence relative to the first chronological event.
+ *    count of time, in milliseconds, from the start of a day.
  * 2. The input file should be placed adjacently in the Parser's directory, and
  *    only the file name, and not path, shall be argued to this Parser.
  * 3. Input line format:
  *      hh:mm:ss.mmm n [ Up | Down ] n
- * Example:
+ *    Example:
  *      09:05:22.123 1 Up 7
  *
  * Public Usage:
@@ -58,58 +57,32 @@ public class Parser {
 
     // Delimiter RegEx constants
     private final String WS_DELIMITER = " ";
-    private final String COMMENT_DELIMITER = "#";
     private final String TIME_DELIMITER_ONE = ":";
     private final String TIME_DELIMITER_TWO= "\\.";
+    // Input file comment char
+    private final char COMMENT_CHAR = '#';
 
     /* Instance Variables */
-
-    // ArrayList of FloorInputEvent Objects from input file
-    private ArrayList<FloorInputEvent> passengers;
-
-    // Reference time [ms] that will be denoted as t0 (t nought)
-    private long startTime;
-
-    // Hacky --verbose flag
-    // TODO: REMOVE
-    boolean verbose;
 
     /* Constructors */
 
     /**
-     * Parametric constructor for this Parser.
+     * Default constructor for this Parser.
      *
      */
-    public Parser() {
-        // Initialize fields
-        this.passengers = new ArrayList<FloorInputEvent>();
-        this.startTime = 0;
-        this.verbose = false;
-    }
+    public Parser() {}
 
     /* Methods */
 
-    /* Getters and Setters */
-
-    public long getStartTime() {
-        return startTime;
-    }
-
-    public int getNumPassengers() {
-        return passengers.size();
-    }
-
-    /* Other Methods */
-
     /**
-     * Convert a time string, as per the project specification,
-     * to a long representing the total milliseconds elapsed since
-     * the start of the day (00:00:00.000).
+     * Convert a time string, as per the project specification, to a long
+     * representing the total milliseconds elapsed since the start of the
+     * day in a 24-hour clock (00:00:00.000).
      *
      * @param timeString The input time string, as per spec.
      * @return The total milliseconds from 00:00:00.000.
      */
-    public long timeStringToLong(String timeString) {
+    private long timeStringToLong(String timeString) {
 
         /* Conversion factors */
         // Hours to milliseconds: 1h * 60m/h * 60s/m * 1000ms/s
@@ -153,10 +126,10 @@ public class Parser {
      * @param string The string to Parse.
      * @return The created FloorInputEvent record.
      */
-    public FloorInputEvent stringToPassenger(String string) {
-
+    private FloorInputEvent stringToFloorInputEvent(String string) {
+        
         // FloorInputEvent for return
-        FloorInputEvent passenger;
+        FloorInputEvent floorInputEvent;
 
         // Splits on space
         String[] splits = string.split(WS_DELIMITER);
@@ -165,13 +138,6 @@ public class Parser {
 
         // arrivalTime
         long arrivalTime = timeStringToLong(splits[0]);
-        // Case: If this is the first input event chronologically, capture its time
-        //       as our reference start time for the sequence, t0
-        if (startTime == 0) {
-            startTime = arrivalTime;
-        }
-        // Calculate and record the delta from t0
-        long relativeArrivalTime = arrivalTime - startTime;
 
         // sourceFloor
         int sourceFloor = Integer.parseInt(splits[1]);
@@ -186,22 +152,29 @@ public class Parser {
         int destinationFloor = Integer.parseInt(splits[3]);
 
         // Create and return FloorInputEvent record with the above values as fields
-        passenger = new FloorInputEvent(relativeArrivalTime, sourceFloor, direction, destinationFloor);
+        floorInputEvent = new FloorInputEvent(arrivalTime, sourceFloor, direction, destinationFloor);
 
-        return passenger;
+        return floorInputEvent;
     }
 
     /**
      * Parse an input file, converting each line to a new FloorInputEvent record,
-     * and accumulate all FloorInputEvent's in this Parser's queue.
+     * and return an ArrayList<FloorInputEvent> of the instantiated records.
      *
-     * NB: This program does NO validation of strings in the input file.
+     * @param filename The file name of the file to parse.
+     * @return The ArrayList of instantiated FloorInputEvent records.
      */
-    public void parse(String filename) {
+    public ArrayList<FloorInputEvent> parse (String filename) {
 
+        // Local variables
         String line;
         BufferedReader bufferedReader;
+        ArrayList<FloorInputEvent> floorInputEvents = new ArrayList<FloorInputEvent>();
 
+        // TODO: should have variable file path.
+        //   Should be able to specify folders other than /src/FloorSubsystem
+        //   such as; /test/resources/input-file.txt, /src/resources/input-file.txt ...
+        // File pathing
         System.out.println("Reading file: " + filename);
         // TODO: Investigate pathing - might be an IntelliJ thing
         // Prepend path relative to where IntelliJ executes
@@ -219,27 +192,24 @@ public class Parser {
                 // Case: Ignore empty lines
                 if (line.length() > 0) {
                     // Case: Non-comment line
-                    if (!(line.charAt(0) == '#')) {
+                    if (!(line.charAt(0) == COMMENT_CHAR)) {
                         // Ingest this line as a FloorInputEvent
-                        FloorInputEvent passenger = stringToPassenger(line);
+                        FloorInputEvent floorInputEvent = stringToFloorInputEvent(line);
                         // Add to queue
-                        passengers.add(passenger);
+                        floorInputEvents.add(floorInputEvent);
                     }
                 }
             }
         }
+        // Catch: IOException, print trace, and exit abnormally
         catch (IOException e) {
             // File not found
             e.printStackTrace();
             System.exit(1);
         }
 
-        if (verbose) {
-            System.out.println("Created " + passengers.size() + " Passengers from input file " + filename + ".");
-        }
-    }
+        System.out.println("Created " + floorInputEvents.size() + " FloorInputEvents from input file " + filename + ".");
 
-    public ArrayList<FloorInputEvent> getEvents() {
-        return null;
+        return floorInputEvents;
     }
 }

@@ -1,3 +1,9 @@
+/**
+ * Floor class which models a floor in the simulation.
+ *
+ * @version 20240202
+ */
+
 package FloorSubsystem;
 import Networking.Events.ElevatorStateEvent;
 import Networking.Receivers.DMA_Receiver;

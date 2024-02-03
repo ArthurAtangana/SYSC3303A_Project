@@ -1,3 +1,9 @@
+/**
+ * Elevator class which models an elevator in the simulation.
+ *
+ * @version 20240202
+ */
+
 package ElevatorSubsytem;
 
 import Networking.Direction;
@@ -27,13 +33,13 @@ public class Elevator implements Runnable {
     }
 
     /**
-     * Processes events received from the scheduler
+     * Processes events received from the scheduler.
      */
     public void getScheduling(){
         DestinationEvent destination = (DestinationEvent) receiver.receive();
-        System.out.println("going in "+ destination.direction() + " direction.");
+        System.out.println("Going in "+ destination.direction() + " direction.");
         this.direction = destination.direction();
-        System.out.println("going to " + destination.destinationFloor());
+        System.out.println("Going to floor " + destination.destinationFloor() + ".");
         travelToFloor(destination.destinationFloor());
     }
 
@@ -43,7 +49,7 @@ public class Elevator implements Runnable {
      */
     public void travelToFloor(int floorNumber) {
         this.currentFloor = floorNumber;
-        System.out.println("elevator is on floor " + this.currentFloor);
+        System.out.println("Elevator is on floor " + this.currentFloor + ".");
         // multiply travel time by num floor
         try {
             Thread.sleep(TRAVEL_TIME);
