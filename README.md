@@ -50,17 +50,25 @@ travel time and passenger (de)boarding time.
 The source file structure is organized using Java packages under the src/ folder. 
 See test README for test file structure.
 
+[Main](#main.java)<br>
+[ElevatorSubsystem](#elevatorsubsystem)<br>
+[FloorSubsystem](#floorsubsystem)<br>
+[SchedulerSubsystem](#schedulersubsystem)<br>
+[Networking](#networking)<br>
+[Tests](#tests)<br>
+[UML](#uml)<br>
+
 ### Main.java
 - Initializes and maintains track of threads
 
-### <u>ElevatorSubsystem (Package)</u>
+### ElevatorSubsystem
 
 **Elevator.java**
 - Receives DestinationEvent records from Scheduler
 - Travels to floors
 - Sends ElevatorStateEvent records to Scheduler
 
-### <u>FloorSubsystem (Package)</u>
+### FloorSubsystem
 
 **Floor.java**
 - Receives ElevatorStateEvent records from Scheduler
@@ -75,7 +83,7 @@ See test README for test file structure.
 **DestinationDispatcher.java**
 - Sends DestinationEvent records to the scheduler
 
-### <u>SchedulerSubsystem (Package)</u>
+### SchedulerSubsystem
 
 **Scheduler.java**
 - Receives ElevatorStateEvent records from the Elevator
@@ -83,7 +91,7 @@ See test README for test file structure.
 - Sends DestinationEvent records to the Elevator
 - Sends ElevatorStateEvent records to the Floor
 
-### <u>Networking (Package)</u>
+### Networking
 
 #### <u>Events</u>
 
@@ -94,7 +102,7 @@ See test README for test file structure.
 - Holds destination floor and direction
 
 **ElevatorStateEvent.java**
-- Holds currentFloor, direction, and FloorInputEvents
+- Holds current floor, direction, and FloorInputEvents
 
 **FloorInputEvent.java**
 - Holds arrival time, source floor, direction, and destination floor
@@ -117,6 +125,38 @@ See test README for test file structure.
 
 **Direction.java**
 - Enum of directions (UP, DOWN, STOPPED)
+
+### Tests
+
+#### <u>resources</u>
+
+**input-file.txt**
+- File used to test Parser class
+
+#### <u>unit</u>
+
+<u>FloorSubsystem</u>
+**ParserTest.java**
+- Tests parser class
+
+<u>Networking</u>
+**DMA_ReceiverTest.java**
+- Tests DMA_Receiver class
+
+**DMA_TransmitterTest.java**
+- Tests DMA_Transmitter class
+
+### UML
+<u>01</u>
+
+**class-diagram-system-01.png**
+
+**sequence-diagram-subsystem-communication-01.png**
+
+**sequence-diagram-subsystem-receives-01.png**
+
+**sequence-diagram-subsystem-transmits-01.png**
+
 
 ## Scope
 
