@@ -23,14 +23,15 @@ import java.util.Comparator;
 public class DestinationDispatcher implements Runnable {
     private long lastEventTime;
     private final ArrayList<FloorInputEvent> eventStack;
-    private DMA_Transmitter transmitterToScheduler;
+    private final DMA_Transmitter transmitterToScheduler;
 
 
-    DestinationDispatcher(Parser inputHandler, DMA_Transmitter transmitter){
-        eventStack = inputHandler.getEvents();
-        // Sort based on time int (low to high), TODO: TEST THIS
-         eventStack.sort(Comparator.comparingLong(FloorInputEvent::time));
-        // Set baseline time
+    public DestinationDispatcher(ArrayList<FloorInputEvent> eventStack, DMA_Transmitter transmitterToScheduler){
+         this.transmitterToScheduler = transmitterToScheduler;
+         this.eventStack = eventStack;
+         // Sort based on time int (low to high), TODO: TEST THIS
+         this.eventStack.sort(Comparator.comparingLong(FloorInputEvent::time));
+         // Set baseline time
          lastEventTime = eventStack.get(0).time();
     }
 
