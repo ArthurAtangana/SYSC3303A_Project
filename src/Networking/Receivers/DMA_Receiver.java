@@ -42,7 +42,6 @@ public class DMA_Receiver implements Receiver{
         return msgBuf.remove(0);
     }
 
-    // DMA Receiver asynch receiving method
     /**
      * Asynchronous receive method to update the buffer from the DMA_Transmitter.
      * @param msg The message to store in the message buffer.
