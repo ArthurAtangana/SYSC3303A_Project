@@ -1,3 +1,5 @@
+C:\Users\Testo\.jdks\corretto-18.0.2\bin\java.exe "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA 2022.2.3\lib\idea_rt.jar=50568:C:\Program Files\JetBrains\IntelliJ IDEA 2022.2.3\bin" -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\Testo\IdeaProjects\SYSC3303A_Project\out\production\SYSC3303A_Project Main
+
 ****** Generating System Input Events ******
 
 Parser: Reading input file: input-file.txt
@@ -11,13 +13,14 @@ Floor: Waiting for next floor request.
 Elevator: Going in UP direction.
 Elevator: Going to floor 7.
 Elevator: Elevator is on floor 7.
+Floor #4: Lamp display updated to floor#7.
+Floor #2: Lamp display updated to floor#7.
+Floor #3: Lamp display updated to floor#7.
 Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
+Floor #5: Lamp display updated to floor#7.
+Floor #6: Lamp display updated to floor#7.
+Floor #0: Lamp display updated to floor#7.
+Floor #1: Lamp display updated to floor#7.
 Floor: Sending destination, DestinationEvent[destinationFloor=3, direction=UP]
 Floor: Waiting for next floor request.
 Elevator: Going in UP direction.
@@ -26,222 +29,52 @@ Floor: Sending destination, DestinationEvent[destinationFloor=6, direction=UP]
 Floor: Waiting for next floor request.
 Elevator: Elevator is on floor 3.
 Elevator: Going in UP direction.
-Floor #3: Lamp display updated to floor#3.
-Floor #3: Lamp display updated to floor#3.
 Elevator: Going to floor 6.
+Floor #7: Lamp display updated to floor#3.
+Floor #1: Lamp display updated to floor#3.
+Floor #2: Lamp display updated to floor#3.
+Floor #4: Lamp display updated to floor#3.
+Floor #5: Lamp display updated to floor#3.
 Floor #3: Lamp display updated to floor#3.
-Floor #3: Lamp display updated to floor#3.
-Floor #3: Lamp display updated to floor#3.
-Floor #3: Lamp display updated to floor#3.
-Floor #3: Lamp display updated to floor#3.
+Floor #0: Lamp display updated to floor#3.
+Floor #6: Lamp display updated to floor#3.
 Elevator: Elevator is on floor 6.
+Floor #3: Lamp display updated to floor#6.
+Floor #0: Lamp display updated to floor#6.
+Floor #5: Lamp display updated to floor#6.
+Floor #4: Lamp display updated to floor#6.
+Floor #1: Lamp display updated to floor#6.
 Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
+Floor #2: Lamp display updated to floor#6.
+Floor #7: Lamp display updated to floor#6.
 Floor: Sending destination, DestinationEvent[destinationFloor=4, direction=DOWN]
 Floor: Waiting for next floor request.
 Elevator: Going in DOWN direction.
 Elevator: Going to floor 4.
 Elevator: Elevator is on floor 4.
+Floor #0: Lamp display updated to floor#4.
+Floor #6: Lamp display updated to floor#4.
+Floor #7: Lamp display updated to floor#4.
+Floor #2: Lamp display updated to floor#4.
 Floor #4: Lamp display updated to floor#4.
-Floor #4: Lamp display updated to floor#4.
-Floor #4: Lamp display updated to floor#4.
-Floor #4: Lamp display updated to floor#4.
-Floor #4: Lamp display updated to floor#4.
-Floor #4: Lamp display updated to floor#4.
-Floor #4: Lamp display updated to floor#4.
+Floor #1: Lamp display updated to floor#4.
+Floor #5: Lamp display updated to floor#4.
+Floor #3: Lamp display updated to floor#4.
 Floor: Sending destination, DestinationEvent[destinationFloor=5, direction=UP]
 Floor: Waiting for next floor request.
 Elevator: Going in UP direction.
 Elevator: Going to floor 5.
 Elevator: Elevator is on floor 5.
+Floor #1: Lamp display updated to floor#5.
+Floor #3: Lamp display updated to floor#5.
 Floor #5: Lamp display updated to floor#5.
-Floor #5: Lamp display updated to floor#5.
-Floor #5: Lamp display updated to floor#5.
-Floor #5: Lamp display updated to floor#5.
-Floor #5: Lamp display updated to floor#5.
-Floor #5: Lamp display updated to floor#5.
-Floor #5: Lamp display updated to floor#5.
-Floor: Sending destination, DestinationEvent[destinationFloor=2, direction=DOWN]
-Floor: Waiting for next floor request.
-Elevator: Going in DOWN direction.
+Floor #2: Lamp display updated to floor#5.
+Floor #4: Lamp display updated to floor#5.
+Floor #6: Lamp display updated to floor#5.
+Floor #7: Lamp display updated to floor#5.
+Floor #0: Lamp display updated to floor#5.
 Elevator: Going to floor 2.
 Floor: Sending destination, DestinationEvent[destinationFloor=1, direction=DOWN]
 Floor: Waiting for next floor request.
 Floor: Sending destination, DestinationEvent[destinationFloor=1, direction=DOWN]
 Floor: Waiting for next floor request.
-Elevator: Elevator is on floor 2.
-Elevator: Going in DOWN direction.
-Elevator: Going to floor 1.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor: Sending destination, DestinationEvent[destinationFloor=7, direction=UP]
-Floor: Waiting for next floor request.
-Elevator: Elevator is on floor 1.
-Elevator: Going in DOWN direction.
-Elevator: Going to floor 1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor: Sending destination, DestinationEvent[destinationFloor=1, direction=DOWN]
-Floor: Waiting for next floor request.
-Floor: Sending destination, DestinationEvent[destinationFloor=2, direction=UP]
-Floor: Waiting for next floor request.
-Elevator: Elevator is on floor 1.
-Elevator: Going in UP direction.
-Elevator: Going to floor 7.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Elevator: Elevator is on floor 7.
-Elevator: Going in DOWN direction.
-Elevator: Going to floor 1.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor: Sending destination, DestinationEvent[destinationFloor=7, direction=UP]
-Floor: Waiting for next floor request.
-Floor: Sending destination, DestinationEvent[destinationFloor=1, direction=DOWN]
-Floor: Waiting for next floor request.
-Floor: Sending destination, DestinationEvent[destinationFloor=2, direction=DOWN]
-Floor: Waiting for next floor request.
-Elevator: Elevator is on floor 1.
-Elevator: Going in UP direction.
-Elevator: Going to floor 2.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor: Sending destination, DestinationEvent[destinationFloor=1, direction=DOWN]
-Floor: Waiting for next floor request.
-Elevator: Elevator is on floor 2.
-Elevator: Going in UP direction.
-Elevator: Going to floor 7.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor: Sending destination, DestinationEvent[destinationFloor=6, direction=UP]
-Floor: Waiting for next floor request.
-Floor: Sending destination, DestinationEvent[destinationFloor=6, direction=UP]
-Floor: Waiting for next floor request.
-Elevator: Elevator is on floor 7.
-Elevator: Going in DOWN direction.
-Elevator: Going to floor 1.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor: Sending destination, DestinationEvent[destinationFloor=1, direction=DOWN]
-Floor: Waiting for next floor request.
-Elevator: Elevator is on floor 1.
-Elevator: Going in DOWN direction.
-Elevator: Going to floor 2.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor: Sending destination, DestinationEvent[destinationFloor=4, direction=DOWN]
-Floor: Waiting for next floor request.
-Elevator: Elevator is on floor 2.
-Elevator: Going in DOWN direction.
-Elevator: Going to floor 1.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor #2: Lamp display updated to floor#2.
-Floor: Sending destination, DestinationEvent[destinationFloor=1, direction=DOWN]
-Elevator: Elevator is on floor 1.
-Elevator: Going in UP direction.
-Elevator: Going to floor 6.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Elevator: Elevator is on floor 6.
-Elevator: Going in UP direction.
-Elevator: Going to floor 6.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Elevator: Elevator is on floor 6.
-Elevator: Going in DOWN direction.
-Elevator: Going to floor 1.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Elevator: Elevator is on floor 1.
-Elevator: Going in DOWN direction.
-Elevator: Going to floor 4.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Elevator: Elevator is on floor 4.
-Elevator: Going in DOWN direction.
-Elevator: Going to floor 1.
-Floor #4: Lamp display updated to floor#4.
-Floor #4: Lamp display updated to floor#4.
-Floor #4: Lamp display updated to floor#4.
-Floor #4: Lamp display updated to floor#4.
-Floor #4: Lamp display updated to floor#4.
-Floor #4: Lamp display updated to floor#4.
-Floor #4: Lamp display updated to floor#4.
-Elevator: Elevator is on floor 1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
-Floor #1: Lamp display updated to floor#1.
