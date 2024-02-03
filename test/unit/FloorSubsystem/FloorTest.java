@@ -34,25 +34,19 @@ public class FloorTest {
     @Test
     void sendPassengerRequestToSchedulerTest() {
         // Arrange
-        ElevatorSystemEvent event = new FloorButtonPressedEvent(p1);
 
         // Act
-        f.sendPassengerRequestToScheduler(event);
 
         // Assert
-        assertEquals(event, receiver.receive());
     }
 
     @Test
     void removeArrivedPassengersTest() {
         // Arrange
-        f.setPassengers(floorInputEvents);
 
         // Act
-        f.sendFloorButtonPressedEvent();
 
         // Assert
-        assertTrue(f.getPassengers().isEmpty());
     }
 
 

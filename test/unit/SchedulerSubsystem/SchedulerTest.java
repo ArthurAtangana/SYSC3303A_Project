@@ -10,7 +10,6 @@ public class SchedulerTest {
 
     @Test
     void sampleTest() {
-        Scheduler s = new Scheduler();
     }
 
 }

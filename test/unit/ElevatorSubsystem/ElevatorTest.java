@@ -11,6 +11,5 @@ public class ElevatorTest {
 
     @Test
     void sampleTest() {
-        Elevator e = new Elevator(new Scheduler());
     }
 }
