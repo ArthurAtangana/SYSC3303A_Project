@@ -9,10 +9,6 @@ import Networking.Direction;
  * @param direction The direction a passenger would like to go (UP/DOWN).
  * @param destinationFloor Floor that the passenger would like to arrive at.
  */
-<<<<<<< HEAD:src/Networking/Passenger.java
-public record Passenger(long arrivalTime, int sourceFloor, Direction direction, int destinationFloor) {}
-=======
 public record FloorInputEvent
         (long time, int sourceFloor, Direction direction, int destinationFloor)
         implements ElevatorSystemEvent {}
->>>>>>> develop/latest:src/Networking/Events/FloorInputEvent.java
