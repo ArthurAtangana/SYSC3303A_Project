@@ -2,5 +2,6 @@ package Networking;
 
 public enum Direction {
     UP,
-    DOWN
+    DOWN,
+    STOPPED
 }

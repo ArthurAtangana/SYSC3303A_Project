@@ -1,27 +1,40 @@
 package ElevatorSubsytem;
 
-import Networking.SystemEvent;
-import SchedulerSubsystem.Scheduler;
+import Networking.Direction;
+import Networking.Events.DestinationEvent;
+import Networking.Events.ElevatorStateEvent;
+import Networking.Events.FloorInputEvent;
+import Networking.Receivers.DMA_Receiver;
+import Networking.Transmitters.DMA_Transmitter;
+
+import java.util.ArrayList;
 
 public class Elevator implements Runnable {
     /** Single floor travel time */
-    public final double TRAVEL_TIME = 8.5;
+    public final long TRAVEL_TIME = 8500;
     private int currentFloor;
-    private Scheduler scheduler;
+    private Direction direction;
+    private ArrayList<FloorInputEvent> floorInputEventList;
+    private final DMA_Transmitter transmitterToScheduler;
+    private final DMA_Receiver receiver;
 
-    public Elevator(Scheduler scheduler) {
+    public Elevator(DMA_Receiver receiver, DMA_Transmitter transmitter) {
         this.currentFloor = 0;
-        this.scheduler = scheduler;
+        this.direction = Direction.STOPPED;
+        this.floorInputEventList = new ArrayList<>();
+        this.transmitterToScheduler = transmitter;
+        this.receiver = receiver;
     }
 
     /**
-     * Returns the boarding or deboarding time given the numberOfPassengers
-     *
-     * @param numberOfPassengers Amount of passengers boarding/deboarding the elevator.
-     * @return Time in seconds
+     * Processes events received from the scheduler
      */
-    private double getBoardingTime(int numberOfPassengers) {
-        return 1.84 * numberOfPassengers + 6.79;
+    public void getScheduling(){
+        DestinationEvent destination = (DestinationEvent) receiver.receive();
+        System.out.println("going in "+ destination.direction() + " direction.");
+        this.direction = destination.direction();
+        System.out.println("going to " + destination.destinationFloor());
+        travelToFloor(destination.destinationFloor());
     }
 
     /**
@@ -29,20 +42,21 @@ public class Elevator implements Runnable {
      * @param floorNumber
      */
     public void travelToFloor(int floorNumber) {
-        // Requires use of TRAVEL_TIME
-    }
-
-    /**
-     * Elevator tells the scheduler that it has arrived at a floor
-     *
-     * @param schedulerEvent
-     */
-    public void sendArrivedAtFloorMessage(SystemEvent schedulerEvent){
-
+        this.currentFloor = floorNumber;
+        System.out.println("elevator is on floor " + this.currentFloor);
+        // multiply travel time by num floor
+        try {
+            Thread.sleep(TRAVEL_TIME);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        ElevatorStateEvent arrivedAtFloorEvent = new ElevatorStateEvent(currentFloor,direction, floorInputEventList);
+        transmitterToScheduler.send(arrivedAtFloorEvent);
     }
     @Override
     public void run() {
-
+        while (true){
+            getScheduling();
+        }
     }
-
 }

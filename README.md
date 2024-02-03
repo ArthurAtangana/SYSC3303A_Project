@@ -1,19 +1,23 @@
 # README
-* Last Edited: 2024/01/30
+* Last Edited: 2024/02/01
 
 ## Group A1:1
-- Arthur Atangna: 101005197
-- Victoria Malouf:
+- Arthur Atangana: 101005197
+- Victoria Malouf: TODO
 - Michael Desantis: 101213450
-- Braeden Kloke:
+- Braeden Kloke: TODO
 - Alexandre Marques: 101189743
+
+## Usage
+
+TODO: How to run sim
 
 ## Description
 Elevator Simulator, written in Java.
 
-## Contents
+## Design
 
-## Notes
+TODO: Fill this with file structure, and explanation of files/design
 
 ## Scope
 
@@ -32,10 +36,6 @@ Elevator Simulator, written in Java.
 
 ## Tasks
 
-### Iteration 0
-* task
-* task
-
 ### Iteration 1
 
 | Task | Assignee|
@@ -50,5 +50,22 @@ Elevator Simulator, written in Java.
 |Diagrams|Braeden Kloke|
 |Testing|Braeden Kloke|
 
+## Test
 
+All tests are located in directory `test`.
 
+Tests are categorized in subdirectories labelled:
+
+* `unit`: Tests isolated components.
+* `integration`: Tests interoperability of components. (eg. Floor sending events to Scheduler)
+* `system`: Tests all components working together. (eg. Does the simulation correctly get all passengers to their desired floors?)
+
+All resources for tests (eg. input files) should be put in `test/resources`.
+
+### Troubleshooting
+
+**IntelliJ can't find your tests?**
+Ensure you have directory `test` labelled as your Test Source Folder in Project Structure > Modules.
+
+## Known Issues
+See GitHub project issues for most up-to-date issues

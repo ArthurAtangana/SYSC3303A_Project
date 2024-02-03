@@ -1,56 +1,36 @@
 package FloorSubsystem;
-import Networking.SystemEvent;
-import SchedulerSubsystem.Scheduler;
-import Networking.Passenger;
-import java.util.ArrayList;
-
+import Networking.Events.ElevatorStateEvent;
+import Networking.Receivers.DMA_Receiver;
 
 public class Floor implements Runnable {
-    private ArrayList<Passenger> passengers;
     private int floorLamp;
-    private Scheduler scheduler;
+    private final DMA_Receiver receiver;
 
-    public Floor(int floorNumber, Scheduler scheduler) {
-        this.passengers = new ArrayList<>();
+    public Floor(int floorNumber, DMA_Receiver receiver) {
         this.floorLamp = floorNumber;
-        this.scheduler = scheduler;
+        this.receiver = receiver;
     }
-
-    /**
-     * Receives notification from scheduler that the elevator floor has changed.
-     */
-    public void receiveElevatorFloorDisplayChangeRequest() {
-        // uses setLamp
-    }
-
     /**
      * Setting the lamp to display which floor the elevator is on.
      * @param floorNumber The floor number that the elevator is currently on.
      */
-    public void setLamp(int floorNumber) {
-
+    private void setLamp(int floorNumber) {
+        floorLamp = floorNumber;
+        System.out.println("The floor sets its lamp display to " + floorLamp);
     }
 
     /**
-     * Sends floor button request to scheduler.
-     * @param systemEvent
+     * receives events from the scheduler for the floor to process.
      */
-    public void sendPassengerRequestToScheduler(SystemEvent systemEvent) {
-
+    private void receiveEvent(){
+        ElevatorStateEvent elevatorStateEvent = (ElevatorStateEvent) receiver.receive();
+        System.out.println("Floor received the information for its lamp from the scheduler.");
+        setLamp(elevatorStateEvent.currentFloor());
     }
-
-    /**
-     * Sends floor button request to specified elevator.
-     * @param systemEvent
-     */
-    public void sendPassengerRequestToElevator(SystemEvent systemEvent) {
-        // Note this requires a reference to the specified elevator??
-
-    }
-
     @Override
     public void run() {
-
+        while (true) {
+            receiveEvent();
+        }
     }
-
 }

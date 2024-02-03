@@ -1,10 +1,18 @@
-package Networking;
+package Networking.Events;
+
+import Networking.Direction;
 
 /**
- * Passenger holds all data related to a passenger
+ * FloorInputEvent holds all data related to a passenger
  * @param arrivalTime Time the passenger arrives at the floor.
  * @param sourceFloor Floor that the passenger requests an elevator from.
  * @param direction The direction a passenger would like to go (UP/DOWN).
  * @param destinationFloor Floor that the passenger would like to arrive at.
  */
+<<<<<<< HEAD:src/Networking/Passenger.java
 public record Passenger(long arrivalTime, int sourceFloor, Direction direction, int destinationFloor) {}
+=======
+public record FloorInputEvent
+        (long time, int sourceFloor, Direction direction, int destinationFloor)
+        implements ElevatorSystemEvent {}
+>>>>>>> develop/latest:src/Networking/Events/FloorInputEvent.java
