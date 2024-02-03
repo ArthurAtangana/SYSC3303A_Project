@@ -20,7 +20,7 @@ public class Elevator implements Runnable {
     public final long TRAVEL_TIME = 8500;
     private int currentFloor;
     private Direction direction;
-    private ArrayList<FloorInputEvent> floorInputEventList;
+    private final ArrayList<FloorInputEvent> floorInputEventList;
     private final DMA_Transmitter transmitterToScheduler;
     private final DMA_Receiver receiver;
 
@@ -39,30 +39,38 @@ public class Elevator implements Runnable {
         DestinationEvent destination = (DestinationEvent) receiver.receive();
         System.out.println("Elevator: Going in "+ destination.direction() + " direction.");
         this.direction = destination.direction();
-        System.out.println("Elevator: Going to floor " + destination.destinationFloor() + ".");
         travelToFloor(destination.destinationFloor());
     }
 
     /**
      * Elevator travels to a specified floor.
-     * @param floorNumber
+     * @param floorNumber the floor number to travel to.
      */
     private void travelToFloor(int floorNumber) {
-        this.currentFloor = floorNumber;
-        System.out.println("Elevator: Elevator is on floor " + this.currentFloor + ".");
-        // multiply travel time by num floor
+        System.out.println("Elevator: Going to floor " + floorNumber + ".");
         try {
+            // TODO: multiply travel time by num floor in future iterations (refine math)
             Thread.sleep(TRAVEL_TIME);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        this.currentFloor = floorNumber;
+        System.out.println("Elevator: Elevator is on floor " + this.currentFloor + ".");
+    }
+
+    /**
+     * Update scheduler with this elevator's state.
+     */
+    private void sendStateUpdate(){
         ElevatorStateEvent arrivedAtFloorEvent = new ElevatorStateEvent(currentFloor,direction, floorInputEventList);
         transmitterToScheduler.send(arrivedAtFloorEvent);
     }
+
     @Override
     public void run() {
         while (true){
             getScheduling();
+            sendStateUpdate();
         }
     }
 }
