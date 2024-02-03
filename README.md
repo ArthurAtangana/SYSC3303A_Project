@@ -69,7 +69,7 @@ The file structure is organized using Java packages.
 **input-file.txt**
 - Input file used to provide inputs to the system
 
-**DestinationDispatcher**
+**DestinationDispatcher.java**
 - Sends DestinationEvent records to the scheduler
 
 ### <u>SchedulerSubsystem (Package)</u>
@@ -79,7 +79,6 @@ The file structure is organized using Java packages.
 - Receives DestinationEvent records from the DestinationDispatcher
 - Sends DestinationEvent records to the Elevator
 - Sends ElevatorStateEvent records to the Floor
-
 
 ### <u>Networking (Package)</u>
 
