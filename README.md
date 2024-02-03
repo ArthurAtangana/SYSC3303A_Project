@@ -17,7 +17,7 @@ Group A1:1
 - Arthur Atangana: 101005197
 - Victoria Malouf: 101179986
 - Michael Desantis: 101213450
-- Braeden Kloke: TODO
+- Braeden Kloke: 100895984
 - Alexandre Marques: 101189743
 
 ## Usage
@@ -204,6 +204,11 @@ Tests are categorized in subdirectories labelled:
 * `system`: Tests all components working together. (eg. Does the simulation correctly get all passengers to their desired floors?)
 
 All resources for tests (eg. input files) are in `test/resources`.
+
+Only classes that expose public methods are unit tested.
+
+The testing framework used for unit tests is JUnit 5.8.1.
+
 For detailed test layout, see test README.
 
 ### Troubleshooting
