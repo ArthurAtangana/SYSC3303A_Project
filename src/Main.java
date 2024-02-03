@@ -2,7 +2,6 @@ import ElevatorSubsytem.Elevator;
 import FloorSubsystem.DestinationDispatcher;
 import FloorSubsystem.Floor;
 import FloorSubsystem.Parser;
-import Networking.Direction;
 import Networking.Events.FloorInputEvent;
 import Networking.Receivers.DMA_Receiver;
 import Networking.Transmitters.DMA_Transmitter;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class Main {
-    private static final int NUM_FLOORS = 3;
+    private static final int NUM_FLOORS = 7;
     private static final int NUM_ELEVATORS = 1;
     private static final ArrayList<Thread> floorThreads = new ArrayList<>();
     private static final ArrayList<Thread> elevatorThreads = new ArrayList<>();
@@ -52,10 +51,10 @@ public class Main {
 
         // Instantiate Parser and parse input file to FloorInputEvents
         Parser parser = new Parser();
-        ArrayList<FloorInputEvent> testEvents = parser.parse("input-file.txt");
+        ArrayList<FloorInputEvent> inputEvents = parser.parse("input-file.txt");
 
         // Start dispatcher (want all systems to be ready before sending events)
-        new Thread(new DestinationDispatcher(testEvents, toSchedulerTransmitter)).start();
+        new Thread(new DestinationDispatcher(inputEvents, toSchedulerTransmitter)).start();
 
         // Join floor, elevator, and scheduler threads
         for (Thread t: floorThreads) {
