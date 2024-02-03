@@ -12,7 +12,6 @@ public class Floor implements Runnable {
     }
     /**
      * Setting the lamp to display which floor the elevator is on.
-     *
      * @param floorNumber The floor number that the elevator is currently on.
      */
     private void setLamp(int floorNumber) {
