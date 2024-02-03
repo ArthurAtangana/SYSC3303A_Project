@@ -9,7 +9,9 @@ import java.util.ArrayList;
  * operation.
  * @param currentFloor Floor that the elevator is at.
  * @param direction The direction a passenger would like to go (UP/DOWN/STOPPED).
- * @param floorInputEvents list of floorInputEvents in the elevator.
+ * @param DestinationEvent list of DestinationEvents in the elevator (think of these as elevator passengers).
+ *
+ * @version iteration-1
  */
 public record ElevatorStateEvent
         (int currentFloor, Direction direction, ArrayList<DestinationEvent> DestinationEvent)
