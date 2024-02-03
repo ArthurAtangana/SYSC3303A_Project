@@ -4,8 +4,9 @@
  * @author Michael De Santis
  * @version 20240202
  */
-package FloorSubsystem;
+package unit.FloorSubsystem;
 
+import FloorSubsystem.Parser;
 import Networking.Direction;
 import Networking.Events.FloorInputEvent;
 import org.junit.jupiter.api.Test;
