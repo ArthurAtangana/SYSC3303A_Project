@@ -1,23 +1,119 @@
 # README
-* Last Edited: 2024/02/01
+* Last Edited: 2024/02/03
 
-## Group A1:1
+## Table of Contents
+
+1. [Authors](#authors)
+2. [Usage](#usage)
+3. [Description](#description)
+4. [Files](#files)
+5. [Scope](#scope)
+6. [Tasks](#tasks)
+7. [Test](#test)
+8. [Known Issues](#known-issues)
+
+## Authors 
+Group A1:1
 - Arthur Atangana: 101005197
-- Victoria Malouf: TODO
+- Victoria Malouf: 101179986
 - Michael Desantis: 101213450
 - Braeden Kloke: TODO
 - Alexandre Marques: 101189743
 
 ## Usage
-
-TODO: How to run sim
+Note: Compiled using JDK - 21 Oracle OpenJDK version 21.0.1
+1. Retrieve source code (https://github.com/ArthurAtangana/SYSC3303A_Project)
+   - Clone using HTTPS:
+     - `https://github.com/ArthurAtangana/SYSC3303A_Project.git` 
+   - Clone using SSH:
+     - `git clone git@github.com:ArthurAtangana/SYSC3303A_Project.git`
+   - Clone using GitHub CLI:
+     - `gh repo clone ArthurAtangana/SYSC3303A_Project`
+2. Open Main.java
+3. Run the main function
 
 ## Description
-Elevator Simulator, written in Java.
 
-## Design
+This project is being produced for SYSC 3303 - Real Time Concurrent Systems. 
 
-TODO: Fill this with file structure, and explanation of files/design
+Over five iterations, the team will be designing and implementing an elevator control 
+system and simulator written in Java. 
+
+The project model is designed using the "ELEV - 1" elevator in Carleton's Canal building.
+
+Raw data was collected and analyzed during iteration 0 to model elevator 
+travel time and passenger (de)boarding time.
+
+## Files
+The file structure is organized using Java packages.
+
+### Main.java
+- Initializes and maintains track of threads
+
+### <u>ElevatorSubsystem (Package)</u>
+
+**Elevator.java**
+- Receives DestinationEvent records from Scheduler
+- Travels to floors
+- Sends ElevatorStateEvent records to Scheduler
+
+### <u>FloorSubsystem (Package)</u>
+
+**Floor.java**
+- Receives ElevatorStateEvent records from Scheduler
+- Sets lamp
+
+**Parser.java**
+- Parses input-file.txt to simulate input events to the system
+
+**input-file.txt**
+- Input file used to provide inputs to the system
+
+**DestinationDispatcher.java**
+- Sends DestinationEvent records to the scheduler
+
+### <u>SchedulerSubsystem (Package)</u>
+
+**Scheduler.java**
+- Receives ElevatorStateEvent records from the Elevator
+- Receives DestinationEvent records from the DestinationDispatcher
+- Sends DestinationEvent records to the Elevator
+- Sends ElevatorStateEvent records to the Floor
+
+### <u>Networking (Package)</u>
+
+#### <u>Events</u>
+
+**ElevatorSystemEvent.java** 
+- Interface for elevator system events
+
+**DestinationEvent.java**
+- Holds destination floor and direction
+
+**ElevatorStateEvent.java**
+- Holds currentFloor, direction, and FloorInputEvents
+
+**FloorInputEvent.java**
+- Holds arrival time, source floor, direction, and destination floor
+
+#### <u>Receivers</u>
+
+**Receiver.java**
+- Interface for receivers
+
+**DMA_Receiver.java**
+- Receives ElevatorSystemEvent records and stores them in a buffer
+
+#### <u>Transmitters</u>
+
+**Transmitter.java**
+- Interface for transmitters
+
+**DMA_Transmitter.java**
+- Sends ElevatorSystemEvent records to DMA_Receiver objects
+
+**Direction.java**
+- Enum of directions (UP, DOWN, STOPPED)
 
 ## Scope
 
