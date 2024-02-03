@@ -1,23 +1,107 @@
 # README
-* Last Edited: 2024/02/01
+* Last Edited: 2024/02/03
 
 ## Group A1:1
 - Arthur Atangana: 101005197
-- Victoria Malouf: TODO
+- Victoria Malouf: 101179986
 - Michael Desantis: 101213450
 - Braeden Kloke: TODO
 - Alexandre Marques: 101189743
 
 ## Usage
-
-TODO: How to run sim
+Note: Compiled using JDK - 21 Oracle OpenJDK version 21.0.1
+1. Retrieve source code (https://github.com/ArthurAtangana/SYSC3303A_Project)
+   - Clone using HTTPS:
+     - `https://github.com/ArthurAtangana/SYSC3303A_Project.git` 
+   - Clone using SSH:
+     - `git clone git@github.com:ArthurAtangana/SYSC3303A_Project.git`
+   - Clone using GitHub CLI:
+     - `gh repo clone ArthurAtangana/SYSC3303A_Project`
+2. Open Main.java
+3. Run the main function
 
 ## Description
-Elevator Simulator, written in Java.
+
+This project is being produced for SYSC 3303 - Real Time Concurrent Systems. 
+
+Over five iterations, the team will be designing and implementing an elevator control 
+system and simulator written in Java. 
+
+The project model is designed using the "ELEV - 1" elevator in Carleton's Canal building.
+
+Raw data was collected and analyzed during iteration 0 to model elevator 
+travel time and passenger (de)boarding time.
 
 ## Design
 
-TODO: Fill this with file structure, and explanation of files/design
+The file structure is organized using Java packages. The src and test folder file structures are shown below:
+```
+src
+    ElevatorSubsystem
+        Elevator
+    FloorSubsystem
+        Floor
+        Parser
+        input-file.txt
+        DestinationDispatcher
+    SchedulerSubsystem
+        Scheduler
+    Networking
+        Events
+            ElevatorSystemEvent (interface)
+            DestinationEvent (record)
+            ElevatorStateEvent (record)
+            FloorInputEvent (record)
+        Receivers
+            Receiver (interface)
+            DMA_Receiver
+        Transmitters
+            Transmitter (interface)
+            DMA_Transmitter 
+        Direction (enum)
+    Main
+test
+    integration
+        SendEventFromFloorToSchedulerTest
+    resources
+        input-file.txt
+    system
+        OnePassengerTest
+    unit
+        ElevatorSubsystem
+            ElevatorTest
+        FloorSubsystem
+            FloorTest
+            ParserTest   
+        SchedulerSubsystem
+            SchedulerTest
+ ```         
+
+The three main subsystems are the FloorSubsystem, ElevatorSubsystem, and SchedulerSubsystem. 
+
+The subsystems communicate with each other using classes from the Networking package.
+
+The following is a typical workflow from the floor to the scheduler to the elevator and then back.
+
+1. The DestinationDispatcher class (FloorSubsystem) is responsible for sending FloorInputEvent records 
+to the Scheduler via a DMA_Transmitter. 
+
+2. The Scheduler receives the FloorInputEvent records (via it's DMA_Receiver). 
+
+3. The Scheduler sends DestinationEvent records (via it's DMA_Transmitter) to the Elevator's DMA_Receiver. 
+
+4. The Elevator sends ElevatorStateEvent records (via it's DMA_Transmitter) to the Scheduler's DMA_Receiver. 
+
+5. The Scheduler receives DestinationEvent records (via it's DMA_Receiver).
+
+6. The Scheduler sends ElevatorStateEvent records (via it's DMA_Transmitter) to the Floor's DMA_Receiver.
+
+In summary:
+The floor receives data from the scheduler.
+The scheduler receives data from the elevator and dispatcher and sends data to the floor and elevator.
+The elevator receives data from the scheduler and sends data to the scheduler. 
+
+The scheduler acts as a communication channel between the floor and elevator subsystems. 
 
 ## Scope
 
