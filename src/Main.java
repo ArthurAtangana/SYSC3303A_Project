@@ -15,7 +15,8 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class Main {
-    private static final int NUM_FLOORS = 7;
+    // Note: our system starts counting floors at 0 :)
+    private static final int NUM_FLOORS = 8;
     private static final int NUM_ELEVATORS = 1;
     private static final ArrayList<Thread> floorThreads = new ArrayList<>();
     private static final ArrayList<Thread> elevatorThreads = new ArrayList<>();
