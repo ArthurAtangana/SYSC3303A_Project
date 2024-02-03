@@ -46,7 +46,7 @@ public class DestinationDispatcher implements Runnable {
     private void waitEvent(){
         long curTime = eventQueue.get(0).time();
         long delay = curTime - lastEventTime;
-        System.out.println("Floor subsystem waiting for next event.");
+        System.out.println("Floor: Waiting for next event.");
         try {
             Thread.sleep(delay);
         } catch (InterruptedException e) {

@@ -175,7 +175,7 @@ public class Parser {
         //   Should be able to specify folders other than /src/FloorSubsystem
         //   such as; /test/resources/input-file.txt, /src/resources/input-file.txt ...
         // File pathing
-        System.out.println("Reading file: " + filename);
+        System.out.println("Parser: Reading input file: " + filename);
         // TODO: Investigate pathing - might be an IntelliJ thing
         // Prepend path relative to where IntelliJ executes
         String relativeFilename = System.getProperty("user.dir") + "/src/FloorSubsystem/" + filename;
@@ -208,7 +208,7 @@ public class Parser {
             System.exit(1);
         }
 
-        System.out.println("Created " + floorInputEvents.size() + " FloorInputEvents from input file " + filename + ".");
+        System.out.println("Parser: Created " + floorInputEvents.size() + " FloorInputEvents from input file " + filename + ".");
 
         return floorInputEvents;
     }
