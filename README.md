@@ -53,8 +53,17 @@ Elevator Simulator, written in Java.
 
 ## UML Diagrams
 
+### System Class Diagram
+
+The following diagram shows the three main subsystems (Floor, Scheduler, and Elevator) implemented as Runnables.
+Each subsystem is composed of transmitters and receivers to facilitate communication.
+
+<img src="./diagrams/system-class-diagram.png" alt="System Class Diagram" width="500" height="500" />
+
 ### Subsystem Communication Sequence Diagram
+
 The following sequence diagram shows how the Floor subsystem communicates (eg. sends events) to the Scheduler subsystem via transmitters and receivers.
 There are transmitters and receivers between each subsystem to facilitate communication.
+
 <img src="./diagrams/subsystem-communication-sequence-diagram.png" alt="Subsystem Communication Sequence Diagram" width="500" height="500" />
 
