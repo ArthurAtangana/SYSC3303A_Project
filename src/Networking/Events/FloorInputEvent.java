@@ -1,3 +1,11 @@
+/**
+ * FloorInputEvent record which models an input event to the system. These events
+ * may be supplied to the system via an input file, which is then parsed to
+ * generate the event.
+ *
+ * @version 20240202
+ */
+
 package Networking.Events;
 
 import Networking.Direction;

@@ -1,3 +1,9 @@
+/**
+ * Elevator class which models an elevator in the simulation.
+ *
+ * @version 20240202
+ */
+
 package ElevatorSubsytem;
 
 import Networking.Direction;
@@ -27,7 +33,7 @@ public class Elevator implements Runnable {
     }
 
     /**
-     * Processes events received from the scheduler
+     * Processes events received from the scheduler.
      */
     public void getScheduling(){
         DestinationEvent destination = (DestinationEvent) receiver.receive();
