@@ -1,6 +1,7 @@
 import ElevatorSubsytem.Elevator;
 import FloorSubsystem.DestinationDispatcher;
 import FloorSubsystem.Floor;
+import FloorSubsystem.Parser;
 import Networking.Direction;
 import Networking.Events.FloorInputEvent;
 import Networking.Receivers.DMA_Receiver;
@@ -49,13 +50,11 @@ public class Main {
         }
         schedulerThread.start();
 
-        // Start dispatcher (want all systems to be ready before sending events)
-        // TODO: REPLACE BY PARSER.parse(), demonstration code
-        ArrayList<FloorInputEvent> testEvents = new ArrayList<>();
-        testEvents.add(new FloorInputEvent(0, 2, Direction.DOWN, 1));
-        testEvents.add(new FloorInputEvent(0, 0, Direction.DOWN, 2));
+        // Instantiate Parser and parse input file to FloorInputEvents
+        Parser parser = new Parser();
+        ArrayList<FloorInputEvent> testEvents = parser.parse("input-file.txt");
 
-        // Start dispatcher
+        // Start dispatcher (want all systems to be ready before sending events)
         new Thread(new DestinationDispatcher(testEvents, toSchedulerTransmitter)).start();
 
         // Join floor, elevator, and scheduler threads
