@@ -68,23 +68,12 @@ public class Parser {
     /* Constructors */
 
     /**
-     * Parametric constructor for this Parser.
+     * Default constructor for this Parser.
      *
      */
-    public Parser() {
-        // Initialize fields
-        this.startTime = 0;
-    }
+    public Parser() {}
 
     /* Methods */
-
-    /* Getters and Setters */
-
-    public long getStartTime() {
-        return startTime;
-    }
-
-    /* Other Methods */
 
     /**
      * Convert a time string, as per the project specification, to a long
@@ -138,10 +127,13 @@ public class Parser {
      * @param string The string to Parse.
      * @return The created FloorInputEvent record.
      */
-    public FloorInputEvent stringToPassenger(String string) {
+    public FloorInputEvent stringToFloorInputEvent(String string) {
+        
+        // Initialize start time to 0 for t0
+        long startTime = 0;
 
         // FloorInputEvent for return
-        FloorInputEvent passenger;
+        FloorInputEvent floorInputEvent;
 
         // Splits on space
         String[] splits = string.split(WS_DELIMITER);
@@ -171,25 +163,25 @@ public class Parser {
         int destinationFloor = Integer.parseInt(splits[3]);
 
         // Create and return FloorInputEvent record with the above values as fields
-        passenger = new FloorInputEvent(relativeArrivalTime, sourceFloor, direction, destinationFloor);
+        floorInputEvent = new FloorInputEvent(relativeArrivalTime, sourceFloor, direction, destinationFloor);
 
-        return passenger;
+        return floorInputEvent;
     }
 
     /**
-     * Parse an input file, converting each line to a new Passenger record,
-     * and return an ArrayList<Passenger> of the instantiated records.
+     * Parse an input file, converting each line to a new FloorInputEvent record,
+     * and return an ArrayList<FloorInputEvent> of the instantiated records.
      *
      * @param filename The file name of the file to parse.
-     * @return The ArrayList of instantiated Passenger records.
+     * @return The ArrayList of instantiated FloorInputEvent records.
      */
-    public ArrayList<Passenger> parse (String filename) {
+    public ArrayList<FloorInputEvent> parse (String filename) {
 
         // Local variables
         String line;
         BufferedReader bufferedReader;
         long startTime;
-        ArrayList<Passenger> passengers = new ArrayList<Passenger>();
+        ArrayList<FloorInputEvent> floorInputEvents = new ArrayList<FloorInputEvent>();
 
         // File pathing
         System.out.println("Reading file: " + filename);
@@ -209,11 +201,11 @@ public class Parser {
                 // Case: Ignore empty lines
                 if (line.length() > 0) {
                     // Case: Non-comment line
-                    if (!(line.charAt(0) == '#')) {
+                    if (!(line.charAt(0) == COMMENT_CHAR)) {
                         // Ingest this line as a FloorInputEvent
-                        FloorInputEvent passenger = stringToPassenger(line);
+                        FloorInputEvent floorInputEvent = stringToFloorInputEvent(line);
                         // Add to queue
-                        passengers.add(passenger);
+                        floorInputEvents.add(floorInputEvent);
                     }
                 }
             }
@@ -225,8 +217,8 @@ public class Parser {
             System.exit(1);
         }
 
-        System.out.println("Created " + passengers.size() + " Passengers from input file " + filename + ".");
+        System.out.println("Created " + floorInputEvents.size() + " FloorInputEvents from input file " + filename + ".");
 
-        return passengers;
+        return floorInputEvents;
     }
 }
