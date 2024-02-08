@@ -15,10 +15,10 @@ public class Scheduler implements Runnable {
     }
 
     /**
-     * receives ElevatorSystemEvent from the floor subsystem or elevator subsystem.
+     * receives SystemEvent from the floor subsystem or elevator subsystem.
      */
     private void receiveEvent(){
-        ElevatorSystemEvent systemEvent = receiver.receive();
+        SystemEvent systemEvent = receiver.receive();
         if (systemEvent instanceof ElevatorStateEvent){
             processElevatorEvent((ElevatorStateEvent) systemEvent);
         } else if (systemEvent instanceof DestinationEvent) {

@@ -8,13 +8,13 @@
  */
 package Networking.Receivers;
 
-import Networking.Events.ElevatorSystemEvent;
+import Networking.Events.SystemEvent;
 
 import java.util.ArrayList;
 
 public class DMA_Receiver implements Receiver{
     // Message buffer
-    private final ArrayList<ElevatorSystemEvent> msgBuf;
+    private final ArrayList<SystemEvent> msgBuf;
 
     /**
      * Default DMA_Receiver constructor.
@@ -31,7 +31,7 @@ public class DMA_Receiver implements Receiver{
      * @return A message sent from a transmitter.
      */
     @Override
-    public synchronized ElevatorSystemEvent receive() {
+    public synchronized SystemEvent receive() {
         while(msgBuf.isEmpty()){
             try {
                 wait();
@@ -46,7 +46,7 @@ public class DMA_Receiver implements Receiver{
      * Asynchronous receive method to update the buffer from the DMA_Transmitter.
      * @param msg The message to store in the message buffer.
      */
-    public synchronized void setMessage(ElevatorSystemEvent msg){
+    public synchronized void setMessage(SystemEvent msg){
         msgBuf.add(msg);
         notifyAll();
     }

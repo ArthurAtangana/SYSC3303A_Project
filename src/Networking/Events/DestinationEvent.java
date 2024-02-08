@@ -16,4 +16,4 @@ import Networking.Direction;
  */
 public record DestinationEvent
         (int destinationFloor, Direction direction)
-        implements ElevatorSystemEvent {}
+        implements SystemEvent {}

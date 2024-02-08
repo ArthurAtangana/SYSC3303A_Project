@@ -7,12 +7,12 @@
 
 package Networking.Transmitters;
 
-import Networking.Events.ElevatorSystemEvent;
+import Networking.Events.SystemEvent;
 
 public interface Transmitter {
     /**
      * Sends a message (event) to receivers.
      * @param event The message to be sent to receivers.
      */
-    void send(ElevatorSystemEvent event);
+    void send(SystemEvent event);
 }

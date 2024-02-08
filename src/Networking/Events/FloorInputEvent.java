@@ -19,4 +19,4 @@ import Networking.Direction;
  */
 public record FloorInputEvent
         (long time, int sourceFloor, Direction direction, int destinationFloor)
-        implements ElevatorSystemEvent {}
+        implements SystemEvent {}
