@@ -19,14 +19,16 @@ import java.util.ArrayList;
 public class Elevator implements Runnable {
     /** Single floor travel time */
     public final long TRAVEL_TIME = 8500;
+    private final int elevNum;
     private int currentFloor;
     private Direction direction;
     private final ArrayList<DestinationEvent> passengerDestinations;
     private final DMA_Transmitter transmitterToScheduler;
     private final DMA_Receiver receiver;
 
-    public Elevator(DMA_Receiver receiver, DMA_Transmitter transmitter) {
+    public Elevator(int elevNum, DMA_Receiver receiver, DMA_Transmitter transmitter) {
         this.currentFloor = 0;
+        this.elevNum = elevNum;
         this.direction = Direction.STOPPED;
         this.passengerDestinations = new ArrayList<>();
         this.transmitterToScheduler = transmitter;
@@ -58,7 +60,7 @@ public class Elevator implements Runnable {
      * Update scheduler with this elevator's state.
      */
     private void sendStateUpdate(){
-        ElevatorStateEvent stateEvent = new ElevatorStateEvent(currentFloor, direction, passengerDestinations);
+        ElevatorStateEvent stateEvent = new ElevatorStateEvent(elevNum, currentFloor, direction, passengerDestinations);
         transmitterToScheduler.send(stateEvent);
     }
 

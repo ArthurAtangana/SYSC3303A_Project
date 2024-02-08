@@ -44,7 +44,7 @@ public class Main {
             newFloor.start();
         }
         for (int i = 0; i < NUM_ELEVATORS; ++i) {
-            Thread newElevator = new Thread(new Elevator(elevatorReceiver, toSchedulerTransmitter));
+            Thread newElevator = new Thread(new Elevator(i, elevatorReceiver, toSchedulerTransmitter));
             elevatorThreads.add(newElevator);
             newElevator.start();
         }
