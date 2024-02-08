@@ -26,14 +26,24 @@ public class Scheduler implements Runnable {
      */
     private void processDestinationEvent(DestinationEvent destinationEvent) {
         transmitterToElevator.send(destinationEvent);
+
     }
+
+    private boolean isElevatorStopping(ElevatorStateEvent event) {
+        // TODO: Implement check
+        return true;
+    }
+
     /**
      *  process elevator event with elevator state (current floor, direction, passengerList)
      *  and sends it to the floor.
-     * @param elevatorStateEvent an elevator state event
+     * @param event an elevator state event
      */
-    private void processElevatorEvent(ElevatorStateEvent elevatorStateEvent) {
-        transmitterToFloor.send(elevatorStateEvent);
+    private void processElevatorEvent(ElevatorStateEvent event) {
+        if (isElevatorStopping(event)) // Stop elevator for a load
+            new Thread(new ElevatorLoader(event, transmitterToFloor, transmitterToElevator)).start();
+        else // Keep moving
+            transmitterToElevator.send(new MoveElevatorCommand(event.elevatorNum()));
     }
 
     /**
