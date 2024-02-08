@@ -6,14 +6,14 @@ import Networking.Transmitters.DMA_Transmitter;
 
 import java.util.ArrayList;
 
-public class ElevatorLoader implements Runnable {
+public class Loader implements Runnable {
     private final ElevatorStateEvent elevatorState;
     private final DMA_Transmitter txElevator;
     private final DMA_Transmitter txFloor;
     private final DMA_Receiver receiver;
     private final DMA_Transmitter txThis;
 
-    public ElevatorLoader(ElevatorStateEvent event, DMA_Transmitter txFloor, DMA_Transmitter txElevator) {
+    public Loader(ElevatorStateEvent event, DMA_Transmitter txFloor, DMA_Transmitter txElevator) {
         elevatorState = event;
         this.txFloor = txFloor;
         this.txElevator = txElevator;
