@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @param direction The direction a passenger would like to go (UP/DOWN/STOPPED).
  * @param destinationEvents list of floorInputEvents in the elevator.
  *
- * @author Alexandre Marques - 101189743
+ * @author Alexandre Marques
  * @version Iteration-2
  */
 public record ElevatorStateEvent

@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * @param elevNum The elevator the command is addressed to.
  * @param newPassengers The passengers to load into the elevator (CAN BE NULL)
  *
- * @author Alexandre Marques - 101189743
+ * @author Alexandre Marques
  * @version Iteration-2
  */
 public record MovePassengersCommand(int elevNum, ArrayList<DestinationEvent> newPassengers) implements SystemCommand {

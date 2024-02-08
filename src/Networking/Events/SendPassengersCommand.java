@@ -9,7 +9,7 @@ import Networking.Transmitters.DMA_Transmitter;
  * @param floorNum The floor number the command is addressed to.
  * @param tx The transmitter through which the passengers should be sent.
  *
- * @author Alexandre Marques - 101189743
+ * @author Alexandre Marques
  * @version Iteration-2
  */
 public record SendPassengersCommand(int floorNum, DMA_Transmitter tx) implements SystemCommand{

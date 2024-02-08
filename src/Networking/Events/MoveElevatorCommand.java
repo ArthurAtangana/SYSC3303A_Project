@@ -5,7 +5,7 @@ package Networking.Events;
  *
  * @param elevNum The elevator the command is addressed to.
  *
- * @author Alexandre Marques - 101189743
+ * @author Alexandre Marques
  * @version Iteration-2
  */
 public record MoveElevatorCommand(int elevNum) implements SystemCommand{
