@@ -8,7 +8,7 @@
  */
 package Networking.Receivers;
 
-import Networking.Events.SystemEvent;
+import Networking.Messages.SystemEvent;
 
 import java.util.ArrayList;
 

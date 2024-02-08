@@ -2,7 +2,7 @@ import ElevatorSubsytem.Elevator;
 import FloorSubsystem.DestinationDispatcher;
 import FloorSubsystem.Floor;
 import FloorSubsystem.Parser;
-import Networking.Events.FloorInputEvent;
+import Networking.Messages.FloorInputEvent;
 import Networking.Receivers.DMA_Receiver;
 import Networking.Transmitters.DMA_Transmitter;
 import SchedulerSubsystem.Scheduler;

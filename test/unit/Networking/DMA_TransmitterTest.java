@@ -1,8 +1,8 @@
 package unit.Networking;
 
 import Networking.Direction;
-import Networking.Events.DestinationEvent;
-import Networking.Events.SystemEvent;
+import Networking.Messages.DestinationEvent;
+import Networking.Messages.SystemEvent;
 import Networking.Receivers.DMA_Receiver;
 import Networking.Transmitters.DMA_Transmitter;
 import org.junit.jupiter.api.Test;

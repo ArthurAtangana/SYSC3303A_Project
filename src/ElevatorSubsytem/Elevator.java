@@ -7,8 +7,8 @@
 package ElevatorSubsytem;
 
 import Networking.Direction;
-import Networking.Events.DestinationEvent;
-import Networking.Events.ElevatorStateEvent;
+import Networking.Messages.DestinationEvent;
+import Networking.Messages.ElevatorStateEvent;
 import Networking.Receivers.DMA_Receiver;
 import Networking.Transmitters.DMA_Transmitter;
 

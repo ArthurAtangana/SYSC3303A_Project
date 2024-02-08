@@ -1,4 +1,4 @@
-package Networking.Events;
+package Networking.Messages;
 
 /**
  * Interface definition for all commands passed in the system to inherit.

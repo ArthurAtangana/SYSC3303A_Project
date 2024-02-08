@@ -7,7 +7,7 @@
 
 package Networking.Transmitters;
 
-import Networking.Events.SystemEvent;
+import Networking.Messages.SystemEvent;
 
 public interface Transmitter {
     /**

@@ -1,5 +1,5 @@
 package SchedulerSubsystem;
-import Networking.Events.*;
+import Networking.Messages.*;
 import Networking.Receivers.DMA_Receiver;
 import Networking.Transmitters.DMA_Transmitter;
 

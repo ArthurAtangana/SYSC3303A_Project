@@ -6,7 +6,7 @@
  */
 package Networking.Receivers;
 
-import Networking.Events.SystemEvent;
+import Networking.Messages.SystemEvent;
 
 public interface Receiver {
     /**

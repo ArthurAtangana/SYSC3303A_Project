@@ -8,7 +8,7 @@
  */
 package Networking.Transmitters;
 
-import Networking.Events.SystemEvent;
+import Networking.Messages.SystemEvent;
 import Networking.Receivers.DMA_Receiver;
 
 import java.util.ArrayList;

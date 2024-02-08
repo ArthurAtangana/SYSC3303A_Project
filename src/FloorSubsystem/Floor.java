@@ -5,7 +5,7 @@
  */
 
 package FloorSubsystem;
-import Networking.Events.ElevatorStateEvent;
+import Networking.Messages.ElevatorStateEvent;
 import Networking.Receivers.DMA_Receiver;
 
 public class Floor implements Runnable {

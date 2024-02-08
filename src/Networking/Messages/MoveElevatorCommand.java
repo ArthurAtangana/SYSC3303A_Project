@@ -1,4 +1,4 @@
-package Networking.Events;
+package Networking.Messages;
 
 /**
  * MoveElevatorCommand Record, Command to elevator to move until the next floor is reached.

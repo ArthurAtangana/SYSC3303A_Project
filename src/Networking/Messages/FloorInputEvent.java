@@ -1,4 +1,4 @@
-package Networking.Events;
+package Networking.Messages;
 
 import Networking.Direction;
 
