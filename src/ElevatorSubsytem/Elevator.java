@@ -9,8 +9,10 @@ package ElevatorSubsytem;
 import Networking.Direction;
 import Networking.Messages.DestinationEvent;
 import Networking.Messages.ElevatorStateEvent;
+import Networking.Messages.SystemEvent;
 import Networking.Receivers.DMA_Receiver;
 import Networking.Transmitters.DMA_Transmitter;
+import com.sun.jdi.InvalidTypeException;
 
 import java.util.ArrayList;
 
@@ -32,21 +34,16 @@ public class Elevator implements Runnable {
     }
 
     /**
-     * Processes events received from the scheduler.
-     */
-    private void getScheduling(){
-        DestinationEvent destination = (DestinationEvent) receiver.receive();
-        System.out.println("Elevator: Going in "+ destination.direction() + " direction.");
-        this.direction = destination.direction();
-        travelToFloor(destination.destinationFloor());
-    }
-
-    /**
      * Elevator travels to a specified floor.
-     * @param floorNumber the floor number to travel to.
+     * @param event the DestinationEvent containing the information.
      */
-    private void travelToFloor(int floorNumber) {
-        System.out.println("Elevator: Going to floor " + floorNumber + ".");
+    @Deprecated
+    // TODO: To be replaced by single floor travel function
+    private void travelToFloor(DestinationEvent event) {
+        int floorNumber = event.destinationFloor();
+        direction = event.direction();
+
+        System.out.println("Elevator: Going " + direction + ", to floor" + floorNumber + ".");
         try {
             // TODO: multiply travel time by num floor in future iterations (refine math)
             Thread.sleep(TRAVEL_TIME);
@@ -61,14 +58,32 @@ public class Elevator implements Runnable {
      * Update scheduler with this elevator's state.
      */
     private void sendStateUpdate(){
-        ElevatorStateEvent arrivedAtFloorEvent = new ElevatorStateEvent(currentFloor,direction, passengerDestinations);
-        transmitterToScheduler.send(arrivedAtFloorEvent);
+        ElevatorStateEvent stateEvent = new ElevatorStateEvent(currentFloor, direction, passengerDestinations);
+        transmitterToScheduler.send(stateEvent);
+    }
+
+    /**
+     * Process the given event, identify type and select an action or activity based on it.
+     *
+     * @param event The event to process
+     * @throws InvalidTypeException If it receives an event type this class cannot handle
+     */
+    private void processEvent(SystemEvent event) throws InvalidTypeException {
+        // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.
+        if (event instanceof DestinationEvent)
+            travelToFloor(((DestinationEvent) event));
+        else // Default, should never happen
+            throw new InvalidTypeException("Event type received cannot be handled by this subsystem.");
     }
 
     @Override
     public void run() {
         while (true){
-            getScheduling();
+            try {
+                processEvent(receiver.receive());
+            } catch (InvalidTypeException e) {
+                throw new RuntimeException(e);
+            }
             sendStateUpdate();
         }
     }
