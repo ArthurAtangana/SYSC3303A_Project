@@ -6,7 +6,7 @@
  */
 package Networking.Receivers;
 
-import Networking.Messages.SystemEvent;
+import Networking.Messages.SystemMessage;
 
 public interface Receiver {
     /**
@@ -15,5 +15,5 @@ public interface Receiver {
      *
      * @return A message sent from a transmitter.
      */
-    SystemEvent receive();
+    SystemMessage receive();
 }

@@ -2,7 +2,8 @@ package SchedulerSubsystem;
 
 import Networking.Messages.DestinationEvent;
 import Networking.Messages.ElevatorStateEvent;
-import Networking.Messages.SystemEvent;
+import Networking.Messages.MoveElevatorCommand;
+import Networking.Messages.SystemMessage;
 import Networking.Receivers.DMA_Receiver;
 import Networking.Transmitters.DMA_Transmitter;
 import com.sun.jdi.InvalidTypeException;
@@ -41,7 +42,7 @@ public class Scheduler implements Runnable {
      * @param event The event to process
      * @throws InvalidTypeException If it receives an event type this class cannot handle
      */
-    private void processEvent(SystemEvent event) throws InvalidTypeException {
+    private void processMessage(SystemMessage event) throws InvalidTypeException {
         // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.
         if (event instanceof ElevatorStateEvent)
             processElevatorEvent((ElevatorStateEvent) event);
@@ -55,7 +56,7 @@ public class Scheduler implements Runnable {
     public void run() {
         while (true){
             try {
-                processEvent(receiver.receive());
+                processMessage(receiver.receive());
             } catch (InvalidTypeException e) {
                 throw new RuntimeException(e);
             }
