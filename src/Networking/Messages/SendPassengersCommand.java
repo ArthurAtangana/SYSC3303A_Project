@@ -1,5 +1,6 @@
 package Networking.Messages;
 
+import Networking.Direction;
 import Networking.Transmitters.DMA_Transmitter;
 
 /**
@@ -12,7 +13,7 @@ import Networking.Transmitters.DMA_Transmitter;
  * @author Alexandre Marques
  * @version Iteration-2
  */
-public record SendPassengersCommand(int floorNum, DMA_Transmitter tx) implements SystemCommand{
+public record SendPassengersCommand(int floorNum, Direction dir, DMA_Transmitter tx) implements SystemCommand {
     /**
      * Match floor number with the given key.
      * @param key The floor number of the floor trying to process this event.
