@@ -29,7 +29,7 @@ public class Scheduler implements Runnable {
      *
      * @param destinationEvent Destination event received from floor.
      */
-    private void processDestinationEvent(DestinationEvent destinationEvent) {
+    public void processDestinationEvent(DestinationEvent destinationEvent) {
         // Store event locally to use in scheduling
         destinationEvents.add(destinationEvent);
 
@@ -48,7 +48,7 @@ public class Scheduler implements Runnable {
      */
     public boolean isElevatorStopping(ElevatorStateEvent event) {
         // TODO: Implement check
-        return true;
+        return false;
     }
 
     /**

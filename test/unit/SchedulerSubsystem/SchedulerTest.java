@@ -29,16 +29,30 @@ public class SchedulerTest {
         mockTransmitterToElevator = new DMA_Transmitter((mockElevatorReceiver));
         s = new Scheduler(receiver, mockTransmitterToFloor, mockTransmitterToElevator);
     }
+
+    /**
+     * Positive test for isElevatorStopping.
+     *
+     * Elevator should stop when elevator.currentFloor belongs to the union of
+     * scheduler.destinationEvents and elevator.destinationEvents.
+     *
+     * See state diagram of scheduler for additional context.
+     */
     @Test
-    public void isElevatorStoppingTest() {
+    @DisplayName("isElevatorStopping positive test")
+    public void testPositiveIsElevatorStopping() {
         // Arrange
-        ArrayList<DestinationEvent> destinationEvents = new ArrayList<>();
-        ElevatorStateEvent e = new ElevatorStateEvent(1, 1, Direction.UP, destinationEvents);
+        int floor = 1;
+        DestinationEvent destinationEvent = new DestinationEvent(floor, Direction.UP);
+        ArrayList<DestinationEvent> elevatorDestinationEvents = new ArrayList<>();
+        elevatorDestinationEvents.add(destinationEvent);
+        ElevatorStateEvent elevatorStateEvent = new ElevatorStateEvent(1, floor, Direction.UP, elevatorDestinationEvents);
+        s.processDestinationEvent(destinationEvent);
 
         // Act
-        boolean result = s.isElevatorStopping(e);
+        boolean result = s.isElevatorStopping(elevatorStateEvent);
 
         // Assert
-        assertEquals(false, result);
+        assertEquals(true, result);
     }
 }
