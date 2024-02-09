@@ -50,9 +50,7 @@ public class Scheduler implements Runnable {
         // See state diagram of scheduler for additional context.
 
         // TODO: implement private function union(destEvents, destEvents) -> destEvents
-        // TODO: implement private function reduce(destEvents) -> destFloors
-        List<Integer> destinationFloors = new ArrayList<>(); // tmp
-        destinationFloors.add(1); // tmp
+        List<Integer> destinationFloors = filterDestinationFloors(destinationEvents);
 
         if (destinationFloors.contains(event.currentFloor())) {
             return true;
@@ -87,6 +85,20 @@ public class Scheduler implements Runnable {
             processDestinationEvent((DestinationEvent) event);
         else // Default, should never happen
             throw new InvalidTypeException("Event type received cannot be handled by this subsystem.");
+    }
+
+    /**
+     * Filters destination floors from destination events.
+     *
+     * @param events List of destination events.
+     * @return List of destination floors.
+     */
+    private List<Integer> filterDestinationFloors(List<DestinationEvent> events) {
+        List<Integer> destinationFloors = new ArrayList<>();
+        for (DestinationEvent e: events) {
+            destinationFloors.add(e.destinationFloor());
+        }
+        return destinationFloors;
     }
 
     @Override
