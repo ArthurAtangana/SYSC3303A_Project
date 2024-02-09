@@ -8,15 +8,20 @@ import Networking.Receivers.DMA_Receiver;
 import Networking.Transmitters.DMA_Transmitter;
 import com.sun.jdi.InvalidTypeException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Scheduler implements Runnable {
     private final DMA_Transmitter transmitterToFloor;
     private final DMA_Transmitter transmitterToElevator;
     private final DMA_Receiver receiver;
+    private List<DestinationEvent> floorRequests;
 
     public Scheduler(DMA_Receiver receiver, DMA_Transmitter transmitterToFloor, DMA_Transmitter transmitterToElevator) {
         this.receiver = receiver;
         this.transmitterToElevator = transmitterToElevator;
         this.transmitterToFloor = transmitterToFloor;
+        floorRequests = new ArrayList<DestinationEvent>();
     }
 
     /**
@@ -25,8 +30,8 @@ public class Scheduler implements Runnable {
      * @param destinationEvent a destination event
      */
     private void processDestinationEvent(DestinationEvent destinationEvent) {
+        floorRequests.add(destinationEvent);
         transmitterToElevator.send(destinationEvent);
-
     }
 
     /**
