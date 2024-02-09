@@ -47,11 +47,13 @@ public class Scheduler implements Runnable {
      * @return True if elevator should stop, false otherwise.
      */
     public boolean isElevatorStopping(ElevatorStateEvent event) {
+        // Elevator should stop if elevator.currentFloor belongs to the
+        // union of scheduler.destinationEvents and elevator.destinationEvents.
+        //
         // See state diagram of scheduler for additional context.
 
-        // TODO: implement private function union(destEvents, destEvents) -> destEvents
-        List<Integer> destinationFloors = filterDestinationFloors(destinationEvents);
-
+        List<DestinationEvent> union = unionOfDestinationEvents(destinationEvents, event.destinationEvents());
+        List<Integer> destinationFloors = filterDestinationFloors(union);
         if (destinationFloors.contains(event.currentFloor())) {
             return true;
         } else {
@@ -99,6 +101,25 @@ public class Scheduler implements Runnable {
             destinationFloors.add(e.destinationFloor());
         }
         return destinationFloors;
+    }
+
+    /**
+     * Take union of two destination event lists.
+     *
+     * @param A List of destination events.
+     * @param B List of destination events.
+     * @return Union of both lists.
+     */
+    private List<DestinationEvent> unionOfDestinationEvents(
+            List<DestinationEvent> A,
+            List<DestinationEvent> B) {
+        ArrayList<DestinationEvent> union = new ArrayList<>();
+        for (DestinationEvent a: A) {
+            if (B.contains(a)) {
+                union.add(a);
+            }
+        }
+        return union;
     }
 
     @Override
