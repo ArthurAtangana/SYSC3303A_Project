@@ -1,8 +1,8 @@
 package unit.Networking;
 
 import Networking.Direction;
-import Networking.Events.DestinationEvent;
-import Networking.Events.ElevatorSystemEvent;
+import Networking.Messages.DestinationEvent;
+import Networking.Messages.SystemEvent;
 import Networking.Receivers.DMA_Receiver;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DMA_ReceiverTest {
 
     DMA_Receiver receiver;
-    ElevatorSystemEvent systemEvent;
+    SystemEvent systemEvent;
     @Test
     void setUp() {
         this.receiver = new DMA_Receiver();

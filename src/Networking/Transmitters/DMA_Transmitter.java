@@ -8,7 +8,7 @@
  */
 package Networking.Transmitters;
 
-import Networking.Events.ElevatorSystemEvent;
+import Networking.Messages.SystemMessage;
 import Networking.Receivers.DMA_Receiver;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class DMA_Transmitter implements Transmitter {
      * @param event The message to be sent to receivers.
      */
     @Override
-    public void send(ElevatorSystemEvent event) {
+    public void send(SystemMessage event) {
         destinationReceivers.forEach(d -> d.setMessage(event));
     }
 }

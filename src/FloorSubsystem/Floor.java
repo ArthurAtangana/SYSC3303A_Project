@@ -5,8 +5,11 @@
  */
 
 package FloorSubsystem;
-import Networking.Events.ElevatorStateEvent;
+
+import Networking.Messages.ElevatorStateEvent;
+import Networking.Messages.SystemMessage;
 import Networking.Receivers.DMA_Receiver;
+import com.sun.jdi.InvalidTypeException;
 
 public class Floor implements Runnable {
     private int floorLamp;
@@ -29,16 +32,27 @@ public class Floor implements Runnable {
     }
 
     /**
-     * receives events from the scheduler for the floor to process.
+     * Process the given event, identify type and select an action or activity based on it.
+     *
+     * @param event The event to process
+     * @throws InvalidTypeException If it receives an event type this class cannot handle
      */
-    private void receiveEvent(){
-        ElevatorStateEvent elevatorStateEvent = (ElevatorStateEvent) receiver.receive();
-        setLamp(elevatorStateEvent.currentFloor());
+    private void processMessage(SystemMessage event) throws InvalidTypeException {
+        // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.
+        if (event instanceof ElevatorStateEvent)
+            setLamp(((ElevatorStateEvent) event).currentFloor());
+        else // Default, should never happen
+            throw new InvalidTypeException("Event type received cannot be handled by this subsystem.");
     }
     @Override
     public void run() {
         while (true) {
-            receiveEvent();
+            // receiver.receive = receive state. ProcessEvent "selects" the action
+            try {
+                processMessage(receiver.receive());
+            } catch (InvalidTypeException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
