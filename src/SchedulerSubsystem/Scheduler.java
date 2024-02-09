@@ -53,7 +53,7 @@ public class Scheduler implements Runnable {
         // See state diagram of scheduler for additional context.
 
         List<DestinationEvent> union = unionOfDestinationEvents(destinationEvents, e.destinationEvents());
-        List<Integer> destinationFloors = filterDestinationFloors(union);
+        List<Integer> destinationFloors = toDestinationFloors(union);
         if (destinationFloors.contains(e.currentFloor())) {
             return true;
         } else {
@@ -95,7 +95,7 @@ public class Scheduler implements Runnable {
      * @param events List of destination events.
      * @return List of destination floors.
      */
-    private List<Integer> filterDestinationFloors(List<DestinationEvent> events) {
+    private List<Integer> toDestinationFloors(List<DestinationEvent> events) {
         List<Integer> destinationFloors = new ArrayList<>();
         for (DestinationEvent e: events) {
             destinationFloors.add(e.destinationFloor());
