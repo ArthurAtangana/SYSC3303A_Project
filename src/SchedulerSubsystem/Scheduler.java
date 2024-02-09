@@ -35,7 +35,7 @@ public class Scheduler implements Runnable {
      * @param event Elevator state to check.
      * @return True if elevator should stop, false otherwise.
      */
-    private boolean isElevatorStopping(ElevatorStateEvent event) {
+    public boolean isElevatorStopping(ElevatorStateEvent event) {
         // TODO: Implement check
         return true;
     }
