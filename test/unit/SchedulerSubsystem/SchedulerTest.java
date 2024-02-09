@@ -32,15 +32,15 @@ public class SchedulerTest {
 
     /**
      * Positive test for isElevatorStopping.
-     *
-     * Elevator should stop when elevator.currentFloor belongs to the union of
-     * scheduler.destinationEvents and elevator.destinationEvents.
-     *
-     * See state diagram of scheduler for additional context.
      */
     @Test
     @DisplayName("isElevatorStopping positive test")
     public void testPositiveIsElevatorStopping() {
+        // Elevator should stop when elevator.currentFloor belong to the union of
+        // scheduler.destinationEvents and elevator.destinationEvents.
+        //
+        // See state diagram of scheduler for additional context.
+
         // Arrange
         int floor = 1;
         DestinationEvent destinationEvent = new DestinationEvent(floor, Direction.UP);
