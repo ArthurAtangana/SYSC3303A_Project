@@ -15,22 +15,28 @@ public class Scheduler implements Runnable {
     private final DMA_Transmitter transmitterToFloor;
     private final DMA_Transmitter transmitterToElevator;
     private final DMA_Receiver receiver;
-    private List<DestinationEvent> floorRequests;
+    private List<DestinationEvent> destinationEvents;
 
     public Scheduler(DMA_Receiver receiver, DMA_Transmitter transmitterToFloor, DMA_Transmitter transmitterToElevator) {
         this.receiver = receiver;
         this.transmitterToElevator = transmitterToElevator;
         this.transmitterToFloor = transmitterToFloor;
-        floorRequests = new ArrayList<DestinationEvent>();
+        destinationEvents = new ArrayList<DestinationEvent>();
     }
 
     /**
-     * process event received from the floor (up or down request)
-     * and sends it to the elevator.
-     * @param destinationEvent a destination event
+     * Process event received from the floor.
+     *
+     * @param destinationEvent Destination event received from floor.
      */
     private void processDestinationEvent(DestinationEvent destinationEvent) {
-        floorRequests.add(destinationEvent);
+        // Store event locally to use in scheduling
+        destinationEvents.add(destinationEvent);
+
+        // Forward event to elevator subsystem
+        // TODO(@alex): describe WHY event is being forwarded to elevator subsystem
+        //   HEY ALEX! It would be helpful for the team for you to document HERE why the
+        //   elevator subsystem is getting a duplicated event. Much love, Braeden.
         transmitterToElevator.send(destinationEvent);
     }
 
