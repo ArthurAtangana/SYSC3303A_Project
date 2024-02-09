@@ -43,18 +43,18 @@ public class Scheduler implements Runnable {
     /**
      * Check if elevator should stop.
      *
-     * @param event Elevator state to check.
+     * @param e Elevator state to check.
      * @return True if elevator should stop, false otherwise.
      */
-    public boolean isElevatorStopping(ElevatorStateEvent event) {
+    public boolean isElevatorStopping(ElevatorStateEvent e) {
         // Elevator should stop if elevator.currentFloor belongs to the
         // union of scheduler.destinationEvents and elevator.destinationEvents.
         //
         // See state diagram of scheduler for additional context.
 
-        List<DestinationEvent> union = unionOfDestinationEvents(destinationEvents, event.destinationEvents());
+        List<DestinationEvent> union = unionOfDestinationEvents(destinationEvents, e.destinationEvents());
         List<Integer> destinationFloors = filterDestinationFloors(union);
-        if (destinationFloors.contains(event.currentFloor())) {
+        if (destinationFloors.contains(e.currentFloor())) {
             return true;
         } else {
             return false;
