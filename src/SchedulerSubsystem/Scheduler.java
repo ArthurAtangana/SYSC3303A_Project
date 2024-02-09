@@ -47,8 +47,18 @@ public class Scheduler implements Runnable {
      * @return True if elevator should stop, false otherwise.
      */
     public boolean isElevatorStopping(ElevatorStateEvent event) {
-        // TODO: Implement check
-        return false;
+        // See state diagram of scheduler for additional context.
+
+        // TODO: implement private function union(destEvents, destEvents) -> destEvents
+        // TODO: implement private function reduce(destEvents) -> destFloors
+        List<Integer> destinationFloors = new ArrayList<>(); // tmp
+        destinationFloors.add(1); // tmp
+
+        if (destinationFloors.contains(event.currentFloor())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
