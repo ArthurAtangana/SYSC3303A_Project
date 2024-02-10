@@ -32,12 +32,6 @@ public class Scheduler implements Runnable {
     public void processDestinationEvent(DestinationEvent destinationEvent) {
         // Store event locally to use in scheduling
         destinationEvents.add(destinationEvent);
-
-        // Forward event to elevator subsystem
-        // TODO(@alex): describe WHY event is being forwarded to elevator subsystem
-        //   HEY ALEX! It would be helpful for the team for you to document HERE why the
-        //   elevator subsystem is getting a duplicated event. Much love, Braeden.
-        transmitterToElevator.send(destinationEvent);
     }
 
     /**
