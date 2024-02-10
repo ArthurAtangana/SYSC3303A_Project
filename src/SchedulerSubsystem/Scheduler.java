@@ -48,11 +48,7 @@ public class Scheduler implements Runnable {
 
         List<DestinationEvent> union = unionOfDestinationEvents(destinationEvents, e.destinationEvents());
         List<Integer> destinationFloors = toDestinationFloors(union);
-        if (destinationFloors.contains(e.currentFloor())) {
-            return true;
-        } else {
-            return false;
-        }
+        return destinationFloors.contains(e.currentFloor());
     }
 
     /**
