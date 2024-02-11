@@ -9,6 +9,8 @@ import Networking.Transmitters.DMA_Transmitter;
 import Networking.Transmitters.Transmitter;
 import SchedulerSubsystem.Scheduler;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import org.junit.jupiter.api.*;
@@ -50,8 +52,8 @@ public class SchedulerTest {
         schedulerDestinationEvents.add(destinationEvent);
         s.setDestinationEvents(schedulerDestinationEvents);
 
-        ArrayList<DestinationEvent> elevatorDestinationEvents = new ArrayList<>();
-        elevatorDestinationEvents.add(destinationEvent);
+        HashMap<DestinationEvent, Integer> elevatorDestinationEvents = new HashMap<DestinationEvent, Integer>();
+        elevatorDestinationEvents.put(destinationEvent, 1);
         ElevatorStateEvent elevatorStateEvent = new ElevatorStateEvent(1, floor, Direction.UP, elevatorDestinationEvents);
 
         // Act
