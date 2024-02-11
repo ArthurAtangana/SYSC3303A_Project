@@ -1,14 +1,17 @@
 package Networking.Messages;
 
+import Networking.Direction;
+
 /**
  * MoveElevatorCommand Record, Command to elevator to move until the next floor is reached.
  *
  * @param elevNum The elevator the command is addressed to.
+ * @param direction The direction of travel for the elevator
  *
  * @author Alexandre Marques
  * @version Iteration-2
  */
-public record MoveElevatorCommand(int elevNum) implements SystemCommand{
+public record MoveElevatorCommand(int elevNum, Direction direction) implements SystemCommand{
     /**
      * Match elevator number with the given key.
      * @param key The elevator number of the elevator trying to process this event.
