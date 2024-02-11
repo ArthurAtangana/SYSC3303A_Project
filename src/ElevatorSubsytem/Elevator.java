@@ -14,7 +14,7 @@ import Networking.Receivers.DMA_Receiver;
 import Networking.Transmitters.DMA_Transmitter;
 import com.sun.jdi.InvalidTypeException;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Elevator implements Runnable {
     /** Single floor travel time */
@@ -22,7 +22,7 @@ public class Elevator implements Runnable {
     private final int elevNum;
     private int currentFloor;
     private Direction direction;
-    private final ArrayList<DestinationEvent> passengerDestinations;
+    private final HashMap<DestinationEvent, Integer> passengerCountMap;
     private final DMA_Transmitter transmitterToScheduler;
     private final DMA_Receiver receiver;
 
@@ -30,7 +30,7 @@ public class Elevator implements Runnable {
         this.currentFloor = 0;
         this.elevNum = elevNum;
         this.direction = Direction.STOPPED;
-        this.passengerDestinations = new ArrayList<>();
+        this.passengerCountMap = new HashMap<>();
         this.transmitterToScheduler = transmitter;
         this.receiver = receiver;
     }
@@ -60,7 +60,7 @@ public class Elevator implements Runnable {
      * Update scheduler with this elevator's state.
      */
     private void sendStateUpdate(){
-        ElevatorStateEvent stateEvent = new ElevatorStateEvent(elevNum, currentFloor, direction, passengerDestinations);
+        ElevatorStateEvent stateEvent = new ElevatorStateEvent(elevNum, currentFloor, direction, passengerCountMap);
         transmitterToScheduler.send(stateEvent);
     }
 
