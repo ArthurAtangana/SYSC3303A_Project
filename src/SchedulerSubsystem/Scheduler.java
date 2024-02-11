@@ -45,7 +45,7 @@ public class Scheduler implements Runnable {
         //
         // See state diagram of scheduler for additional context.
 
-        Set<DestinationEvent> union = unionOfDestinationEvents(destinationEvents, e.destinationEvents());
+        Set<DestinationEvent> union = unionOfDestinationEvents(destinationEvents, e.passengerCountMap().keySet());
         Set<Integer> destinationFloors = filterDestinationFloors(union);
         return destinationFloors.contains(e.currentFloor());
     }
