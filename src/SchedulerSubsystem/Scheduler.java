@@ -14,13 +14,13 @@ public class Scheduler implements Runnable {
     private final DMA_Transmitter transmitterToFloor;
     private final DMA_Transmitter transmitterToElevator;
     private final DMA_Receiver receiver;
-    private Set<DestinationEvent> destinationEvents;
+    private Set<DestinationEvent> floorRequests;
 
     public Scheduler(DMA_Receiver receiver, DMA_Transmitter transmitterToFloor, DMA_Transmitter transmitterToElevator) {
         this.receiver = receiver;
         this.transmitterToElevator = transmitterToElevator;
         this.transmitterToFloor = transmitterToFloor;
-        destinationEvents = new HashSet<DestinationEvent>();
+        floorRequests = new HashSet<DestinationEvent>();
     }
 
     /**
@@ -30,7 +30,7 @@ public class Scheduler implements Runnable {
      */
     private void processDestinationEvent(DestinationEvent destinationEvent) {
         // Store event locally to use in scheduling
-        destinationEvents.add(destinationEvent);
+        floorRequests.add(destinationEvent);
     }
 
     /**
@@ -45,7 +45,7 @@ public class Scheduler implements Runnable {
         //
         // See state diagram of scheduler for additional context.
 
-        Set<DestinationEvent> union = unionOfDestinationEvents(destinationEvents, e.passengerCountMap().keySet());
+        Set<DestinationEvent> union = unionOfDestinationEvents(floorRequests, e.passengerCountMap().keySet());
         Set<Integer> destinationFloors = filterDestinationFloors(union);
         return destinationFloors.contains(e.currentFloor());
     }
@@ -117,9 +117,9 @@ public class Scheduler implements Runnable {
      *
      * @param events Set of destination events to be set.
      */
-    public void setDestinationEvents(Set<DestinationEvent> events) {
+    public void setFloorRequests(Set<DestinationEvent> events) {
         // Documenting a setter for a set is unsettling ...
-        this.destinationEvents = events;
+        this.floorRequests = events;
     }
 
     @Override

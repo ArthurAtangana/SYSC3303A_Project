@@ -4,12 +4,9 @@ import Networking.Direction;
 import Networking.Messages.DestinationEvent;
 import Networking.Messages.ElevatorStateEvent;
 import Networking.Receivers.DMA_Receiver;
-import Networking.Receivers.Receiver;
 import Networking.Transmitters.DMA_Transmitter;
-import Networking.Transmitters.Transmitter;
 import SchedulerSubsystem.Scheduler;
-import java.util.ArrayList;
-import java.util.Collection;
+
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -50,7 +47,7 @@ public class SchedulerTest {
         DestinationEvent destinationEvent = new DestinationEvent(floor, Direction.UP);
         HashSet<DestinationEvent> schedulerDestinationEvents = new HashSet<>();
         schedulerDestinationEvents.add(destinationEvent);
-        s.setDestinationEvents(schedulerDestinationEvents);
+        s.setFloorRequests(schedulerDestinationEvents);
 
         HashMap<DestinationEvent, Integer> elevatorDestinationEvents = new HashMap<DestinationEvent, Integer>();
         elevatorDestinationEvents.put(destinationEvent, 1);
