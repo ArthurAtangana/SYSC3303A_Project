@@ -7,20 +7,21 @@
 package ElevatorSubsytem;
 
 import Networking.Direction;
-import Networking.Messages.DestinationEvent;
-import Networking.Messages.ElevatorStateEvent;
-import Networking.Messages.SystemMessage;
+import Networking.Messages.*;
 import Networking.Receivers.DMA_Receiver;
 import Networking.Transmitters.DMA_Transmitter;
 import com.sun.jdi.InvalidTypeException;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class Elevator implements Runnable {
     /** Single floor travel time */
-    public final long TRAVEL_TIME = 8500;
+    private static final long TRAVEL_TIME = 8500;
+    private  static final long LOAD_TIME = 1000;
     private final int elevNum;
     private int currentFloor;
+    @Deprecated
     private Direction direction;
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
     private final DMA_Transmitter transmitterToScheduler;
@@ -37,25 +38,71 @@ public class Elevator implements Runnable {
 
     /**
      * Elevator travels to a specified floor.
-     * @param event the DestinationEvent containing the information.
+     *
+     * @param direction
      */
-    @Deprecated
-    // TODO: To be replaced by single floor travel function
-    private void travelToFloor(DestinationEvent event) {
-        int floorNumber = event.destinationFloor();
-        direction = event.direction();
-
-        System.out.println("Elevator: Going " + direction + ", to floor" + floorNumber + ".");
+    private void move(Direction direction) {
+        if (direction == Direction.UP){
+            currentFloor += 1;
+        }
+        else if (direction == Direction.DOWN){
+            currentFloor -= 1;
+        }
+        System.out.println("Elevator: Going " + direction + ", to floor" + currentFloor + ".");
         try {
-            // TODO: multiply travel time by num floor in future iterations (refine math)
             Thread.sleep(TRAVEL_TIME);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        this.currentFloor = floorNumber;
         System.out.println("Elevator: Elevator is on floor " + this.currentFloor + ".");
     }
 
+    /**
+     *
+     * @return
+     */
+    private Direction elevatorDirection(){
+        Set<DestinationEvent> destinationEvents = passengerCountMap.keySet();
+        // TODO: guard check on every direction being the same.
+        Direction direction = null;
+        for (DestinationEvent e : destinationEvents){
+            if (direction == null){
+                direction = e.direction();
+            }
+            if (direction != e.direction()){
+                throw new RuntimeException("Missmatched passenger direction in elevator");
+            }
+        }
+        return direction;
+    }
+    private void unload(){
+        Direction direction = elevatorDirection();
+        if (elevatorDirection() == null){
+            return;
+        }
+        try {
+            // each passenger takes LOAD_TIME to leave the elevator.
+            Thread.sleep(LOAD_TIME * passengerCountMap.remove(new DestinationEvent(currentFloor,direction)));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    /**
+     * Loads passengers in and/or out of the elevator
+     */
+    private void load(MovePassengersCommand command){
+        // load passengers into the elevator, taking LOAD_TIME per passengers waiting on the floor.
+        try {
+            Thread.sleep(LOAD_TIME * command.newPassengers().size());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        // for every passenger that board, we add them to the passengerCountMap.
+        for (DestinationEvent e : command.newPassengers()){
+            passengerCountMap.merge(e,1, Integer::sum);
+            // if the key exists in passengerCountMap, increment value by 1. if not, add new entry.
+        }
+    }
     /**
      * Update scheduler with this elevator's state.
      */
@@ -71,9 +118,16 @@ public class Elevator implements Runnable {
      * @throws InvalidTypeException If it receives an event type this class cannot handle
      */
     private void processMessage(SystemMessage event) throws InvalidTypeException {
-        // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.
-        if (event instanceof DestinationEvent)
-            travelToFloor(((DestinationEvent) event));
+        // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.\
+        if (event instanceof SystemCommand && !((SystemCommand) event).matchKey(this.elevNum)){
+            return;
+        }
+        if (event instanceof MoveElevatorCommand)
+            move(((MoveElevatorCommand) event).direction());
+        else if (event instanceof MovePassengersCommand) {
+            unload();
+            load((MovePassengersCommand) event);
+        }
         else // Default, should never happen
             throw new InvalidTypeException("Event type received cannot be handled by this subsystem.");
     }
