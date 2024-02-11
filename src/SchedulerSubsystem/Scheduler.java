@@ -9,6 +9,7 @@ import Networking.Transmitters.DMA_Transmitter;
 import com.sun.jdi.InvalidTypeException;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Scheduler implements Runnable {
@@ -29,7 +30,7 @@ public class Scheduler implements Runnable {
      *
      * @param destinationEvent Destination event received from floor.
      */
-    public void processDestinationEvent(DestinationEvent destinationEvent) {
+    private void processDestinationEvent(DestinationEvent destinationEvent) {
         // Store event locally to use in scheduling
         destinationEvents.add(destinationEvent);
     }
@@ -110,6 +111,15 @@ public class Scheduler implements Runnable {
             }
         }
         return union;
+    }
+
+    /**
+     * Set destination events.
+     *
+     * @param events Collection of destination events to add.
+     */
+    public void setDestinationEvents(Collection<DestinationEvent> events) {
+        this.destinationEvents = (List<DestinationEvent>) events;
     }
 
     @Override

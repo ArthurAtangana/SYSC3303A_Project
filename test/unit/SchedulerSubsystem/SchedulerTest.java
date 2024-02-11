@@ -42,12 +42,12 @@ public class SchedulerTest {
         // See state diagram of scheduler for additional context.
 
         // Arrange
-        int floor = 1;
+        int floor = 1; // Same floor for elevator state event and destination event
         DestinationEvent destinationEvent = new DestinationEvent(floor, Direction.UP);
-        ArrayList<DestinationEvent> elevatorDestinationEvents = new ArrayList<>();
-        elevatorDestinationEvents.add(destinationEvent);
-        ElevatorStateEvent elevatorStateEvent = new ElevatorStateEvent(1, floor, Direction.UP, elevatorDestinationEvents);
-        s.processDestinationEvent(destinationEvent);
+        ArrayList<DestinationEvent> destinationEvents = new ArrayList<>();
+        destinationEvents.add(destinationEvent);
+        s.setDestinationEvents(destinationEvents);
+        ElevatorStateEvent elevatorStateEvent = new ElevatorStateEvent(1, floor, Direction.UP, destinationEvents);
 
         // Act
         boolean result = s.isElevatorStopping(elevatorStateEvent);
