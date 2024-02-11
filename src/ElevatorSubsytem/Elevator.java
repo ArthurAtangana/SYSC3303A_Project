@@ -22,7 +22,7 @@ public class Elevator implements Runnable {
     private final int elevNum;
     private int currentFloor;
     @Deprecated
-    private Direction direction;
+    private final Direction direction;
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
     private final DMA_Transmitter transmitterToScheduler;
     private final DMA_Receiver receiver;
@@ -39,7 +39,7 @@ public class Elevator implements Runnable {
     /**
      * Elevator travels to a specified floor.
      *
-     * @param direction
+     * @param direction the direction to travel towards.
      */
     private void move(Direction direction) {
         if (direction == Direction.UP){
@@ -118,10 +118,7 @@ public class Elevator implements Runnable {
      * @throws InvalidTypeException If it receives an event type this class cannot handle
      */
     private void processMessage(SystemMessage event) throws InvalidTypeException {
-        // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.\
-        if (event instanceof SystemCommand && !((SystemCommand) event).matchKey(this.elevNum)){
-            return;
-        }
+        // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.
         if (event instanceof MoveElevatorCommand)
             move(((MoveElevatorCommand) event).direction());
         else if (event instanceof MovePassengersCommand) {
