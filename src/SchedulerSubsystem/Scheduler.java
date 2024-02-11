@@ -34,7 +34,7 @@ public class Scheduler implements Runnable {
     }
 
     /**
-     * Check if elevator should stop.
+     * Returns true if elevator should stop, false otherwise.
      *
      * @param e Elevator state to check.
      * @return True if elevator should stop, false otherwise.
@@ -112,12 +112,13 @@ public class Scheduler implements Runnable {
     }
 
     /**
-     * Set destination events.
+     * Sets destination events of this scheduler.
      *
-     * @param events Collection of destination events to add.
+     * @param events Set of destination events to be set.
      */
-    public void setDestinationEvents(Collection<DestinationEvent> events) {
-        this.destinationEvents = (Set<DestinationEvent>) events;
+    public void setDestinationEvents(Set<DestinationEvent> events) {
+        // Documenting a setter for a set is unsettling ...
+        this.destinationEvents = events;
     }
 
     @Override
