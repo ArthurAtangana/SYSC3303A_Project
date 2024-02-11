@@ -9,6 +9,8 @@ import Networking.Transmitters.DMA_Transmitter;
 import Networking.Transmitters.Transmitter;
 import SchedulerSubsystem.Scheduler;
 import java.util.ArrayList;
+import java.util.HashSet;
+
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,10 +46,13 @@ public class SchedulerTest {
         // Arrange
         int floor = 1; // Same floor for elevator state event and destination event
         DestinationEvent destinationEvent = new DestinationEvent(floor, Direction.UP);
-        ArrayList<DestinationEvent> destinationEvents = new ArrayList<>();
-        destinationEvents.add(destinationEvent);
-        s.setDestinationEvents(destinationEvents);
-        ElevatorStateEvent elevatorStateEvent = new ElevatorStateEvent(1, floor, Direction.UP, destinationEvents);
+        HashSet<DestinationEvent> schedulerDestinationEvents = new HashSet<>();
+        schedulerDestinationEvents.add(destinationEvent);
+        s.setDestinationEvents(schedulerDestinationEvents);
+
+        ArrayList<DestinationEvent> elevatorDestinationEvents = new ArrayList<>();
+        elevatorDestinationEvents.add(destinationEvent);
+        ElevatorStateEvent elevatorStateEvent = new ElevatorStateEvent(1, floor, Direction.UP, elevatorDestinationEvents);
 
         // Act
         boolean result = s.isElevatorStopping(elevatorStateEvent);

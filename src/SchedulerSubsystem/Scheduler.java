@@ -8,21 +8,19 @@ import Networking.Receivers.DMA_Receiver;
 import Networking.Transmitters.DMA_Transmitter;
 import com.sun.jdi.InvalidTypeException;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class Scheduler implements Runnable {
     private final DMA_Transmitter transmitterToFloor;
     private final DMA_Transmitter transmitterToElevator;
     private final DMA_Receiver receiver;
-    private List<DestinationEvent> destinationEvents;
+    private Set<DestinationEvent> destinationEvents;
 
     public Scheduler(DMA_Receiver receiver, DMA_Transmitter transmitterToFloor, DMA_Transmitter transmitterToElevator) {
         this.receiver = receiver;
         this.transmitterToElevator = transmitterToElevator;
         this.transmitterToFloor = transmitterToFloor;
-        destinationEvents = new ArrayList<DestinationEvent>();
+        destinationEvents = new HashSet<DestinationEvent>();
     }
 
     /**
@@ -47,8 +45,8 @@ public class Scheduler implements Runnable {
         //
         // See state diagram of scheduler for additional context.
 
-        List<DestinationEvent> union = unionOfDestinationEvents(destinationEvents, e.destinationEvents());
-        List<Integer> destinationFloors = toDestinationFloors(union);
+        Set<DestinationEvent> union = unionOfDestinationEvents(destinationEvents, e.destinationEvents());
+        Set<Integer> destinationFloors = filterDestinationFloors(union);
         return destinationFloors.contains(e.currentFloor());
     }
 
@@ -83,11 +81,11 @@ public class Scheduler implements Runnable {
     /**
      * Filters destination floors from destination events.
      *
-     * @param events List of destination events.
-     * @return List of destination floors.
+     * @param events Set of destination events.
+     * @return Set of destination floors.
      */
-    private List<Integer> toDestinationFloors(List<DestinationEvent> events) {
-        List<Integer> destinationFloors = new ArrayList<>();
+    private Set<Integer> filterDestinationFloors(Set<DestinationEvent> events) {
+        Set<Integer> destinationFloors = new HashSet<>();
         for (DestinationEvent e: events) {
             destinationFloors.add(e.destinationFloor());
         }
@@ -95,16 +93,16 @@ public class Scheduler implements Runnable {
     }
 
     /**
-     * Take union of two destination event lists.
+     * Takes union of two destination event sets.
      *
-     * @param A List of destination events.
-     * @param B List of destination events.
-     * @return Union of both lists.
+     * @param A Set of destination events.
+     * @param B Set of destination events.
+     * @return Union of both sets.
      */
-    private List<DestinationEvent> unionOfDestinationEvents(
-            List<DestinationEvent> A,
-            List<DestinationEvent> B) {
-        ArrayList<DestinationEvent> union = new ArrayList<>();
+    private Set<DestinationEvent> unionOfDestinationEvents(
+            Collection<DestinationEvent> A,
+            Collection<DestinationEvent> B) {
+        HashSet<DestinationEvent> union = new HashSet<DestinationEvent>();
         for (DestinationEvent a: A) {
             if (B.contains(a)) {
                 union.add(a);
@@ -119,7 +117,7 @@ public class Scheduler implements Runnable {
      * @param events Collection of destination events to add.
      */
     public void setDestinationEvents(Collection<DestinationEvent> events) {
-        this.destinationEvents = (List<DestinationEvent>) events;
+        this.destinationEvents = (Set<DestinationEvent>) events;
     }
 
     @Override
