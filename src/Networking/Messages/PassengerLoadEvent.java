@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  * PassengerLoadEvent record, holds a list of passengers to load onto an elevator.
- * operation.
+ * Intended flow: Floor -> Scheduler(Loader).
  *
  * @param passengers The passengers to be loaded on the elevator
  * @author Alexandre Marques
