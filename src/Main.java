@@ -23,11 +23,11 @@ public class Main {
 
     public static void main(String[] args) {
         // Create receivers
-        DMA_Receiver schedulerReceiver = new DMA_Receiver();
-        DMA_Receiver elevatorReceiver = new DMA_Receiver();
+        DMA_Receiver schedulerReceiver = new DMA_Receiver(); // Scheduler is unique, no need for keys/commands.
+        DMA_Receiver elevatorReceiver = new DMA_Receiver(0);
         ArrayList<DMA_Receiver> floorReceivers = new ArrayList<>();
         for(int i=0; i < NUM_FLOORS; i++){
-            floorReceivers.add(new DMA_Receiver());
+            floorReceivers.add(new DMA_Receiver(i));
         }
 
         // Create Transmitters (composes with receivers)
