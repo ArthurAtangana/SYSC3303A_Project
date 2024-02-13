@@ -218,6 +218,16 @@ The testing framework used for unit tests is JUnit 5.8.1.
 
 For detailed test layout, see test README.
 
+### Nested Test Class in Production Class
+Some unit tests for private methods are written in the production class as a *nested test class*. 
+For example, SchedulerTest.testPositiveIsElevatorStopping() is written directly in class Scheduler.
+
+This testing strategy preserves information hiding while enabling testing of critical private methods.
+
+This strategy should not be abused. Not all private methods merit unit tests.
+
+For additional reading on testing private methods, see this [article](https://www.artima.com/articles/testing-private-methods-with-junit-and-suiterunner). 
+
 ### Troubleshooting
 
 **IntelliJ can't find your tests?**
