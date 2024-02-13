@@ -30,8 +30,6 @@ public class Main {
         config.printConfig();
         int numFloors = config.getNumFloors();
         int numElevators = config.getNumElevators();
-        long travelTime = config.getTravelTime();
-        long loadTime = config.getLoadTime();
 
         // Create receivers
         DMA_Receiver schedulerReceiver = new DMA_Receiver();
