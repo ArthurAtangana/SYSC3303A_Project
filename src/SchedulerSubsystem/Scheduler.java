@@ -44,12 +44,16 @@ public class Scheduler implements Runnable {
      * @return True if elevator should stop, false otherwise.
      */
     private boolean isElevatorStopping(ElevatorStateEvent e) {
-        // Elevator should stop if (elevator.currentFloor, elevator.Direction)
+        // Elevator should stop if tuple (elevator.currentFloor, elevator.Direction)
         // belongs to the union of scheduler.destinationEvents and elevator.destinationEvents.
         //
         // See state diagram of scheduler for additional context.
 
-        Set<DestinationEvent> union = unionOfDestinationEvents(floorRequests, e.passengerCountMap().keySet());
+        // Create new object for union set to avoid funny business of destination events
+        // being added to the scheduler's floor requests!
+        Set<DestinationEvent> union = new HashSet<DestinationEvent>();
+        union.addAll(floorRequests);
+        union.addAll(e.passengerCountMap().keySet());
         Set<Integer> destinationFloors = filterDestinationFloors(union);
         return destinationFloors.contains(e.currentFloor());
     }
@@ -96,26 +100,6 @@ public class Scheduler implements Runnable {
             destinationFloors.add(e.destinationFloor());
         }
         return destinationFloors;
-    }
-
-    /**
-     * Takes union of two destination event sets.
-     *
-     * @param A Set of destination events.
-     * @param B Set of destination events.
-     * @return Union of both sets.
-     */
-    private Set<DestinationEvent> unionOfDestinationEvents(
-            // TODO(@braeden): delete method, use set.addAll() instead
-            Collection<DestinationEvent> A,
-            Collection<DestinationEvent> B) {
-        HashSet<DestinationEvent> union = new HashSet<DestinationEvent>();
-        for (DestinationEvent a: A) {
-            if (B.contains(a)) {
-                union.add(a);
-            }
-        }
-        return union;
     }
 
     /**
