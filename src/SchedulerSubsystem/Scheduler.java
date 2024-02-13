@@ -65,7 +65,11 @@ public class Scheduler implements Runnable {
      * @return Direction elevator is travelling.
      */
     private Direction getElevatorDirection(ElevatorStateEvent e) {
-        return Direction.UP;
+        Direction direction = null;
+        for (DestinationEvent event: e.passengerCountMap().keySet()) {
+            direction = event.direction();
+        }
+        return direction;
     };
 
     /**
@@ -78,7 +82,7 @@ public class Scheduler implements Runnable {
             new Thread(new Loader(event, transmitterToFloor, transmitterToElevator)).start();
         else // Keep moving
             // Note(@braeden): event.direction() is deprecated
-            transmitterToElevator.send(new MoveElevatorCommand(event.elevatorNum(), event.direction()));
+            transmitterToElevator.send(new MoveElevatorCommand(event.elevatorNum(), getElevatorDirection(event)));
     }
 
     /**
