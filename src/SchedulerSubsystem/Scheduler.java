@@ -54,8 +54,8 @@ public class Scheduler implements Runnable {
         Set<DestinationEvent> union = new HashSet<DestinationEvent>();
         union.addAll(floorRequests);
         union.addAll(e.passengerCountMap().keySet());
-        Set<Integer> destinationFloors = filterDestinationFloors(union);
-        return destinationFloors.contains(e.currentFloor());
+        DestinationEvent event = new DestinationEvent(e.currentFloor(), Direction.UP);
+        return union.contains(event);
     }
 
     /**
@@ -85,21 +85,6 @@ public class Scheduler implements Runnable {
             processDestinationEvent((DestinationEvent) event);
         else // Default, should never happen
             throw new InvalidTypeException("Event type received cannot be handled by this subsystem.");
-    }
-
-    /**
-     * Filters destination floors from destination events.
-     *
-     * @param events Set of destination events.
-     * @return Set of destination floors.
-     */
-    private Set<Integer> filterDestinationFloors(Set<DestinationEvent> events) {
-        //TODO(@braeden): delete method
-        Set<Integer> destinationFloors = new HashSet<>();
-        for (DestinationEvent e: events) {
-            destinationFloors.add(e.destinationFloor());
-        }
-        return destinationFloors;
     }
 
     @Override
