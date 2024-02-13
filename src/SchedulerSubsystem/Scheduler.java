@@ -102,6 +102,7 @@ public class Scheduler implements Runnable {
         return destinationFloors;
     }
 
+    // TODO(@braeden): refactor docs to be more accurate
     /**
      * Sets destination events of this scheduler.
      *
