@@ -47,4 +47,14 @@ public class Config {
         return loadTime;
     }
 
+    public void printConfig() {
+        System.out.println("Launching system under the following configuration:");
+        System.out.println("-- numFloors: " + getNumFloors());
+        System.out.println("-- numElevators: " + getNumElevators());
+        System.out.println("-- travelTime: " + getTravelTime() + " [ms]");
+        System.out.println("-- loadTime: " + getLoadTime() + " [ms]");
+        System.out.println();
+        return;
+    }
+
 }
