@@ -10,7 +10,8 @@
 5. [Scope](#scope)
 6. [Tasks](#tasks)
 7. [Test](#test)
-8. [Known Issues](#known-issues)
+8. [Resources](#resources)
+9. [Known Issues](#known-issues)
 
 ## Authors 
 Group A1:1
@@ -77,9 +78,6 @@ See test README for test file structure.
 **Parser.java**
 - Parses input-file.txt to simulate input events to the system
 
-**input-file.txt**
-- Input file used to provide inputs to the system
-
 **DestinationDispatcher.java**
 - Sends DestinationEvent records to the scheduler
 
@@ -125,6 +123,15 @@ See test README for test file structure.
 
 **Direction.java**
 - Enum of directions (UP, DOWN, STOPPED)
+
+### Configuration
+
+**Configuration.java** 
+- Class which parses JSON configuration file into Config object.
+
+**Config.java** 
+- Class which contains system configuration data.
+
 
 ### Tests
 
@@ -226,7 +233,17 @@ For additional reading on testing private methods, see this [article](https://ww
 **IntelliJ can't find your tests?**
 Ensure you have directory `test` labelled as your Test Source Folder in Project Structure > Modules.
 
-** Test classes don't compile due to missing imports (red squiggles)?**
+**Test classes don't compile due to missing imports (red squiggles)?**
 Alt-enter on the invalid imports, and select add JUnit 5.8.1 to classpath, select OK.
+
+## Resources
+Resources for this project, such as system configuration and input files, are included in the `res/` directory. 
+
+### System Input
+System input files are text files used to simulate input into the system, and contain newline separated input strings adherent to the form specified in the project requirements.
+
+### System Configuration
+System configuration files are stored as JSONs, and specify values for the system components that configure its runtime behaviour.
+
 ## Known Issues
 See GitHub project issues for most up-to-date issues

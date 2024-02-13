@@ -9,5 +9,5 @@ package Networking;
 public enum Direction {
     UP,
     DOWN,
-    STOPPED
+    STOPPED // TODO: Remove (Deprecated)
 }

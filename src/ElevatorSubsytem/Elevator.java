@@ -11,23 +11,33 @@ import Networking.Messages.*;
 import Networking.Receivers.DMA_Receiver;
 import Networking.Transmitters.DMA_Transmitter;
 import com.sun.jdi.InvalidTypeException;
+import Configuration.Configurator;
+import Configuration.Config;
 
 import java.util.HashMap;
 import java.util.Set;
 
 public class Elevator implements Runnable {
     /** Single floor travel time */
-    private static final long TRAVEL_TIME = 8500;
-    private  static final long LOAD_TIME = 1000;
     private final int elevNum;
     private int currentFloor;
     @Deprecated
     private Direction direction;
+    private long travelTime;
+    private long loadTime;
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
     private final DMA_Transmitter transmitterToScheduler;
     private final DMA_Receiver receiver;
 
     public Elevator(int elevNum, DMA_Receiver receiver, DMA_Transmitter transmitter) {
+
+        // Configure Elevator from JSON
+        String jsonFilename = "res/system-config-00.json";
+        System.out.println("Configuring Elevator " + elevNum + "...");
+        Config config = (new Configurator(jsonFilename).getConfig());
+        this.travelTime = config.getTravelTime();
+        this.loadTime = config.getLoadTime();
+
         this.currentFloor = 0;
         this.elevNum = elevNum;
         this.direction = Direction.STOPPED;
@@ -39,7 +49,7 @@ public class Elevator implements Runnable {
     /**
      * Elevator travels to a specified floor.
      *
-     * @param direction
+     * @param direction the direction to travel towards.
      */
     private void move(Direction direction) {
         if (direction == Direction.UP){
@@ -50,7 +60,7 @@ public class Elevator implements Runnable {
         }
         System.out.println("Elevator: Going " + direction + ", to floor" + currentFloor + ".");
         try {
-            Thread.sleep(TRAVEL_TIME);
+            Thread.sleep(travelTime);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -81,8 +91,8 @@ public class Elevator implements Runnable {
             return;
         }
         try {
-            // each passenger takes LOAD_TIME to leave the elevator.
-            Thread.sleep(LOAD_TIME * passengerCountMap.remove(new DestinationEvent(currentFloor,direction)));
+            // each passenger takes loadTime to leave the elevator.
+            Thread.sleep(loadTime * passengerCountMap.remove(new DestinationEvent(currentFloor,direction)));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -93,7 +103,7 @@ public class Elevator implements Runnable {
     private void load(MovePassengersCommand command){
         // load passengers into the elevator, taking LOAD_TIME per passengers waiting on the floor.
         try {
-            Thread.sleep(LOAD_TIME * command.newPassengers().size());
+            Thread.sleep(loadTime * command.newPassengers().size());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -118,10 +128,7 @@ public class Elevator implements Runnable {
      * @throws InvalidTypeException If it receives an event type this class cannot handle
      */
     private void processMessage(SystemMessage event) throws InvalidTypeException {
-        // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.\
-        if (event instanceof SystemCommand && !((SystemCommand) event).matchKey(this.elevNum)){
-            return;
-        }
+        // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.
         if (event instanceof MoveElevatorCommand)
             move(((MoveElevatorCommand) event).direction());
         else if (event instanceof MovePassengersCommand) {
