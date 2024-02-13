@@ -139,7 +139,7 @@ public class Scheduler implements Runnable {
         }
     }
 
-    /* Nested Test Class */
+    /* Test */
 
     /**
      * Nested test class for Scheduler unit tests.
@@ -150,7 +150,7 @@ public class Scheduler implements Runnable {
 
         DMA_Receiver receiver, mockFloorReceiver, mockElevatorReceiver;
         DMA_Transmitter mockTransmitterToFloor, mockTransmitterToElevator;
-        Scheduler s;
+        Scheduler scheduler;
         @BeforeEach
         public void setUp() {
             receiver = new DMA_Receiver();
@@ -158,7 +158,7 @@ public class Scheduler implements Runnable {
             mockElevatorReceiver = new DMA_Receiver();
             mockTransmitterToFloor = new DMA_Transmitter(mockFloorReceiver);
             mockTransmitterToElevator = new DMA_Transmitter((mockElevatorReceiver));
-            s = new Scheduler(receiver, mockTransmitterToFloor, mockTransmitterToElevator);
+            scheduler = new Scheduler(receiver, mockTransmitterToFloor, mockTransmitterToElevator);
         }
 
         /**
@@ -172,14 +172,14 @@ public class Scheduler implements Runnable {
             DestinationEvent destinationEvent = new DestinationEvent(floor, Direction.UP);
             HashSet<DestinationEvent> schedulerDestinationEvents = new HashSet<>();
             schedulerDestinationEvents.add(destinationEvent);
-            s.setFloorRequests(schedulerDestinationEvents);
+            scheduler.setFloorRequests(schedulerDestinationEvents);
 
             HashMap<DestinationEvent, Integer> elevatorDestinationEvents = new HashMap<DestinationEvent, Integer>();
             elevatorDestinationEvents.put(destinationEvent, 1);
             ElevatorStateEvent elevatorStateEvent = new ElevatorStateEvent(1, floor, Direction.UP, elevatorDestinationEvents);
 
             // Act
-            boolean result = s.isElevatorStopping(elevatorStateEvent);
+            boolean result = scheduler.isElevatorStopping(elevatorStateEvent);
 
             // Assert
             assertEquals(true, result);
