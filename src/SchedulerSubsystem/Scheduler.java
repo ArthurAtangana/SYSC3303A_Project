@@ -54,9 +54,18 @@ public class Scheduler implements Runnable {
         Set<DestinationEvent> union = new HashSet<DestinationEvent>();
         union.addAll(floorRequests);
         union.addAll(e.passengerCountMap().keySet());
-        DestinationEvent event = new DestinationEvent(e.currentFloor(), Direction.UP);
-        return union.contains(event);
+
+        return union.contains(new DestinationEvent(e.currentFloor(), getElevatorDirection(e)));
     }
+
+    /**
+     * Gets direction elevator is currently traveling.
+     *
+     * @param e Elevator state to get direction from.
+     */
+    private Direction getElevatorDirection(ElevatorStateEvent e) {
+        return Direction.UP;
+    };
 
     /**
      *  process elevator event with elevator state (current floor, direction, passengerList)
