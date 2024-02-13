@@ -59,7 +59,7 @@ public class Scheduler implements Runnable {
     }
 
     /**
-     * Gets direction elevator is currently traveling.
+     * Gets the direction an elevator is travelling.
      *
      * @param e Elevator state to get direction from.
      * @return Direction elevator is travelling.
@@ -118,9 +118,9 @@ public class Scheduler implements Runnable {
     /* Test */
 
     /**
-     * Nested test class for Scheduler unit tests.
+     * Nested test class for class Scheduler. Contains unit tests for critical private methods.
      *
-     * See README for reasoning.
+     * See README section Test for additional context.
      */
     public static class SchedulerTest {
 
