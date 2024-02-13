@@ -126,6 +126,15 @@ See test README for test file structure.
 **Direction.java**
 - Enum of directions (UP, DOWN, STOPPED)
 
+### Configuration
+
+**Configuration.java** 
+- Class which parses JSON configuration file into Config object.
+
+**Config.java** 
+- Class which contains system configuration data.
+
+
 ### Tests
 
 #### <u>resources</u>
