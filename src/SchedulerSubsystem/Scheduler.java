@@ -65,6 +65,10 @@ public class Scheduler implements Runnable {
      * @return Direction elevator is travelling.
      */
     private Direction getElevatorDirection(ElevatorStateEvent e) {
+        // TODO(@braeden): should always return a valid direction or throw error
+        //   I'm worried about returning a null value!
+        // TODO(@braeden): should also assert that every direction is same?
+        //   see Elevator.getDirection
         Direction direction = null;
         for (DestinationEvent event: e.passengerCountMap().keySet()) {
             direction = event.direction();
