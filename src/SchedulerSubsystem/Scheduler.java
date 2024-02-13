@@ -40,8 +40,8 @@ public class Scheduler implements Runnable {
      * @return True if elevator should stop, false otherwise.
      */
     public boolean isElevatorStopping(ElevatorStateEvent e) {
-        // Elevator should stop if elevator.currentFloor belongs to the
-        // union of scheduler.destinationEvents and elevator.destinationEvents.
+        // Elevator should stop if (elevator.currentFloor, elevator.Direction)
+        // belongs to the union of scheduler.destinationEvents and elevator.destinationEvents.
         //
         // See state diagram of scheduler for additional context.
 
@@ -86,6 +86,7 @@ public class Scheduler implements Runnable {
      * @return Set of destination floors.
      */
     private Set<Integer> filterDestinationFloors(Set<DestinationEvent> events) {
+        //TODO(@braeden): delete method
         Set<Integer> destinationFloors = new HashSet<>();
         for (DestinationEvent e: events) {
             destinationFloors.add(e.destinationFloor());
@@ -101,6 +102,7 @@ public class Scheduler implements Runnable {
      * @return Union of both sets.
      */
     private Set<DestinationEvent> unionOfDestinationEvents(
+            // TODO(@braeden): delete method, use set.addAll() instead
             Collection<DestinationEvent> A,
             Collection<DestinationEvent> B) {
         HashSet<DestinationEvent> union = new HashSet<DestinationEvent>();
