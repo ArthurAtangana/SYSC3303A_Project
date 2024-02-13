@@ -1,3 +1,5 @@
+import Configuration.Configurator;
+import Configuration.Config;
 import ElevatorSubsytem.Elevator;
 import FloorSubsystem.DestinationDispatcher;
 import FloorSubsystem.Floor;
@@ -16,17 +18,26 @@ import java.util.ArrayList;
  */
 public class Main {
     // Note: our system starts counting floors at 0 :)
-    private static final int NUM_FLOORS = 8;
-    private static final int NUM_ELEVATORS = 1;
     private static final ArrayList<Thread> floorThreads = new ArrayList<>();
     private static final ArrayList<Thread> elevatorThreads = new ArrayList<>();
 
     public static void main(String[] args) {
+
+        // Ingest system configuration from JSON
+        String jsonFilename = "res/system-config-00.json";
+        System.out.println("Reading system configuration from \"" + jsonFilename +"\"");
+        Config config = (new Configurator(jsonFilename).getConfig());
+        config.printConfig();
+        int numFloors = config.getNumFloors();
+        int numElevators = config.getNumElevators();
+        long travelTime = config.getTravelTime();
+        long loadTime = config.getLoadTime();
+
         // Create receivers
         DMA_Receiver schedulerReceiver = new DMA_Receiver();
         DMA_Receiver elevatorReceiver = new DMA_Receiver();
         ArrayList<DMA_Receiver> floorReceivers = new ArrayList<>();
-        for(int i=0; i < NUM_FLOORS; i++){
+        for(int i=0; i < numFloors; i++){
             floorReceivers.add(new DMA_Receiver());
         }
 
@@ -38,12 +49,12 @@ public class Main {
         // Start floor, elevator, and scheduler threads
         Scheduler scheduler = new Scheduler(schedulerReceiver, toFloorsTransmitter, toElevatorTransmitter);
         Thread schedulerThread = new Thread(scheduler);
-        for (int i = 0; i < NUM_FLOORS; ++i) {
+        for (int i = 0; i < numFloors; ++i) {
             Thread newFloor = new Thread(new Floor(i, floorReceivers.get(i)));
             floorThreads.add(newFloor);
             newFloor.start();
         }
-        for (int i = 0; i < NUM_ELEVATORS; ++i) {
+        for (int i = 0; i < numElevators; ++i) {
             Thread newElevator = new Thread(new Elevator(i, elevatorReceiver, toSchedulerTransmitter));
             elevatorThreads.add(newElevator);
             newElevator.start();
