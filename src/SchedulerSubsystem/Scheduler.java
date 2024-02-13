@@ -62,6 +62,7 @@ public class Scheduler implements Runnable {
      * Gets direction elevator is currently traveling.
      *
      * @param e Elevator state to get direction from.
+     * @return Direction elevator is travelling.
      */
     private Direction getElevatorDirection(ElevatorStateEvent e) {
         return Direction.UP;
