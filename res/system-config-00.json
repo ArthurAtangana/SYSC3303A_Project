@@ -1,12 +1,6 @@
 {
-  "system": 
-    {
-      "numFloors": 7,
-      "numElevators": 1
-    },
-  "elevator":
-    {
-      "travelTime": 8500,
-      "loadTime": 1000
-    }
+  "numFloors": 7,
+  "numElevators": 1,
+  "travelTime": 8500,
+  "loadTime": 1000
 }
