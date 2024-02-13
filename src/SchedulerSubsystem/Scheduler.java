@@ -81,7 +81,6 @@ public class Scheduler implements Runnable {
         if (isElevatorStopping(event)) // Stop elevator for a load
             new Thread(new Loader(event, transmitterToFloor, transmitterToElevator)).start();
         else // Keep moving
-            // Note(@braeden): event.direction() is deprecated
             transmitterToElevator.send(new MoveElevatorCommand(event.elevatorNum(), getElevatorDirection(event)));
     }
 
