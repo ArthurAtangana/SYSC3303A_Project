@@ -6,29 +6,62 @@
 
 package FloorSubsystem;
 
-import Networking.Messages.ElevatorStateEvent;
-import Networking.Messages.SystemMessage;
+import Networking.Direction;
+import Networking.Messages.*;
 import Networking.Receivers.DMA_Receiver;
 import com.sun.jdi.InvalidTypeException;
+
+import java.util.ArrayList;
 
 public class Floor implements Runnable {
     private int floorLamp;
     private final int floorNum;
     private final DMA_Receiver receiver;
+    private ArrayList<DestinationEvent> floorRequests;
 
     public Floor(int floorNumber, DMA_Receiver receiver) {
         this.floorNum = floorNumber;
         this.receiver = receiver;
         // Start elevator location at 0 until an update is received
         floorLamp = 0;
+        floorRequests = new ArrayList<>();
     }
     /**
      * Setting the lamp to display which floor the elevator is on.
+     *
      * @param floorNumber The floor number that the elevator is currently on.
      */
     private void setLamp(int floorNumber) {
         floorLamp = floorNumber;
         System.out.println("Floor #"+floorNum+": Lamp display updated to floor#"+ floorLamp + ".");
+    }
+
+    /**
+     * Storing the floor request made by a passenger.
+     *
+     * @param destinationEvent Destination event received from the scheduler.
+     */
+    private void storeDestination(DestinationEvent destinationEvent) {
+        floorRequests.add(destinationEvent);
+    }
+
+    /**
+     * Sending passengers onto the elevator. Once loaded, they are no longer waiting for
+     * service from the floor.
+     *
+     * @param sendPassengersCommand Passenger load event received from the scheduler.
+     */
+    private void sendPassengers(SendPassengersCommand sendPassengersCommand) {
+        ArrayList<DestinationEvent> passengersToLoad = new ArrayList<>();
+        Direction currentDirection = sendPassengersCommand.dir();
+        // Send passengers with current direction
+        for (DestinationEvent dest : floorRequests) {
+            if (dest.direction() == currentDirection) {
+                passengersToLoad.add(dest);
+            }
+        }
+        sendPassengersCommand.tx().send(new PassengerLoadEvent(passengersToLoad));
+        floorRequests.removeAll(passengersToLoad);
     }
 
     /**
@@ -41,6 +74,12 @@ public class Floor implements Runnable {
         // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.
         if (event instanceof ElevatorStateEvent)
             setLamp(((ElevatorStateEvent) event).currentFloor());
+        else if (event instanceof SendPassengersCommand) {
+            sendPassengers((SendPassengersCommand) event);
+        }
+        else if (event instanceof DestinationEvent) {
+            storeDestination((DestinationEvent) event);
+        }
         else // Default, should never happen
             throw new InvalidTypeException("Event type received cannot be handled by this subsystem.");
     }
