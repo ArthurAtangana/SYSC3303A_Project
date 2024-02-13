@@ -63,7 +63,8 @@ public class Main {
         // Instantiate Parser and parse input file to FloorInputEvents
         System.out.println("\n****** Generating System Input Events ******\n");
         Parser parser = new Parser();
-        ArrayList<FloorInputEvent> inputEvents = parser.parse("input-file.txt");
+        String inputFilename = "res/input-file.txt";
+        ArrayList<FloorInputEvent> inputEvents = parser.parse(inputFilename);
 
         // Start dispatcher (want all systems to be ready before sending events)
         System.out.println("\n****** Begin Real-Time System Operation ******\n");
