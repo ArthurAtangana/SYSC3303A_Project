@@ -8,19 +8,30 @@
  */
 package Networking.Receivers;
 
+import Networking.Messages.SystemCommand;
 import Networking.Messages.SystemMessage;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DMA_Receiver implements Receiver{
     // Message buffer
-    private final ArrayList<SystemMessage> msgBuf;
+    private final List<SystemMessage> msgBuf;
+    private final int key;
 
     /**
      * Default DMA_Receiver constructor.
      */
     public DMA_Receiver(){
-        msgBuf = new ArrayList<>();
+        this(-1); // invalid key, will not match against anything
+    }
+
+    /**
+     * DMA_Receiver with key to check commands against.
+     */
+    public DMA_Receiver(int key) {
+        this.key = key;
+        this.msgBuf = new ArrayList<>();
     }
 
     /**
@@ -39,6 +50,7 @@ public class DMA_Receiver implements Receiver{
                 throw new RuntimeException(e);
             }
         }
+
         return msgBuf.remove(0);
     }
 
@@ -46,8 +58,14 @@ public class DMA_Receiver implements Receiver{
      * Asynchronous receive method to update the buffer from the DMA_Transmitter.
      * @param msg The message to store in the message buffer.
      */
-    public synchronized void setMessage(SystemMessage msg) {
-        msgBuf.add(msg);
-        notifyAll();
+    public void setMessage(SystemMessage msg) {
+        // GUARD: If the message type is a command, only accept it if it is addressed to this receiver.
+        if (msg instanceof SystemCommand && !((SystemCommand) msg).matchKey(this.key))
+            return;
+        // Store message and notify if waiting.
+        synchronized (msgBuf) {
+            msgBuf.add(msg);
+            notify(); // Single wait type, single notify
+        }
     }
 }
