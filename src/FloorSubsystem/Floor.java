@@ -6,24 +6,25 @@
 
 package FloorSubsystem;
 
+import Networking.Direction;
 import Networking.Messages.*;
 import Networking.Receivers.DMA_Receiver;
 import com.sun.jdi.InvalidTypeException;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 public class Floor implements Runnable {
     private int floorLamp;
     private final int floorNum;
     private final DMA_Receiver receiver;
-    private HashSet<DestinationEvent> floorRequests;
+    private ArrayList<DestinationEvent> floorRequests;
 
     public Floor(int floorNumber, DMA_Receiver receiver) {
         this.floorNum = floorNumber;
         this.receiver = receiver;
         // Start elevator location at 0 until an update is received
         floorLamp = 0;
-        floorRequests = new HashSet<>();
+        floorRequests = new ArrayList<>();
     }
     /**
      * Setting the lamp to display which floor the elevator is on.
@@ -48,10 +49,19 @@ public class Floor implements Runnable {
      * Sending passengers onto the elevator. Once loaded, they are no longer waiting for
      * service from the floor.
      *
-     * @param passengerLoadEvent Passenger load event received from the scheduler.
+     * @param sendPassengersCommand Passenger load event received from the scheduler.
      */
-    private void sendPassengers(PassengerLoadEvent passengerLoadEvent) {
-        floorRequests.removeAll(passengerLoadEvent.passengers());
+    private void sendPassengers(SendPassengersCommand sendPassengersCommand) {
+        ArrayList<DestinationEvent> passengersToLoad = new ArrayList<>();
+        Direction currentDirection = sendPassengersCommand.dir();
+        // Send passengers with current direction
+        for (DestinationEvent dest : floorRequests) {
+            if (dest.direction() == currentDirection) {
+                passengersToLoad.add(dest);
+            }
+        }
+        sendPassengersCommand.tx().send(new PassengerLoadEvent(passengersToLoad));
+        floorRequests.removeAll(passengersToLoad);
     }
 
     /**
@@ -64,8 +74,8 @@ public class Floor implements Runnable {
         // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.
         if (event instanceof ElevatorStateEvent)
             setLamp(((ElevatorStateEvent) event).currentFloor());
-        else if (event instanceof PassengerLoadEvent) {
-            sendPassengers((PassengerLoadEvent) event);
+        else if (event instanceof SendPassengersCommand) {
+            sendPassengers((SendPassengersCommand) event);
         }
         else if (event instanceof DestinationEvent) {
             storeDestination((DestinationEvent) event);
