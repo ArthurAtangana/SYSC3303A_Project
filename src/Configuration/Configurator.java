@@ -57,15 +57,7 @@ public class Configurator {
         String jsonFilename = "res/system-config-00.json";
         Configurator configurator = new Configurator(jsonFilename);
         Config config = configurator.getConfig();
-
-        // Print
-        System.out.println();
-        System.out.println("*** Printing parsed config values from \"" + jsonFilename +"\":");
-        System.out.println("-- numFloors: " + config.getNumFloors());
-        System.out.println("-- numElevators: " + config.getNumElevators());
-        System.out.println("-- travelTime: " + config.getTravelTime());
-        System.out.println("-- loadTime: " + config.getLoadTime());
-        System.out.println();
+        config.printConfig();
 
         return;
     }
