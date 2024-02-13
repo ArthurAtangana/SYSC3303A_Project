@@ -102,17 +102,6 @@ public class Scheduler implements Runnable {
         return destinationFloors;
     }
 
-    // TODO(@braeden): refactor docs to be more accurate
-    /**
-     * Sets destination events of this scheduler.
-     *
-     * @param events Set of destination events to be set.
-     */
-    public void setFloorRequests(Set<DestinationEvent> events) {
-        // Documenting a setter for a set is unsettling ...
-        this.floorRequests = events;
-    }
-
     @Override
     public void run() {
         while (true){
@@ -157,7 +146,7 @@ public class Scheduler implements Runnable {
             DestinationEvent destinationEvent = new DestinationEvent(floor, Direction.UP);
             HashSet<DestinationEvent> schedulerDestinationEvents = new HashSet<>();
             schedulerDestinationEvents.add(destinationEvent);
-            scheduler.setFloorRequests(schedulerDestinationEvents);
+            scheduler.floorRequests = schedulerDestinationEvents;
 
             HashMap<DestinationEvent, Integer> elevatorDestinationEvents = new HashMap<DestinationEvent, Integer>();
             elevatorDestinationEvents.put(destinationEvent, 1);
