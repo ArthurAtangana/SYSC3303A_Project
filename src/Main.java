@@ -23,9 +23,10 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // Ingest system configuration from JSON
+        // Configure system from JSON
+        System.out.println("\n****** Configuring System ******\n");
         String jsonFilename = "res/system-config-00.json";
-        System.out.println("Reading system configuration from \"" + jsonFilename +"\"");
+        System.out.println("Reading system configuration from \"" + jsonFilename +"\"...");
         Config config = (new Configurator(jsonFilename).getConfig());
         config.printConfig();
         int numFloors = config.getNumFloors();
