@@ -1,6 +1,6 @@
-package Networking.Messages;
+package Messaging.Events;
 
-import Networking.Direction;
+import Messaging.Direction;
 
 /**
  * FloorInputEvent record, models an input event to the system. These events

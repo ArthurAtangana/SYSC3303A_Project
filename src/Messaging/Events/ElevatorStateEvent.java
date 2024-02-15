@@ -1,6 +1,6 @@
-package Networking.Messages;
+package Messaging.Events;
 
-import Networking.Direction;
+import Messaging.Direction;
 
 import java.util.HashMap;
 

@@ -1,12 +1,12 @@
 package SchedulerSubsystem;
 
-import Networking.Direction;
-import Networking.Messages.DestinationEvent;
-import Networking.Messages.ElevatorStateEvent;
-import Networking.Messages.MoveElevatorCommand;
-import Networking.Messages.SystemMessage;
-import Networking.Receivers.DMA_Receiver;
-import Networking.Transmitters.DMA_Transmitter;
+import Messaging.Direction;
+import Messaging.Events.DestinationEvent;
+import Messaging.Events.ElevatorStateEvent;
+import Messaging.Commands.MoveElevatorCommand;
+import Messaging.SystemMessage;
+import Messaging.Receivers.DMA_Receiver;
+import Messaging.Transmitters.DMA_Transmitter;
 import com.sun.jdi.InvalidTypeException;
 import org.junit.jupiter.api.*;
 

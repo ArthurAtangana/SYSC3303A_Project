@@ -6,9 +6,13 @@
 
 package FloorSubsystem;
 
-import Networking.Direction;
-import Networking.Messages.*;
-import Networking.Receivers.DMA_Receiver;
+import Messaging.Commands.SendPassengersCommand;
+import Messaging.Direction;
+import Messaging.Events.DestinationEvent;
+import Messaging.Events.ElevatorStateEvent;
+import Messaging.Events.PassengerLoadEvent;
+import Messaging.Receivers.DMA_Receiver;
+import Messaging.SystemMessage;
 import com.sun.jdi.InvalidTypeException;
 
 import java.util.ArrayList;

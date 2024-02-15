@@ -1,4 +1,6 @@
-package Networking.Messages;
+package Messaging.Commands;
+
+import Messaging.SystemMessage;
 
 /**
  * Interface definition for all commands passed in the system to inherit.

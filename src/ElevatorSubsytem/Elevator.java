@@ -6,10 +6,14 @@
 
 package ElevatorSubsytem;
 
-import Networking.Direction;
-import Networking.Messages.*;
-import Networking.Receivers.DMA_Receiver;
-import Networking.Transmitters.DMA_Transmitter;
+import Messaging.Commands.MoveElevatorCommand;
+import Messaging.Commands.MovePassengersCommand;
+import Messaging.Direction;
+import Messaging.Events.DestinationEvent;
+import Messaging.Events.ElevatorStateEvent;
+import Messaging.Receivers.DMA_Receiver;
+import Messaging.SystemMessage;
+import Messaging.Transmitters.DMA_Transmitter;
 import com.sun.jdi.InvalidTypeException;
 import Configuration.Configurator;
 import Configuration.Config;

@@ -1,6 +1,6 @@
-package Networking.Messages;
+package Messaging.Events;
 
-import Networking.Direction;
+import Messaging.Direction;
 /**
  * DestinationEvent record, holds data modelling a destination.
  * Floor requests, and passengers in the system can both be modeled as a destination to be served.

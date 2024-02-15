@@ -7,8 +7,8 @@
 package unit.FloorSubsystem;
 
 import FloorSubsystem.Parser;
-import Networking.Direction;
-import Networking.Messages.FloorInputEvent;
+import Messaging.Direction;
+import Messaging.Events.FloorInputEvent;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

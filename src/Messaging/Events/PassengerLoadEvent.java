@@ -1,4 +1,4 @@
-package Networking.Messages;
+package Messaging.Events;
 
 import java.util.ArrayList;
 

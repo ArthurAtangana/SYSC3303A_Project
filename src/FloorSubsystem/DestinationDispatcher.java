@@ -9,9 +9,9 @@
 
 package FloorSubsystem;
 
-import Networking.Messages.DestinationEvent;
-import Networking.Messages.FloorInputEvent;
-import Networking.Transmitters.DMA_Transmitter;
+import Messaging.Events.DestinationEvent;
+import Messaging.Events.FloorInputEvent;
+import Messaging.Transmitters.DMA_Transmitter;
 
 import java.util.ArrayList;
 import java.util.Comparator;

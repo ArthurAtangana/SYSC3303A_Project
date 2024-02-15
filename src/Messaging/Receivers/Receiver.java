@@ -4,9 +4,9 @@
  * @author Alexandre Marques
  * @version Iteration-1
  */
-package Networking.Receivers;
+package Messaging.Receivers;
 
-import Networking.Messages.SystemMessage;
+import Messaging.SystemMessage;
 
 public interface Receiver {
     /**

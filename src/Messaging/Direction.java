@@ -4,7 +4,7 @@
  * @version 20240202
  */
 
-package Networking;
+package Messaging;
 
 public enum Direction {
     UP,

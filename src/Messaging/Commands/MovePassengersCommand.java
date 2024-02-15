@@ -1,4 +1,6 @@
-package Networking.Messages;
+package Messaging.Commands;
+
+import Messaging.Events.DestinationEvent;
 
 import java.util.ArrayList;
 

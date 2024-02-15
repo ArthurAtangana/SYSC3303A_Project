@@ -44,8 +44,8 @@
 
 package FloorSubsystem;
 
-import Networking.Direction;
-import Networking.Messages.FloorInputEvent;
+import Messaging.Direction;
+import Messaging.Events.FloorInputEvent;
 
 import java.io.*;
 import java.util.*;
