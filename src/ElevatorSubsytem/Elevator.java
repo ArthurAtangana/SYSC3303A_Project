@@ -6,6 +6,8 @@
 
 package ElevatorSubsytem;
 
+import Configuration.Config;
+import Configuration.Configurator;
 import Messaging.Commands.MoveElevatorCommand;
 import Messaging.Commands.MovePassengersCommand;
 import Messaging.Direction;
@@ -15,8 +17,6 @@ import Messaging.Receivers.DMA_Receiver;
 import Messaging.SystemMessage;
 import Messaging.Transmitters.DMA_Transmitter;
 import com.sun.jdi.InvalidTypeException;
-import Configuration.Configurator;
-import Configuration.Config;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -25,10 +25,8 @@ public class Elevator implements Runnable {
     /** Single floor travel time */
     private final int elevNum;
     private int currentFloor;
-    @Deprecated
-    private Direction direction;
-    private long travelTime;
-    private long loadTime;
+    private final long travelTime;
+    private final long loadTime;
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
     private final DMA_Transmitter transmitterToScheduler;
     private final DMA_Receiver receiver;
@@ -44,7 +42,6 @@ public class Elevator implements Runnable {
 
         this.currentFloor = 0;
         this.elevNum = elevNum;
-        this.direction = Direction.STOPPED;
         this.passengerCountMap = new HashMap<>();
         this.transmitterToScheduler = transmitter;
         this.receiver = receiver;
@@ -56,19 +53,16 @@ public class Elevator implements Runnable {
      * @param direction the direction to travel towards.
      */
     private void move(Direction direction) {
-        if (direction == Direction.UP){
-            currentFloor += 1;
-        }
-        else if (direction == Direction.DOWN){
-            currentFloor -= 1;
-        }
-        System.out.println("Elevator: Going " + direction + ", to floor" + currentFloor + ".");
+        System.out.println("Elevator: Going " + direction + ", from floor #" + currentFloor + ".");
         try {
             Thread.sleep(travelTime);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Elevator: Elevator is on floor " + this.currentFloor + ".");
+
+        currentFloor += direction.getDisplacement();
+
+        System.out.println("Elevator: Elevator reached floor #" + this.currentFloor + ".");
     }
 
     /**
@@ -77,7 +71,7 @@ public class Elevator implements Runnable {
      */
     private Direction elevatorDirection(){
         Set<DestinationEvent> destinationEvents = passengerCountMap.keySet();
-        // TODO: guard check on every direction being the same.
+
         Direction direction = null;
         for (DestinationEvent e : destinationEvents){
             if (direction == null){
@@ -121,7 +115,7 @@ public class Elevator implements Runnable {
      * Update scheduler with this elevator's state.
      */
     private void sendStateUpdate(){
-        ElevatorStateEvent stateEvent = new ElevatorStateEvent(elevNum, currentFloor, direction, passengerCountMap);
+        ElevatorStateEvent stateEvent = new ElevatorStateEvent(elevNum, currentFloor, passengerCountMap);
         transmitterToScheduler.send(stateEvent);
     }
 

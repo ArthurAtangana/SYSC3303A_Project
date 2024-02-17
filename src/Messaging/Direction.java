@@ -7,7 +7,16 @@
 package Messaging;
 
 public enum Direction {
-    UP,
-    DOWN,
-    STOPPED // TODO: Remove (Deprecated)
+    UP(1),
+    DOWN(-1);
+
+    private final int displacement;
+
+    Direction(int displacement) {
+        this.displacement = displacement;
+    }
+
+    public int getDisplacement() {
+        return displacement;
+    }
 }

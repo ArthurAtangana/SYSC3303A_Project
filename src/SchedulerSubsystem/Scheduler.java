@@ -1,40 +1,49 @@
 package SchedulerSubsystem;
 
+import Messaging.Commands.MoveElevatorCommand;
 import Messaging.Direction;
 import Messaging.Events.DestinationEvent;
 import Messaging.Events.ElevatorStateEvent;
-import Messaging.Commands.MoveElevatorCommand;
-import Messaging.SystemMessage;
+import Messaging.Events.FloorRequestEvent;
 import Messaging.Receivers.DMA_Receiver;
+import Messaging.SystemMessage;
 import Messaging.Transmitters.DMA_Transmitter;
 import com.sun.jdi.InvalidTypeException;
-import org.junit.jupiter.api.*;
+import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.runner.RunWith;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@RunWith(Enclosed.class)
 public class Scheduler implements Runnable {
     private final DMA_Transmitter transmitterToFloor;
     private final DMA_Transmitter transmitterToElevator;
     private final DMA_Receiver receiver;
-    private Set<DestinationEvent> floorRequests;
+    private final Map<DestinationEvent, Long> floorRequestsToTime;
 
     public Scheduler(DMA_Receiver receiver, DMA_Transmitter transmitterToFloor, DMA_Transmitter transmitterToElevator) {
         this.receiver = receiver;
         this.transmitterToElevator = transmitterToElevator;
         this.transmitterToFloor = transmitterToFloor;
-        floorRequests = new HashSet<DestinationEvent>();
+        floorRequestsToTime = new HashMap<>();
     }
 
     /**
      * Process event received from the floor.
      *
-     * @param destinationEvent Destination event received from floor.
+     * @param event Event to process.
      */
-    private void processDestinationEvent(DestinationEvent destinationEvent) {
+    private void storeFloorRequest(FloorRequestEvent event) {
         // Store event locally to use in scheduling
-        floorRequests.add(destinationEvent);
+        floorRequestsToTime.put(event.destinationEvent(), event.time());
     }
 
     /**
@@ -51,8 +60,8 @@ public class Scheduler implements Runnable {
 
         // Create new object for union set to avoid funny business of destination events
         // being added to the scheduler's floor requests!
-        Set<DestinationEvent> union = new HashSet<DestinationEvent>();
-        union.addAll(floorRequests);
+        Set<DestinationEvent> union = new HashSet<>();
+        union.addAll(floorRequestsToTime.keySet());
         union.addAll(e.passengerCountMap().keySet());
 
         return union.contains(new DestinationEvent(e.currentFloor(), getElevatorDirection(e)));
@@ -61,20 +70,44 @@ public class Scheduler implements Runnable {
     /**
      * Gets the direction an elevator is travelling.
      *
-     * @param e Elevator state to get direction from.
+     * @param event Elevator state to get direction from.
      * @return Direction elevator is travelling.
      */
-    private Direction getElevatorDirection(ElevatorStateEvent e) {
-        // TODO(@braeden): should always return a valid direction or throw error
-        //   I'm worried about returning a null value!
-        // TODO(@braeden): should also assert that every direction is same?
-        //   see Elevator.getDirection
+    private Direction getElevatorDirection(ElevatorStateEvent event) {
         Direction direction = null;
-        for (DestinationEvent event: e.passengerCountMap().keySet()) {
-            direction = event.direction();
+        for (DestinationEvent e : event.passengerCountMap().keySet()) {
+            if (direction == null) {
+                direction = e.direction();
+            }
+            if (direction != e.direction()) {
+                throw new RuntimeException("Missmatched passenger direction in elevator");
+            }
         }
+
+        if (direction == null) {
+            direction = getOldestFloorDir();
+
+            // TODO what if there are no floorRequests? Wait here, and notify when floor requests updated.
+            //  Synchronize on floorRequestsToTime
+            //  Save list of idle elevators to reply to
+        }
+
         return direction;
-    };
+    }
+
+    private Direction getOldestFloorDir() {
+        if (floorRequestsToTime.isEmpty()) return null;
+
+        Long waitTime = (long) -1;
+        Direction oldestDir = null;
+        // TODO: Set oldest dir
+        for (Map.Entry<DestinationEvent, Long> x : floorRequestsToTime.entrySet()) {
+            if (x.getValue() > waitTime) {
+                waitTime = x.getValue();
+            }
+        }
+        return oldestDir;
+    }
 
     /**
      *  process elevator event with elevator state (current floor, direction, passengerList)
@@ -98,8 +131,8 @@ public class Scheduler implements Runnable {
         // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.
         if (event instanceof ElevatorStateEvent)
             processElevatorEvent((ElevatorStateEvent) event);
-        else if (event instanceof DestinationEvent)
-            processDestinationEvent((DestinationEvent) event);
+        else if (event instanceof FloorRequestEvent)
+            storeFloorRequest((FloorRequestEvent) event);
         else // Default, should never happen
             throw new InvalidTypeException("Event type received cannot be handled by this subsystem.");
     }
@@ -148,17 +181,18 @@ public class Scheduler implements Runnable {
             DestinationEvent destinationEvent = new DestinationEvent(floor, Direction.UP);
             HashSet<DestinationEvent> schedulerDestinationEvents = new HashSet<>();
             schedulerDestinationEvents.add(destinationEvent);
+            // FIXME
             scheduler.floorRequests = schedulerDestinationEvents;
 
-            HashMap<DestinationEvent, Integer> elevatorDestinationEvents = new HashMap<DestinationEvent, Integer>();
+            HashMap<DestinationEvent, Integer> elevatorDestinationEvents = new HashMap<>();
             elevatorDestinationEvents.put(destinationEvent, 1);
-            ElevatorStateEvent elevatorStateEvent = new ElevatorStateEvent(1, floor, Direction.UP, elevatorDestinationEvents);
+            ElevatorStateEvent elevatorStateEvent = new ElevatorStateEvent(1, floor, elevatorDestinationEvents);
 
             // Act
             boolean result = scheduler.isElevatorStopping(elevatorStateEvent);
 
             // Assert
-            assertEquals(true, result);
+            assertTrue(result);
         }
     }
 }

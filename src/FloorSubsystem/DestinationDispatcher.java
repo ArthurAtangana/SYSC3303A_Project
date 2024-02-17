@@ -9,9 +9,11 @@
 
 package FloorSubsystem;
 
+import Messaging.Commands.PassengerArrivedCommand;
 import Messaging.Events.DestinationEvent;
 import Messaging.Events.FloorInputEvent;
-import Messaging.Transmitters.DMA_Transmitter;
+import Messaging.Events.FloorRequestEvent;
+import Messaging.Transmitters.Transmitter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -19,18 +21,20 @@ import java.util.Comparator;
 public class DestinationDispatcher implements Runnable {
     private long lastEventTime; // Stores occurrence time of last processed event
     private final ArrayList<FloorInputEvent> eventQueue; // Stores occurrence time of last processed event
-    private final DMA_Transmitter transmitterToScheduler;
+    private final Transmitter txToScheduler;
+    private final Transmitter txToFloor;
 
     /**
      * The default DestinationDispatcher construtor.
+     * TODO: docs
      *
      * @param events The list of input events to dispatch, can be unsorted.
-     * @param transmitterToScheduler A transmitter sending to a scheduler, to dispatch the events to it.
      */
-    public DestinationDispatcher(ArrayList<FloorInputEvent> events, DMA_Transmitter transmitterToScheduler){
-         this.transmitterToScheduler = transmitterToScheduler;
+    public DestinationDispatcher(ArrayList<FloorInputEvent> events, Transmitter txScheduler, Transmitter txToFloor) {
+        this.txToScheduler = txScheduler;
          this.eventQueue = events;
-         // Sort based on time int (low to high), TODO: TEST THIS
+        this.txToFloor = txToFloor;
+        // Sort based on time int (low to high)
          this.eventQueue.sort(Comparator.comparingLong(FloorInputEvent::time));
          // Set baseline time
          lastEventTime = eventQueue.get(0).time();
@@ -72,10 +76,17 @@ public class DestinationDispatcher implements Runnable {
             waitEvent();
             // Could pop from bottom for performance increase... if that's necessary
             FloorInputEvent curEvent = eventQueue.remove(0);
+
             // Send floor request to scheduler
-            DestinationEvent dest = new DestinationEvent(curEvent.destinationFloor(), curEvent.direction());
-            System.out.println("Floor: Sending destination, "+dest);
-            transmitterToScheduler.send(dest);
+            DestinationEvent currentFloorEvent = new DestinationEvent(curEvent.sourceFloor(), curEvent.direction());
+            FloorRequestEvent floorReqEvent = new FloorRequestEvent(currentFloorEvent, curEvent.time());
+
+            txToScheduler.send(floorReqEvent);
+
+            // Send passenger destination to floor
+            DestinationEvent passengerDestination = new DestinationEvent(curEvent.destinationFloor(), curEvent.direction());
+            PassengerArrivedCommand passengerCmd = new PassengerArrivedCommand(curEvent.sourceFloor(), passengerDestination);
+            txToFloor.send(passengerCmd);
         }
     }
 }
