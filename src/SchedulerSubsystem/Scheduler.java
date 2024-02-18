@@ -8,6 +8,7 @@ import Messaging.Events.FloorRequestEvent;
 import Messaging.Receivers.DMA_Receiver;
 import Messaging.SystemMessage;
 import Messaging.Transmitters.DMA_Transmitter;
+import Networking.Messages.ElevatorStateEvent;
 import com.sun.jdi.InvalidTypeException;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -15,10 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -28,12 +26,14 @@ public class Scheduler implements Runnable {
     private final DMA_Transmitter transmitterToElevator;
     private final DMA_Receiver receiver;
     private final Map<DestinationEvent, Long> floorRequestsToTime;
+    private ArrayList<ElevatorStateEvent> idleElevators;
 
     public Scheduler(DMA_Receiver receiver, DMA_Transmitter transmitterToFloor, DMA_Transmitter transmitterToElevator) {
         this.receiver = receiver;
         this.transmitterToElevator = transmitterToElevator;
         this.transmitterToFloor = transmitterToFloor;
         floorRequestsToTime = new HashMap<>();
+        idleElevators = new ArrayList<ElevatorStateEvent>();
     }
 
     /**
@@ -46,6 +46,9 @@ public class Scheduler implements Runnable {
         if (!floorRequestsToTime.containsKey(event.destinationEvent()))
             // Only store request if it does not already exist
             floorRequestsToTime.put(event.destinationEvent(), event.time());
+        if (!idleElevators.isEmpty()){
+            processElevatorEvent(idleElevators.remove(0));
+        }
     }
 
     /**
@@ -125,6 +128,9 @@ public class Scheduler implements Runnable {
     private void processElevatorEvent(ElevatorStateEvent event) {
         if (isElevatorStopping(event)) // Stop elevator for a load
             new Thread(new Loader(event, transmitterToFloor, transmitterToElevator)).start();
+        // TODO: redo condition coz floorRequests doesnt exists anymore.
+        else if (floorRequests.isEmpty()) {
+            idleElevators.add(event);
         else // Keep moving
             transmitterToElevator.send(new MoveElevatorCommand(event.elevatorNum(), getElevatorDirection(event)));
     }
