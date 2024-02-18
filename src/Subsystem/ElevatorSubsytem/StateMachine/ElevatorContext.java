@@ -1,8 +1,9 @@
-package Subsystem.ElevatorSubsytem;
+package Subsystem.ElevatorSubsytem.StateMachine;
 
 import Messaging.Direction;
 import Messaging.Events.DestinationEvent;
 import Messaging.Receivers.Receiver;
+import Messaging.SystemMessage;
 import Messaging.Transmitters.Transmitter;
 import Subsystem.SubsystemContext;
 
@@ -20,6 +21,7 @@ public class ElevatorContext extends SubsystemContext {
     private final Transmitter txScheduler;
     private int currentFloor;
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
+    private Direction direction;
 
     ElevatorContext(Receiver rx, Transmitter txScheduler) {
         super(++key_count, rx);
@@ -27,6 +29,7 @@ public class ElevatorContext extends SubsystemContext {
         // Initial memory state
         currentFloor = 0; // Start at bottom floor
         passengerCountMap = new HashMap<>(); // Empty at first
+        direction = null; // Set before a move command is called
         // Set state, start it by starting the context in a thread.
         setState(new GetMessageState(this));
     }
@@ -36,7 +39,7 @@ public class ElevatorContext extends SubsystemContext {
      *
      * @param direction the direction to travel towards.
      */
-    private void move(Direction direction) {
+    void move() {
         System.out.println("Elevator: Going " + direction + ", from floor #" + currentFloor + ".");
         try {
             Thread.sleep(TRAVEL_TIME);
@@ -45,7 +48,16 @@ public class ElevatorContext extends SubsystemContext {
         }
 
         currentFloor += direction.getDisplacement();
+        direction = null; // Reset direction
 
         System.out.println("Elevator: Elevator reached floor #" + this.currentFloor + ".");
+    }
+
+    SystemMessage getMessage() {
+        return rx.receive();
+    }
+
+    void setDir(Direction dir) {
+        direction = dir;
     }
 }

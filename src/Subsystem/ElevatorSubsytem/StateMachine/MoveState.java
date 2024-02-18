@@ -1,10 +1,17 @@
-package Subsystem.ElevatorSubsytem;
+package Subsystem.ElevatorSubsytem.StateMachine;
 
 import StatePatternLib.State;
 
-public class GetMessageState extends State<ElevatorContext> {
-    public GetMessageState(ElevatorContext context) {
+public class MoveState extends State<ElevatorContext> {
+    public MoveState(ElevatorContext context) {
         super(context);
+    }
+
+    // OnEntry, OnExit can be open/close doors, respectively
+
+    @Override
+    protected void doActivity() {
+        context.move();
     }
 
     /**
