@@ -236,6 +236,16 @@ Ensure you have directory `test` labelled as your Test Source Folder in Project 
 **Test classes don't compile due to missing imports (red squiggles)?**
 Alt-enter on the invalid imports, and select add JUnit 5.8.1 to classpath, select OK.
 
+**Missing libraries?**
+To add the included libraries in the project's `lib/` directory for build, use the following procedure.
+1. In IntelliJ, navigate to the following menu:
+```bash
+File > Project Structure > Project Settings > Libraries
+```
+2. Click the `+` icon to add a new library, and select this project's `lib/` directory.
+3. In the `Choose Modules` dialog box, press `OK`.
+All JAR files in the `lib/` directory should now be included in the project for import and build.
+
 ## Resources
 Resources for this project, such as system configuration and input files, are included in the `res/` directory. 
 
