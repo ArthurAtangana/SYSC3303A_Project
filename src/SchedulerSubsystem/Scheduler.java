@@ -50,6 +50,9 @@ public class Scheduler implements Runnable {
             processElevatorEvent(idleElevators.remove(0));
         }
     }
+    private Direction getOldestFloorDir() {
+        return Direction.UP;
+    }
 
     /**
      * Returns true if elevator should stop, false otherwise.
