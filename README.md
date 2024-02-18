@@ -238,12 +238,11 @@ Alt-enter on the invalid imports, and select add JUnit 5.8.1 to classpath, selec
 
 **Missing libraries?**
 To add the included libraries in the project's `lib/` directory for build, use the following procedure.
-1. In IntelliJ, navigate to the following menu:
-```bash
-File > Project Structure > Project Settings > Libraries
-```
-2. Click the `+` icon to add a new library, and select this project's `lib/` directory.
-3. In the `Choose Modules` dialog box, press `OK`.
+1. In IntelliJ, open the `Project Structure` window (`File > Project Structure`), and navigate to the `Libraries` section (`Project Settings > Libraries`).
+2. Click the `+` icon to add a new library, and select `Java` from the dropdown menu.
+3. In the `Select Library Files` browser that opens, select this project's `lib/` directory and click `OK`.
+4. In the `Choose Modules` dialog box that opens, ensure that this project's module, `SYSC3303A_Project`, is selected (this should be the default), and click `OK`.
+5. In the `Project Structure` window, confirm the changes by clicking `OK`.
 All JAR files in the `lib/` directory should now be included in the project for import and build.
 
 ## Resources
