@@ -1,5 +1,6 @@
 package Subsystem.ElevatorSubsytem;
 
+import Messaging.Direction;
 import Messaging.Events.DestinationEvent;
 import Messaging.Receivers.Receiver;
 import Messaging.Transmitters.Transmitter;
@@ -28,5 +29,23 @@ public class ElevatorContext extends SubsystemContext {
         passengerCountMap = new HashMap<>(); // Empty at first
         // Set state, start it by starting the context in a thread.
         setState(new GetMessageState(this));
+    }
+
+    /**
+     * Elevator travels to a specified floor.
+     *
+     * @param direction the direction to travel towards.
+     */
+    private void move(Direction direction) {
+        System.out.println("Elevator: Going " + direction + ", from floor #" + currentFloor + ".");
+        try {
+            Thread.sleep(travelTime);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        currentFloor += direction.getDisplacement();
+
+        System.out.println("Elevator: Elevator reached floor #" + this.currentFloor + ".");
     }
 }
