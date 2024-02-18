@@ -140,12 +140,12 @@ public class Elevator implements Runnable {
     @Override
     public void run() {
         while (true){
+            sendStateUpdate();
             try {
                 processMessage(receiver.receive());
             } catch (InvalidTypeException e) {
                 throw new RuntimeException(e);
             }
-            sendStateUpdate();
         }
     }
 }

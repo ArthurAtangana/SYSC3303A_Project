@@ -43,14 +43,15 @@ public class DMA_Receiver implements Receiver{
      */
     @Override
     public synchronized SystemMessage receive() {
-        while(msgBuf.isEmpty()){
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+        synchronized (msgBuf) {
+            while (msgBuf.isEmpty()) {
+                try {
+                    msgBuf.wait();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
-
         return msgBuf.remove(0);
     }
 
@@ -60,12 +61,13 @@ public class DMA_Receiver implements Receiver{
      */
     public void setMessage(SystemMessage msg) {
         // GUARD: If the message type is a command, only accept it if it is addressed to this receiver.
-        if (msg instanceof SystemCommand && !((SystemCommand) msg).matchKey(this.key))
+        if (msg instanceof SystemCommand && !((SystemCommand) msg).matchKey(this.key)) {
             return;
+        }
         // Store message and notify if waiting.
         synchronized (msgBuf) {
             msgBuf.add(msg);
-            notify(); // Single wait type, single notify
+            msgBuf.notify(); // Single wait type, single notify
         }
     }
 }

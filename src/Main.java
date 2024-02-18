@@ -48,17 +48,21 @@ public class Main {
         // Start floor, elevator, and scheduler threads
         Scheduler scheduler = new Scheduler(schedulerReceiver, toFloorsTransmitter, toElevatorTransmitter);
         Thread schedulerThread = new Thread(scheduler);
+
+        schedulerThread.start();
+
         for (int i = 0; i < numFloors; ++i) {
             Thread newFloor = new Thread(new Floor(i, floorReceivers.get(i)));
             floorThreads.add(newFloor);
             newFloor.start();
         }
+
         for (int i = 0; i < numElevators; ++i) {
             Thread newElevator = new Thread(new Elevator(i, elevatorReceiver, toSchedulerTransmitter));
             elevatorThreads.add(newElevator);
             newElevator.start();
         }
-        schedulerThread.start();
+
 
         // Instantiate Parser and parse input file to FloorInputEvents
         System.out.println("\n****** Generating System Input Events ******\n");
