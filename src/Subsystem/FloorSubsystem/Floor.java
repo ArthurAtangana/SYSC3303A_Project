@@ -4,7 +4,7 @@
  * @version 20240202
  */
 
-package FloorSubsystem;
+package Subsystem.FloorSubsystem;
 
 import Messaging.Commands.SendPassengersCommand;
 import Messaging.Direction;
@@ -21,7 +21,7 @@ public class Floor implements Runnable {
     private int floorLamp;
     private final int floorNum;
     private final DMA_Receiver receiver;
-    private ArrayList<DestinationEvent> floorRequests;
+    private final ArrayList<DestinationEvent> floorRequests;
 
     public Floor(int floorNumber, DMA_Receiver receiver) {
         this.floorNum = floorNumber;

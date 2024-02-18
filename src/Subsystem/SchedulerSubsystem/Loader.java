@@ -1,4 +1,4 @@
-package SchedulerSubsystem;
+package Subsystem.SchedulerSubsystem;
 
 import Messaging.Commands.MovePassengersCommand;
 import Messaging.Commands.SendPassengersCommand;

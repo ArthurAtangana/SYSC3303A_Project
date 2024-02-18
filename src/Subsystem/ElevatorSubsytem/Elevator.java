@@ -4,7 +4,7 @@
  * @version 20240202
  */
 
-package ElevatorSubsytem;
+package Subsystem.ElevatorSubsytem;
 
 import Configuration.Config;
 import Configuration.Configurator;
@@ -42,6 +42,7 @@ public class Elevator implements Runnable {
 
         this.currentFloor = 0;
         this.elevNum = elevNum;
+        this.direction = Direction.STOPPED;
         this.passengerCountMap = new HashMap<>();
         this.transmitterToScheduler = transmitter;
         this.receiver = receiver;

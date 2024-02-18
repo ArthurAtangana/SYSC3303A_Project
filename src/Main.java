@@ -1,13 +1,13 @@
-import Configuration.Configurator;
 import Configuration.Config;
-import ElevatorSubsytem.Elevator;
-import FloorSubsystem.DestinationDispatcher;
-import FloorSubsystem.Floor;
-import FloorSubsystem.Parser;
+import Configuration.Configurator;
 import Messaging.Events.FloorInputEvent;
 import Messaging.Receivers.DMA_Receiver;
 import Messaging.Transmitters.DMA_Transmitter;
-import SchedulerSubsystem.Scheduler;
+import Subsystem.ElevatorSubsytem.Elevator;
+import Subsystem.FloorSubsystem.DestinationDispatcher;
+import Subsystem.FloorSubsystem.Floor;
+import Subsystem.FloorSubsystem.Parser;
+import Subsystem.SchedulerSubsystem.Scheduler;
 
 import java.util.ArrayList;
 /**

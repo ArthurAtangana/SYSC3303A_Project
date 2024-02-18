@@ -42,13 +42,15 @@
  * @version 20240202
  */
 
-package FloorSubsystem;
+package Subsystem.FloorSubsystem;
 
 import Messaging.Direction;
 import Messaging.Events.FloorInputEvent;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class Parser {
@@ -86,11 +88,11 @@ public class Parser {
 
         /* Conversion factors */
         // Hours to milliseconds: 1h * 60m/h * 60s/m * 1000ms/s
-        final int hoursToMilliseconds = (1 * 60 * 60 * 1000);
+        final int hoursToMilliseconds = (60 * 60 * 1000);
         // Minutes to milliseconds: 1m * 60s/m * 1000ms/s
-        final int minutesToMilliseconds = (1 * 60 * 1000);
+        final int minutesToMilliseconds = (60 * 1000);
         // Seconds to milliseconds: 1s * 1000ms/s
-        final int secondsToMilliseconds = (1 * 1000);
+        final int secondsToMilliseconds = (1000);
 
         // Result for return
         long totalMilliseconds = 0;

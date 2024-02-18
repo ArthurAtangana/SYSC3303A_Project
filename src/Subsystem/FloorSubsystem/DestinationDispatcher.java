@@ -7,7 +7,7 @@
  * @version Iteration-1
  */
 
-package FloorSubsystem;
+package Subsystem.FloorSubsystem;
 
 import Messaging.Commands.PassengerArrivedCommand;
 import Messaging.Events.DestinationEvent;
