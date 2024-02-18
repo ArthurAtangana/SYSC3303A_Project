@@ -18,7 +18,7 @@ public class ElevatorContext extends SubsystemContext {
 
     // State machine fields for app logic:
     private final Transmitter txScheduler;
-    private final int currentFloor;
+    private int currentFloor;
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
 
     ElevatorContext(Receiver rx, Transmitter txScheduler) {
@@ -39,7 +39,7 @@ public class ElevatorContext extends SubsystemContext {
     private void move(Direction direction) {
         System.out.println("Elevator: Going " + direction + ", from floor #" + currentFloor + ".");
         try {
-            Thread.sleep(travelTime);
+            Thread.sleep(TRAVEL_TIME);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
