@@ -69,44 +69,50 @@ public class Scheduler implements Runnable {
 
     /**
      * Gets the direction an elevator is travelling.
+     * Precondition: At least one passenger in the elevator or at least one floor request in floorRequestsToTime.
      *
      * @param event Elevator state to get direction from.
      * @return Direction elevator is travelling.
      */
     private Direction getElevatorDirection(ElevatorStateEvent event) {
+        // Find direction in elevator if elevator has passengers.
         Direction direction = null;
         for (DestinationEvent e : event.passengerCountMap().keySet()) {
             if (direction == null) {
                 direction = e.direction();
             }
             if (direction != e.direction()) {
-                throw new RuntimeException("Missmatched passenger direction in elevator");
+                throw new RuntimeException("Mismatched passenger direction in elevator");
             }
         }
-
+        // Find direction from oldest floor request.
         if (direction == null) {
-            direction = getOldestFloorDir();
-
-            // TODO what if there are no floorRequests? Wait here, and notify when floor requests updated.
-            //  Synchronize on floorRequestsToTime
-            //  Save list of idle elevators to reply to
+            direction = getOldestFloorDirFromElevator(event.currentFloor());
         }
-
+        // No passengers on elevator and no floor requests. (Goes against precondition)
+        if (direction == null) {
+            throw new RuntimeException("No passenger on elevator and no floor requests");
+        }
         return direction;
     }
 
-    private Direction getOldestFloorDir() {
+    /**
+     * Returns the direction of the oldest floor request based on the elevator's current floor.
+     *
+     * @param currentFloor The floor number the elevator is currently on.
+     * @return Direction of oldest floor request relative to currentFloor, null if there are no floor requests.
+     */
+    private Direction getOldestFloorDirFromElevator(int currentFloor) {
         if (floorRequestsToTime.isEmpty()) return null;
-
         Long waitTime = (long) -1;
-        Direction oldestDir = null;
-        // TODO: Set oldest dir
+        int sourceFloor = -1;
         for (Map.Entry<DestinationEvent, Long> x : floorRequestsToTime.entrySet()) {
             if (x.getValue() > waitTime) {
                 waitTime = x.getValue();
+                sourceFloor = x.getKey().destinationFloor();
             }
         }
-        return oldestDir;
+        return (sourceFloor > currentFloor) ? Direction.UP : Direction.DOWN;
     }
 
     /**
