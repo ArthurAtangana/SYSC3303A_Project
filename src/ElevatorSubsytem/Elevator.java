@@ -19,7 +19,6 @@ import Messaging.Transmitters.DMA_Transmitter;
 import com.sun.jdi.InvalidTypeException;
 
 import java.util.HashMap;
-import java.util.Set;
 
 public class Elevator implements Runnable {
     /** Single floor travel time */
@@ -64,28 +63,9 @@ public class Elevator implements Runnable {
 
         System.out.println("Elevator: Elevator reached floor #" + this.currentFloor + ".");
     }
-
-    /**
-     *
-     * @return
-     */
-    private Direction elevatorDirection(){
-        Set<DestinationEvent> destinationEvents = passengerCountMap.keySet();
-
-        Direction direction = null;
-        for (DestinationEvent e : destinationEvents){
-            if (direction == null){
-                direction = e.direction();
-            }
-            if (direction != e.direction()){
-                throw new RuntimeException("Missmatched passenger direction in elevator");
-            }
-        }
-        return direction;
-    }
     private void unload(){
-        Direction direction = elevatorDirection();
-        if (elevatorDirection() == null){
+        Direction direction = ElevatorUtilities.getPassengersDirection(passengerCountMap.keySet());
+        if (direction == null){
             return;
         }
         try {

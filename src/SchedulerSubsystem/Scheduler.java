@@ -1,5 +1,6 @@
 package SchedulerSubsystem;
 
+import ElevatorSubsytem.ElevatorUtilities;
 import Messaging.Commands.MoveElevatorCommand;
 import Messaging.Direction;
 import Messaging.Events.DestinationEvent;
@@ -8,7 +9,7 @@ import Messaging.Events.FloorRequestEvent;
 import Messaging.Receivers.DMA_Receiver;
 import Messaging.SystemMessage;
 import Messaging.Transmitters.DMA_Transmitter;
-import Networking.Messages.ElevatorStateEvent;
+
 import com.sun.jdi.InvalidTypeException;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -50,10 +51,6 @@ public class Scheduler implements Runnable {
             processElevatorEvent(idleElevators.remove(0));
         }
     }
-    private Direction getOldestFloorDir() {
-        return Direction.UP;
-    }
-
     /**
      * Returns true if elevator should stop, false otherwise.
      *
@@ -72,7 +69,42 @@ public class Scheduler implements Runnable {
         union.addAll(floorRequestsToTime.keySet());
         union.addAll(e.passengerCountMap().keySet());
 
-        return union.contains(new DestinationEvent(e.currentFloor(), getElevatorDirection(e)));
+        Direction direction = ElevatorUtilities.getPassengersDirection(e.passengerCountMap().keySet());
+        // if there are passengers that need to get in/out, stop.
+        if (direction != null) {
+            return union.contains(new DestinationEvent(e.currentFloor(), direction));
+        }
+        // if we are on the current floor, stop
+        if (e.currentFloor() == getOldestFloorRequest().destinationFloor()){
+            return true;
+        }
+        //if current floor has a request that goes in the same direction as the oldest floor request, we should stop
+        else if (getOldestFloorRequest().direction() == getDirectionToOldestFloor(e.currentFloor())){
+            return true;
+        }
+        return false;
+    }
+    private DestinationEvent getOldestFloorRequest() {
+        if (floorRequestsToTime.isEmpty()) return null;
+        Long waitTime = Long.MAX_VALUE;
+        DestinationEvent oldestFloor = null;
+        for (Map.Entry<DestinationEvent, Long> request : floorRequestsToTime.entrySet()) {
+            if (request.getValue() < waitTime) {
+                waitTime = request.getValue();
+                oldestFloor = request.getKey();
+            }
+        }
+        return oldestFloor;
+    }
+    /**
+     * Returns the direction of the oldest floor request based on the elevator's current floor.
+     *
+     * @param currentFloor The floor number the elevator is currently on.
+     * @return Direction of oldest floor request relative to currentFloor, null if there are no floor requests.
+     */
+    private Direction getDirectionToOldestFloor(int currentFloor) {
+        int sourceFloor = getOldestFloorRequest().destinationFloor();
+        return (sourceFloor > currentFloor) ? Direction.UP : Direction.DOWN;
     }
 
     /**
@@ -84,18 +116,10 @@ public class Scheduler implements Runnable {
      */
     private Direction getElevatorDirection(ElevatorStateEvent event) {
         // Find direction in elevator if elevator has passengers.
-        Direction direction = null;
-        for (DestinationEvent e : event.passengerCountMap().keySet()) {
-            if (direction == null) {
-                direction = e.direction();
-            }
-            if (direction != e.direction()) {
-                throw new RuntimeException("Mismatched passenger direction in elevator");
-            }
-        }
+        Direction direction = ElevatorUtilities.getPassengersDirection(event.passengerCountMap().keySet());
         // Find direction from oldest floor request.
         if (direction == null) {
-            direction = getOldestFloorDirFromElevator(event.currentFloor());
+            direction = getDirectionToOldestFloor(event.currentFloor());
         }
         // No passengers on elevator and no floor requests. (Goes against precondition)
         if (direction == null) {
@@ -104,24 +128,6 @@ public class Scheduler implements Runnable {
         return direction;
     }
 
-    /**
-     * Returns the direction of the oldest floor request based on the elevator's current floor.
-     *
-     * @param currentFloor The floor number the elevator is currently on.
-     * @return Direction of oldest floor request relative to currentFloor, null if there are no floor requests.
-     */
-    private Direction getOldestFloorDirFromElevator(int currentFloor) {
-        if (floorRequestsToTime.isEmpty()) return null;
-        Long waitTime = Long.MAX_VALUE;
-        int sourceFloor = -1;
-        for (Map.Entry<DestinationEvent, Long> request : floorRequestsToTime.entrySet()) {
-            if (request.getValue() < waitTime) {
-                waitTime = request.getValue();
-                sourceFloor = request.getKey().destinationFloor();
-            }
-        }
-        return (sourceFloor > currentFloor) ? Direction.UP : Direction.DOWN;
-    }
 
     /**
      *  process elevator event with elevator state (current floor, direction, passengerList)
@@ -129,12 +135,12 @@ public class Scheduler implements Runnable {
      * @param event an elevator state event
      */
     private void processElevatorEvent(ElevatorStateEvent event) {
-        if (isElevatorStopping(event)) // Stop elevator for a load
-            new Thread(new Loader(event, transmitterToFloor, transmitterToElevator)).start();
-        // TODO: redo condition coz floorRequests doesnt exists anymore.
-        else if (floorRequests.isEmpty()) {
+        if (floorRequestsToTime.isEmpty() && event.passengerCountMap().isEmpty()) {
+            System.out.println("empty request list and empty passengers.");
             idleElevators.add(event);
-        else // Keep moving
+        } else if (isElevatorStopping(event)) { // Stop elevator for a load
+            new Thread(new Loader(event, transmitterToFloor, transmitterToElevator)).start();
+        } else// Keep moving
             transmitterToElevator.send(new MoveElevatorCommand(event.elevatorNum(), getElevatorDirection(event)));
     }
 
@@ -164,7 +170,6 @@ public class Scheduler implements Runnable {
             }
         }
     }
-
     /* Test */
 
     /**
@@ -199,7 +204,7 @@ public class Scheduler implements Runnable {
             HashSet<DestinationEvent> schedulerDestinationEvents = new HashSet<>();
             schedulerDestinationEvents.add(destinationEvent);
             // FIXME
-            scheduler.floorRequests = schedulerDestinationEvents;
+            //scheduler.floorRequests = schedulerDestinationEvents;
 
             HashMap<DestinationEvent, Integer> elevatorDestinationEvents = new HashMap<>();
             elevatorDestinationEvents.put(destinationEvent, 1);
