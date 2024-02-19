@@ -14,6 +14,10 @@ import Messaging.Events.DestinationEvent;
 import Messaging.Events.FloorInputEvent;
 import Messaging.Events.FloorRequestEvent;
 import Messaging.Transmitters.Transmitter;
+import Messaging.Receivers.DMA_Receiver;
+import Messaging.Transmitters.DMA_Transmitter;
+import Messaging.Transmitters.Transmitter;
+import Subsystem.SchedulerSubsystem.SchedulerContext;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,14 +34,19 @@ public class DestinationDispatcher implements Runnable {
      *
      * @param events The list of input events to dispatch, can be unsorted.
      */
-    public DestinationDispatcher(ArrayList<FloorInputEvent> events, Transmitter txScheduler, Transmitter txToFloor) {
-        this.txToScheduler = txScheduler;
+    public DestinationDispatcher(ArrayList<FloorInputEvent> events) {
          this.eventQueue = events;
         this.txToFloor = txToFloor;
         // Sort based on time int (low to high)
          this.eventQueue.sort(Comparator.comparingLong(FloorInputEvent::time));
          // Set baseline time
          lastEventTime = eventQueue.get(0).time();
+        txScheduler = new DMA_Transmitter();
+    }
+
+    public void bindToScheduler(SchedulerContext sched) {
+        // TODO: Replace when UDP receivers are in
+        txScheduler.addRx((DMA_Receiver) sched.getRx());
     }
 
     /**
