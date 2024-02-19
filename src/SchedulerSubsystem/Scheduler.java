@@ -43,6 +43,7 @@ public class Scheduler implements Runnable {
      * @param event Event to process.
      */
     private void storeFloorRequest(FloorRequestEvent event) {
+        System.out.println("Floor request made: " + event.destinationEvent());
         // Store event locally to use in scheduling
         if (!floorRequestsToTime.containsKey(event.destinationEvent()))
             // Only store request if it does not already exist
@@ -129,10 +130,10 @@ public class Scheduler implements Runnable {
      */
     private void processElevatorEvent(ElevatorStateEvent event) {
         if (floorRequestsToTime.isEmpty() && event.passengerCountMap().isEmpty()) {
-            System.out.println("empty request list and empty passengers.");
+            System.out.println(String.format("Elevator %s idle", event.elevatorNum()));
             idleElevators.add(event);
         } else if (isElevatorStopping(event)) { // Stop elevator for a load
-            new Thread(new Loader(event, transmitterToFloor, transmitterToElevator)).start();
+            System.out.println(String.format("Elevator %s stopped.", event.elevatorNum()));
             new Thread(new Loader(event, transmitterToFloor, transmitterToElevator, getElevatorDirection(event))).start();
             floorRequestsToTime.remove(new DestinationEvent(event.currentFloor(),getElevatorDirection(event)));
         } else// Keep moving

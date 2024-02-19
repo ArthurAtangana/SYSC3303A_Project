@@ -52,16 +52,16 @@ public class Elevator implements Runnable {
      * @param direction the direction to travel towards.
      */
     private void move(Direction direction) {
-        System.out.println("Elevator: Going " + direction + ", from floor #" + currentFloor + ".");
+        System.out.println(String.format("Elevator %s: Going %s from floor %s.",this.elevNum,direction,this.currentFloor));
         try {
-            Thread.sleep(travelTime);
+            Thread.sleep(this.travelTime);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
         currentFloor += direction.getDisplacement();
 
-        System.out.println("Elevator: Elevator reached floor #" + this.currentFloor + ".");
+        System.out.println(String.format("Elevator %s: Elevator reached floor #%s", this.elevNum, this.currentFloor));
     }
     private void unload(){
         Direction direction = ElevatorUtilities.getPassengersDirection(passengerCountMap.keySet());
@@ -70,6 +70,7 @@ public class Elevator implements Runnable {
         }
         try {
             // each passenger takes loadTime to leave the elevator.
+            System.out.println("Passenger unloading from the elevator: " + passengerCountMap.get(new DestinationEvent(currentFloor, direction)));
             Thread.sleep(loadTime * passengerCountMap.remove(new DestinationEvent(currentFloor,direction)));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -81,6 +82,7 @@ public class Elevator implements Runnable {
      * Loads passengers in and/or out of the elevator
      */
     private void load(MovePassengersCommand command){
+        System.out.println("Loading passengers: " + command.newPassengers());
         // load passengers into the elevator, taking LOAD_TIME per passengers waiting on the floor.
         try {
             Thread.sleep(loadTime * command.newPassengers().size());
@@ -92,6 +94,7 @@ public class Elevator implements Runnable {
             passengerCountMap.merge(e,1, Integer::sum);
             // if the key exists in passengerCountMap, increment value by 1. if not, add new entry.
         }
+        System.out.println("Passengers in the elevator: " + passengerCountMap.toString());
     }
     /**
      * Update scheduler with this elevator's state.
