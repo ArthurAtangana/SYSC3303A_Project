@@ -14,6 +14,12 @@ public class MoveElevatorState extends State<ElevatorContext> {
         context.move();
     }
 
+    @Override
+    protected void onExit() {
+        // Reset state
+        context.setDir(null);
+    }
+
     /**
      * Algorithm to select next state, can execute event dependant exit code.
      *

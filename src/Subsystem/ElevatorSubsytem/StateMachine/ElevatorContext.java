@@ -4,7 +4,6 @@ import Messaging.Direction;
 import Messaging.Events.DestinationEvent;
 import Messaging.Events.ElevatorStateEvent;
 import Messaging.Receivers.DMA_Receiver;
-import Messaging.SystemMessage;
 import Messaging.Transmitters.DMA_Transmitter;
 import Messaging.Transmitters.Transmitter;
 import Subsystem.SchedulerSubsystem.SchedulerContext;
@@ -68,7 +67,6 @@ public class ElevatorContext extends SubsystemContext {
         }
 
         currentFloor += direction.getDisplacement();
-        direction = null; // Reset direction
 
         System.out.println("Elevator: Elevator reached floor #" + this.currentFloor + ".");
     }
