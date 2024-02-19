@@ -2,12 +2,17 @@ package Subsystem.ElevatorSubsytem.StateMachine;
 
 import Messaging.Direction;
 import Messaging.Events.DestinationEvent;
-import Messaging.Receivers.Receiver;
+import Messaging.Events.ElevatorStateEvent;
+import Messaging.Receivers.DMA_Receiver;
 import Messaging.SystemMessage;
+import Messaging.Transmitters.DMA_Transmitter;
 import Messaging.Transmitters.Transmitter;
+import Subsystem.SchedulerSubsystem.SchedulerContext;
 import Subsystem.SubsystemContext;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public class ElevatorContext extends SubsystemContext {
     // Unique key generator
@@ -23,15 +28,30 @@ public class ElevatorContext extends SubsystemContext {
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
     private Direction direction;
 
-    ElevatorContext(Receiver rx, Transmitter txScheduler) {
-        super(++key_count, rx);
-        this.txScheduler = txScheduler;
+    ElevatorContext() {
+        super(++key_count);
+        txScheduler = new DMA_Transmitter();
         // Initial memory state
         currentFloor = 0; // Start at bottom floor
         passengerCountMap = new HashMap<>(); // Empty at first
         direction = null; // Set before a move command is called
         // Set state, start it by starting the context in a thread.
         setState(new GetMessageState(this));
+    }
+
+    public void bindToScheduler(SchedulerContext sched) {
+        // TODO: Replace when UDP receivers are in
+        txScheduler.addRx((DMA_Receiver) sched.getRx());
+        sched.bindToElevator((DMA_Receiver) rx);
+    }
+
+
+    /**
+     * Update scheduler with this elevator's state.
+     */
+    void sendStateUpdate() {
+        ElevatorStateEvent stateEvent = new ElevatorStateEvent(key, currentFloor, direction, passengerCountMap);
+        txScheduler.send(stateEvent);
     }
 
     /**

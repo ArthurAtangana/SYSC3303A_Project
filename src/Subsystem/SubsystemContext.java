@@ -2,6 +2,7 @@ package Subsystem;
 
 import Configuration.Config;
 import Configuration.Configurator;
+import Messaging.Receivers.DMA_Receiver;
 import Messaging.Receivers.Receiver;
 import StatePatternLib.Context;
 
@@ -15,9 +16,13 @@ public abstract class SubsystemContext extends Context {
     protected final Receiver rx;
     protected final int key;
 
-    protected SubsystemContext(int key, Receiver rx) {
+    protected SubsystemContext(int key) {
         super();
-        this.rx = rx;
+        this.rx = new DMA_Receiver(key); // TODO: Replace by UDP receiver later
         this.key = key;
+    }
+
+    public Receiver getRx() {
+        return rx;
     }
 }

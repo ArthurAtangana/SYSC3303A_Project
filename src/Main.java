@@ -21,6 +21,14 @@ public class Main {
     private static final ArrayList<Thread> floorThreads = new ArrayList<>();
     private static final ArrayList<Thread> elevatorThreads = new ArrayList<>();
 
+    /**
+     * Iter2 Creation procedure
+     * 1. Load numFloors, numElevators from config
+     * 2. Create subsystems
+     * 3. Bind transmitters
+     * 4. Put subsystems in threads, and start them, in this order: Scheduler, Floor, Elevator
+     * 5. Read inputs -> Start Dispatcher
+     */
     public static void main(String[] args) {
 
         // Configure system from JSON
