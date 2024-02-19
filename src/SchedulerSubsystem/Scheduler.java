@@ -113,7 +113,12 @@ public class Scheduler implements Runnable {
         if (floorRequestsToTime.isEmpty()){
             throw new RuntimeException("No passenger on elevator and no floor requests");
         }
-        return direction;
+        // If on the same floor as the oldest floor request, return direction of the floor request.
+        if (event.currentFloor() == getOldestFloorRequest().destinationFloor()){
+            return getOldestFloorRequest().direction();
+        }
+        // Find direction to oldest floor request.
+        return getDirectionToOldestFloor(event.currentFloor());
     }
 
 
