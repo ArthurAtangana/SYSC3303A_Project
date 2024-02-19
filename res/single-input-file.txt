@@ -11,5 +11,7 @@
 #   hh:mm:ss.mmm  |        n        |    Up | Down    |          n            #
 ###############################################################################
 
-## Test Sequence 1: 20 Passengers over ~2 min ##
-09:05:32.994 1 Up 3
+## Test Sequence 1: 2 Passengers over ~2 min ##
+09:05:32.994 1 Up 7
+09:05:32.999 4 Up 6
+09:05:34.000 5 Down 1
