@@ -8,8 +8,8 @@
  */
 package Messaging.Transmitters;
 
-import Messaging.SystemMessage;
 import Messaging.Receivers.DMA_Receiver;
+import Messaging.SystemMessage;
 
 import java.util.ArrayList;
 
@@ -19,24 +19,11 @@ public class DMA_Transmitter implements Transmitter {
 
     /**
      * DMA_Transmitter single receiver constructor.
-     *
-     * @param destReceiver The receiver to send messages to from this transmitter.
      */
-    public DMA_Transmitter(DMA_Receiver destReceiver) {
+    public DMA_Transmitter() {
         // Wraps receiver into array to maintain same behavior with many receivers
         destinationReceivers = new ArrayList<>();
-        destinationReceivers.add(destReceiver);
     }
-
-    /**
-     * DMA_Transmitter list constructor. Supports multiple receiver addresses.
-     *
-     * @param destReceivers The receivers to send messages to from this transmitter.
-     */
-    public DMA_Transmitter(ArrayList<DMA_Receiver> destReceivers) {
-        destinationReceivers = destReceivers;
-    }
-
 
     /**
      * Sends a message (event) to receivers.
@@ -47,5 +34,9 @@ public class DMA_Transmitter implements Transmitter {
     @Override
     public void send(SystemMessage event) {
         destinationReceivers.forEach(d -> d.setMessage(event));
+    }
+
+    public void addRx(DMA_Receiver destReceiver) {
+        destinationReceivers.add(destReceiver);
     }
 }

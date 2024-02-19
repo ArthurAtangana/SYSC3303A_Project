@@ -20,13 +20,6 @@ public class DMA_Receiver implements Receiver{
     private final int key;
 
     /**
-     * Default DMA_Receiver constructor.
-     */
-    public DMA_Receiver(){
-        this(-1); // invalid key, will not match against anything
-    }
-
-    /**
      * DMA_Receiver with key to check commands against.
      */
     public DMA_Receiver(int key) {

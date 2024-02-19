@@ -7,6 +7,7 @@
 
 package Messaging.Transmitters;
 
+import Messaging.Receivers.DMA_Receiver;
 import Messaging.SystemMessage;
 
 public interface Transmitter {
@@ -15,4 +16,6 @@ public interface Transmitter {
      * @param event The message to be sent to receivers.
      */
     void send(SystemMessage event);
+
+    void addRx(DMA_Receiver destReceiver);
 }
