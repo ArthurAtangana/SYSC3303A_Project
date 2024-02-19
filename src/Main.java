@@ -3,8 +3,8 @@ import Configuration.Configurator;
 import Messaging.Events.FloorInputEvent;
 import Subsystem.ElevatorSubsytem.StateMachine.ElevatorContext;
 import Subsystem.FloorSubsystem.DestinationDispatcher;
-import Subsystem.FloorSubsystem.FloorContext;
 import Subsystem.FloorSubsystem.Parser;
+import Subsystem.FloorSubsystem.StateMachine.FloorContext;
 import Subsystem.SchedulerSubsystem.SchedulerContext;
 
 import java.util.ArrayList;
