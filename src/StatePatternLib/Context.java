@@ -16,7 +16,9 @@ public abstract class Context implements Runnable {
 
     @Override
     public void run() {
-        curState.start();
+        // Start next state if not null (null == end state)
+        while (curState != null)
+            curState.startState();
     }
 
     // TODO in Concrete State: Add application logic, package private methods to be called by state activities,

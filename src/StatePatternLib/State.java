@@ -17,15 +17,12 @@ public abstract class State<ContextT extends Context> {
      * 4. OnExit
      * 5. updating context to new state
      */
-    public void start() {
+    public void startState() {
         onEntry();
         doActivity(); // The state has no memory, only the context
         State<ContextT> newState = selectNextState();
         onExit();
         context.setState(newState); // Set next state
-        // Start next state if not null (null == end state)
-        if (newState != null)
-            context.run();
     }
 
     /**
