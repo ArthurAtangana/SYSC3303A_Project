@@ -10,7 +10,7 @@ public class FloorContext extends SubsystemContext {
     private static int key_count = 0;
     private final DMA_Transmitter txScheduler; // Can these be static?
 
-    protected FloorContext(int key) {
+    public FloorContext() {
         super(key_count++);
         txScheduler = new DMA_Transmitter();
     }

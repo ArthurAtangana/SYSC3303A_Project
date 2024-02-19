@@ -28,7 +28,7 @@ public class ElevatorContext extends SubsystemContext {
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
     private Direction direction;
 
-    ElevatorContext() {
+    public ElevatorContext() {
         super(++key_count);
         txScheduler = new DMA_Transmitter();
         // Initial memory state

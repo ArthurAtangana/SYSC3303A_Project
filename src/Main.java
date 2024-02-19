@@ -1,15 +1,15 @@
 import Configuration.Config;
 import Configuration.Configurator;
 import Messaging.Events.FloorInputEvent;
-import Messaging.Receivers.DMA_Receiver;
-import Messaging.Transmitters.DMA_Transmitter;
-import Subsystem.ElevatorSubsytem.Elevator;
+import Subsystem.ElevatorSubsytem.StateMachine.ElevatorContext;
 import Subsystem.FloorSubsystem.DestinationDispatcher;
-import Subsystem.FloorSubsystem.Floor;
+import Subsystem.FloorSubsystem.FloorContext;
 import Subsystem.FloorSubsystem.Parser;
-import Subsystem.SchedulerSubsystem.Scheduler;
+import Subsystem.SchedulerSubsystem.SchedulerContext;
 
 import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Main initializes and maintains track of threads.
  * Note: For iteration 1, number of floors and elevators are stored as fields.
@@ -17,10 +17,6 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class Main {
-    // Note: our system starts counting floors at 0 :)
-    private static final ArrayList<Thread> floorThreads = new ArrayList<>();
-    private static final ArrayList<Thread> elevatorThreads = new ArrayList<>();
-
     /**
      * Iter2 Creation procedure
      * 1. Load numFloors, numElevators from config
@@ -31,7 +27,7 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        // Configure system from JSON
+        // 1. Configure system from JSON
         System.out.println("\n****** Configuring System ******\n");
         String jsonFilename = "res/system-config-00.json";
         System.out.println("Reading system configuration from \"" + jsonFilename +"\"...");
@@ -40,33 +36,33 @@ public class Main {
         int numFloors = config.getNumFloors();
         int numElevators = config.getNumElevators();
 
-        // Create receivers
-        DMA_Receiver schedulerReceiver = new DMA_Receiver(); // Scheduler is unique, no need for keys/commands.
-        DMA_Receiver elevatorReceiver = new DMA_Receiver(0);
-        ArrayList<DMA_Receiver> floorReceivers = new ArrayList<>();
+        // 2. Create subsystems
+        SchedulerContext schedulerContext = new SchedulerContext();
+        List<FloorContext> floorContexts = new ArrayList<>();
+        List<ElevatorContext> elevatorContexts = new ArrayList<>();
         for(int i=0; i < numFloors; i++){
-            floorReceivers.add(new DMA_Receiver());
+            floorContexts.add(new FloorContext());
+        }
+        for (int i = 0; i < numElevators; i++) {
+            elevatorContexts.add(new ElevatorContext());
         }
 
-        // Create Transmitters (composes with receivers)
-        DMA_Transmitter toSchedulerTransmitter = new DMA_Transmitter(schedulerReceiver);
-        DMA_Transmitter toElevatorTransmitter = new DMA_Transmitter(elevatorReceiver);
-        DMA_Transmitter toFloorsTransmitter = new DMA_Transmitter(floorReceivers);
+        // 3. Bind transmitters
+        for (FloorContext floor : floorContexts) {
+            floor.bindToScheduler(schedulerContext);
+        }
+        for (ElevatorContext elevator : elevatorContexts) {
+            elevator.bindToScheduler(schedulerContext);
+        }
 
-        // Start floor, elevator, and scheduler threads
-        Scheduler scheduler = new Scheduler(schedulerReceiver, toFloorsTransmitter, toElevatorTransmitter);
-        Thread schedulerThread = new Thread(scheduler);
+        // 4. Start subsystem threads
+        new Thread(schedulerContext).start();
         for (int i = 0; i < numFloors; ++i) {
-            Thread newFloor = new Thread(new Floor(i, floorReceivers.get(i)));
-            floorThreads.add(newFloor);
-            newFloor.start();
+            new Thread(floorContexts.get(i)).start();
         }
         for (int i = 0; i < numElevators; ++i) {
-            Thread newElevator = new Thread(new Elevator(i, elevatorReceiver, toSchedulerTransmitter));
-            elevatorThreads.add(newElevator);
-            newElevator.start();
+            new Thread(elevatorContexts.get(i)).start();
         }
-        schedulerThread.start();
 
         // Instantiate Parser and parse input file to FloorInputEvents
         System.out.println("\n****** Generating System Input Events ******\n");
@@ -75,29 +71,11 @@ public class Main {
         ArrayList<FloorInputEvent> inputEvents = parser.parse(inputFilename);
 
         // Start dispatcher (want all systems to be ready before sending events)
-        System.out.println("\n****** Begin Real-Time System Operation ******\n");
-        new Thread(new DestinationDispatcher(inputEvents, toSchedulerTransmitter)).start();
+        DestinationDispatcher dispatcher = new DestinationDispatcher(inputEvents);
+        dispatcher.bindToScheduler(schedulerContext);
 
-        // Join floor, elevator, and scheduler threads
-        for (Thread t: floorThreads) {
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        for (Thread t: elevatorThreads) {
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        try {
-            schedulerThread.join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        System.out.println("\n****** Begin Real-Time System Operation ******\n");
+        new Thread(dispatcher).start();
     }
 }
 

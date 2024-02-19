@@ -11,10 +11,12 @@ public class SchedulerContext extends SubsystemContext {
     private final DMA_Transmitter txFloor;
     private final DMA_Transmitter txElevator;
 
-    protected SchedulerContext() {
+    public SchedulerContext() {
         super(++key_count);
         txFloor = new DMA_Transmitter();
         txElevator = new DMA_Transmitter();
+        // Set initial state
+
     }
 
     public void bindToFloor(DMA_Receiver rx) {
