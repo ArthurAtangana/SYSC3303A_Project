@@ -1,12 +1,18 @@
 package Subsystem.ElevatorSubsytem.StateMachine;
 
 import Messaging.Commands.MoveElevatorCommand;
+import Messaging.Commands.MovePassengersCommand;
 import Messaging.SystemMessage;
 import StatePatternLib.State;
 
 public class GetMessageState extends State<ElevatorContext> {
     public GetMessageState(ElevatorContext context) {
         super(context);
+    }
+
+    @Override
+    protected void onEntry() {
+        context.sendStateUpdate();
     }
 
     /**
@@ -17,11 +23,15 @@ public class GetMessageState extends State<ElevatorContext> {
     @Override
     protected State<ElevatorContext> selectNextState() {
         SystemMessage msg = context.getMessage();
+
         if (msg instanceof MoveElevatorCommand) {
             context.setDir(((MoveElevatorCommand) msg).direction());
-            return new MoveState(context);
+            return new MoveElevatorState(context);
         }
-
+        if (msg instanceof MovePassengersCommand) {
+            context.storeNewPassengers(((MovePassengersCommand) msg).newPassengers());
+            return new MovePassengersState(context);
+        }
         throw new RuntimeException("Message not implemented yet");
     }
 }
