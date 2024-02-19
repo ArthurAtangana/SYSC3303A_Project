@@ -73,6 +73,8 @@ public class Elevator implements Runnable {
             Thread.sleep(loadTime * passengerCountMap.remove(new DestinationEvent(currentFloor,direction)));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        } catch (NullPointerException e) {
+            // no passengers to unload, do nothing.
         }
     }
     /**

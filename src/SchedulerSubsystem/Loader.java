@@ -1,9 +1,9 @@
 package SchedulerSubsystem;
 
-import ElevatorSubsytem.ElevatorUtilities;
 import Messaging.Commands.MovePassengersCommand;
 import Messaging.Commands.SendPassengersCommand;
 
+import Messaging.Direction;
 import Messaging.Events.DestinationEvent;
 import Messaging.Events.ElevatorStateEvent;
 import Messaging.Events.PassengerLoadEvent;
@@ -19,11 +19,13 @@ public class Loader implements Runnable {
     private final DMA_Transmitter txFloor;
     private final DMA_Receiver receiver;
     private final DMA_Transmitter txThis;
+    private final Direction elevatorDirection;
 
-    public Loader(ElevatorStateEvent event, DMA_Transmitter txFloor, DMA_Transmitter txElevator) {
+    public Loader(ElevatorStateEvent event, DMA_Transmitter txFloor, DMA_Transmitter txElevator, Direction elevatorDirection) {
         elevatorState = event;
         this.txFloor = txFloor;
         this.txElevator = txElevator;
+        this.elevatorDirection = elevatorDirection;
 
         this.receiver = new DMA_Receiver();
         this.txThis = new DMA_Transmitter(receiver);
@@ -37,6 +39,7 @@ public class Loader implements Runnable {
         System.out.println("loader: ask passengers from the floor");
         txFloor.send(new SendPassengersCommand(elevatorState.currentFloor(),
                 ElevatorUtilities.getPassengersDirection(elevatorState.passengerCountMap().keySet()), txThis));
+        txFloor.send(new SendPassengersCommand(elevatorState.currentFloor(), elevatorDirection, txThis));
         // Receiver passengers
         System.out.println("Loader: receive passengers from the floor");
         ArrayList<DestinationEvent> passengers = ((PassengerLoadEvent) receiver.receive()).passengers();

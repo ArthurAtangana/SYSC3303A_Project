@@ -69,20 +69,10 @@ public class Scheduler implements Runnable {
         union.addAll(floorRequestsToTime.keySet());
         union.addAll(e.passengerCountMap().keySet());
 
-        Direction direction = ElevatorUtilities.getPassengersDirection(e.passengerCountMap().keySet());
-        // if there are passengers that need to get in/out, stop.
-        if (direction != null) {
-            return union.contains(new DestinationEvent(e.currentFloor(), direction));
+        if (e.passengerCountMap().isEmpty() && getElevatorDirection(e) != getOldestFloorRequest().direction()){
+            return false;
         }
-        // if we are on the current floor, stop
-        if (e.currentFloor() == getOldestFloorRequest().destinationFloor()){
-            return true;
-        }
-        //if current floor has a request that goes in the same direction as the oldest floor request, we should stop
-        else if (getOldestFloorRequest().direction() == getDirectionToOldestFloor(e.currentFloor())){
-            return true;
-        }
-        return false;
+        return union.contains(new DestinationEvent(e.currentFloor(), getElevatorDirection(e)));
     }
     private DestinationEvent getOldestFloorRequest() {
         if (floorRequestsToTime.isEmpty()) return null;
@@ -117,12 +107,10 @@ public class Scheduler implements Runnable {
     private Direction getElevatorDirection(ElevatorStateEvent event) {
         // Find direction in elevator if elevator has passengers.
         Direction direction = ElevatorUtilities.getPassengersDirection(event.passengerCountMap().keySet());
-        // Find direction from oldest floor request.
-        if (direction == null) {
-            direction = getDirectionToOldestFloor(event.currentFloor());
+        if (direction != null){
+            return direction;
         }
-        // No passengers on elevator and no floor requests. (Goes against precondition)
-        if (direction == null) {
+        if (floorRequestsToTime.isEmpty()){
             throw new RuntimeException("No passenger on elevator and no floor requests");
         }
         return direction;
@@ -140,6 +128,8 @@ public class Scheduler implements Runnable {
             idleElevators.add(event);
         } else if (isElevatorStopping(event)) { // Stop elevator for a load
             new Thread(new Loader(event, transmitterToFloor, transmitterToElevator)).start();
+            new Thread(new Loader(event, transmitterToFloor, transmitterToElevator, getElevatorDirection(event))).start();
+            floorRequestsToTime.remove(new DestinationEvent(event.currentFloor(),getElevatorDirection(event)));
         } else// Keep moving
             transmitterToElevator.send(new MoveElevatorCommand(event.elevatorNum(), getElevatorDirection(event)));
     }

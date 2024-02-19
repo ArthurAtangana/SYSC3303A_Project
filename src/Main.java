@@ -37,7 +37,7 @@ public class Main {
         DMA_Receiver elevatorReceiver = new DMA_Receiver(0);
         ArrayList<DMA_Receiver> floorReceivers = new ArrayList<>();
         for(int i=0; i < numFloors; i++){
-            floorReceivers.add(new DMA_Receiver());
+            floorReceivers.add(new DMA_Receiver(i));
         }
 
         // Create Transmitters (composes with receivers)
@@ -72,7 +72,7 @@ public class Main {
 
         // Start dispatcher (want all systems to be ready before sending events)
         System.out.println("\n****** Begin Real-Time System Operation ******\n");
-        new Thread(new DestinationDispatcher(inputEvents, toSchedulerTransmitter)).start();
+        new Thread(new DestinationDispatcher(inputEvents, toSchedulerTransmitter, toFloorsTransmitter)).start();
 
         // Join floor, elevator, and scheduler threads
         for (Thread t: floorThreads) {
