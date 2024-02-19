@@ -22,7 +22,7 @@ public class GetMessageState extends State<ElevatorContext> {
      */
     @Override
     protected State<ElevatorContext> selectNextState() {
-        SystemMessage msg = context.getMessage();
+        SystemMessage msg = context.receive();
 
         if (msg instanceof MoveElevatorCommand) {
             context.setDir(((MoveElevatorCommand) msg).direction());

@@ -4,6 +4,7 @@ import Configuration.Config;
 import Configuration.Configurator;
 import Messaging.Receivers.DMA_Receiver;
 import Messaging.Receivers.Receiver;
+import Messaging.SystemMessage;
 import StatePatternLib.Context;
 
 public abstract class SubsystemContext extends Context {
@@ -24,5 +25,9 @@ public abstract class SubsystemContext extends Context {
 
     public Receiver getRx() {
         return rx;
+    }
+
+    public SystemMessage receive() {
+        return rx.receive();
     }
 }

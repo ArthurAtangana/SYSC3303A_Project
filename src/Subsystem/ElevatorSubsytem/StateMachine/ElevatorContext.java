@@ -73,10 +73,6 @@ public class ElevatorContext extends SubsystemContext {
         System.out.println("Elevator: Elevator reached floor #" + this.currentFloor + ".");
     }
 
-    SystemMessage getMessage() {
-        return rx.receive();
-    }
-
     void setDir(Direction dir) {
         direction = dir;
     }
