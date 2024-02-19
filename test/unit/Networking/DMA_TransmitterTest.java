@@ -24,7 +24,6 @@ class DMA_TransmitterTest {
 
     @Test
     void send() {
-        setUp();
         systemEvent = new DestinationEvent(2, Direction.UP);
         transmitter.send(systemEvent);
         DestinationEvent event = (DestinationEvent) receiver.receive();

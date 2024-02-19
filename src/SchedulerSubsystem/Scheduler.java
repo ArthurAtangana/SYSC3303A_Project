@@ -43,7 +43,9 @@ public class Scheduler implements Runnable {
      */
     private void storeFloorRequest(FloorRequestEvent event) {
         // Store event locally to use in scheduling
-        floorRequestsToTime.put(event.destinationEvent(), event.time());
+        if (!floorRequestsToTime.containsKey(event.destinationEvent()))
+            // Only store request if it does not already exist
+            floorRequestsToTime.put(event.destinationEvent(), event.time());
     }
 
     /**
@@ -104,12 +106,12 @@ public class Scheduler implements Runnable {
      */
     private Direction getOldestFloorDirFromElevator(int currentFloor) {
         if (floorRequestsToTime.isEmpty()) return null;
-        Long waitTime = (long) -1;
+        Long waitTime = Long.MAX_VALUE;
         int sourceFloor = -1;
-        for (Map.Entry<DestinationEvent, Long> x : floorRequestsToTime.entrySet()) {
-            if (x.getValue() > waitTime) {
-                waitTime = x.getValue();
-                sourceFloor = x.getKey().destinationFloor();
+        for (Map.Entry<DestinationEvent, Long> request : floorRequestsToTime.entrySet()) {
+            if (request.getValue() < waitTime) {
+                waitTime = request.getValue();
+                sourceFloor = request.getKey().destinationFloor();
             }
         }
         return (sourceFloor > currentFloor) ? Direction.UP : Direction.DOWN;
