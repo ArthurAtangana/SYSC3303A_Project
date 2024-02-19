@@ -1,4 +1,6 @@
-package Networking.Messages;
+package Messaging.Events;
+
+import Messaging.SystemMessage;
 
 /**
  * Interface definition for all events passed in the system to inherit.

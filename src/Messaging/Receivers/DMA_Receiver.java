@@ -6,10 +6,10 @@
  * @author Alexandre Marques
  * @version Iteration-1
  */
-package Networking.Receivers;
+package Messaging.Receivers;
 
-import Networking.Messages.SystemCommand;
-import Networking.Messages.SystemMessage;
+import Messaging.Commands.SystemCommand;
+import Messaging.SystemMessage;
 
 import java.util.ArrayList;
 import java.util.List;

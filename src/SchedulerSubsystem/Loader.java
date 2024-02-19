@@ -1,8 +1,12 @@
 package SchedulerSubsystem;
 
-import Networking.Messages.*;
-import Networking.Receivers.DMA_Receiver;
-import Networking.Transmitters.DMA_Transmitter;
+import Messaging.Commands.MovePassengersCommand;
+import Messaging.Commands.SendPassengersCommand;
+import Messaging.Events.DestinationEvent;
+import Messaging.Events.ElevatorStateEvent;
+import Messaging.Events.PassengerLoadEvent;
+import Messaging.Receivers.DMA_Receiver;
+import Messaging.Transmitters.DMA_Transmitter;
 
 import java.util.ArrayList;
 

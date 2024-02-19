@@ -55,7 +55,7 @@ See test README for test file structure.
 [ElevatorSubsystem](#elevatorsubsystem)<br>
 [FloorSubsystem](#floorsubsystem)<br>
 [SchedulerSubsystem](#schedulersubsystem)<br>
-[Networking](#networking)<br>
+[Messaging](#networking)<br>
 [Tests](#tests)<br>
 [UML](#uml)<br>
 
@@ -89,7 +89,7 @@ See test README for test file structure.
 - Sends DestinationEvent records to the Elevator
 - Sends ElevatorStateEvent records to the Floor
 
-### Networking
+### Messaging
 
 #### <u>Events</u>
 
@@ -146,7 +146,7 @@ See test README for test file structure.
 **ParserTest.java**
 - Tests parser class
 
-<u>Networking</u>
+<u>Messaging</u>
 **DMA_ReceiverTest.java**
 - Tests DMA_Receiver class
 

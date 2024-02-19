@@ -1,4 +1,4 @@
-package Networking.Messages;
+package Messaging;
 
 /**
  * Interface definition for all messages passed in the system to inherit.

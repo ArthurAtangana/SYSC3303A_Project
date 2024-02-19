@@ -6,10 +6,10 @@
  * @author Alexandre Marques
  * @version Iteration-1
  */
-package Networking.Transmitters;
+package Messaging.Transmitters;
 
-import Networking.Messages.SystemMessage;
-import Networking.Receivers.DMA_Receiver;
+import Messaging.SystemMessage;
+import Messaging.Receivers.DMA_Receiver;
 
 import java.util.ArrayList;
 

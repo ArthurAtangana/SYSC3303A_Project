@@ -5,9 +5,9 @@
  * @version Iteration-1
  */
 
-package Networking.Transmitters;
+package Messaging.Transmitters;
 
-import Networking.Messages.SystemMessage;
+import Messaging.SystemMessage;
 
 public interface Transmitter {
     /**
