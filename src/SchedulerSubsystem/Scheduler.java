@@ -43,7 +43,7 @@ public class Scheduler implements Runnable {
      * @param event Event to process.
      */
     private void storeFloorRequest(FloorRequestEvent event) {
-        System.out.println("Floor request made: " + event.destinationEvent());
+        System.out.println("Floor " + event.destinationEvent().destinationFloor() + ": request made: " + event.destinationEvent().direction() + ".");
         // Store event locally to use in scheduling
         if (!floorRequestsToTime.containsKey(event.destinationEvent()))
             // Only store request if it does not already exist
