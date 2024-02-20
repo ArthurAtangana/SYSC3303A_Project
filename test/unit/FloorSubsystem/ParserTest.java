@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ParserTest {
 
-    private String filename = "input-file.txt";
+    private String filename = "test/resources/input-file.txt";
     private Parser parser;
     private ArrayList<FloorInputEvent> floorInputEvents;
 
@@ -36,7 +36,6 @@ class ParserTest {
 
         System.out.println("\n****** START: testParse() ******");
 
-        String filename = "input-file.txt";
         floorInputEvents = parser.parse(filename);
 
         // Assert our ArrayList now has expected number of FloorInputEvents
