@@ -1,7 +1,4 @@
 package Configuration;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.io.IOException;
 
 /**
  *  Config class which contains system configuration data.
@@ -12,10 +9,10 @@ import java.io.IOException;
 public class Config {
 
     /* Instance Variables */
-    private int numFloors;
-    private int numElevators;
-    private long travelTime;
-    private long loadTime;
+    private final int numFloors;
+    private final int numElevators;
+    private final long travelTime;
+    private final long loadTime;
 
     /* Constructors */
 
@@ -54,7 +51,6 @@ public class Config {
         System.out.println("-- travelTime: " + getTravelTime() + " [ms]");
         System.out.println("-- loadTime: " + getLoadTime() + " [ms]");
         System.out.println();
-        return;
     }
 
 }

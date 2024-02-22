@@ -13,7 +13,7 @@
 8. [Resources](#resources)
 9. [Known Issues](#known-issues)
 
-## Authors 
+## Authors
 Group A1:1
 - Arthur Atangana: 101005197
 - Victoria Malouf: 101179986
@@ -22,16 +22,22 @@ Group A1:1
 - Alexandre Marques: 101189743
 
 ## Usage
+Usage written for use in IntelliJ 2023 IDE.
+
 Note: Compiled using JDK - 21 Oracle OpenJDK version 21.0.1
-1. Retrieve source code (https://github.com/ArthurAtangana/SYSC3303A_Project)
+1. Retrieve source code (https://github.com/ArthurAtangana/SYSC3303A_Project) in IntelliJ
    - Clone using HTTPS:
      - `https://github.com/ArthurAtangana/SYSC3303A_Project.git` 
    - Clone using SSH:
      - `git clone git@github.com:ArthurAtangana/SYSC3303A_Project.git`
    - Clone using GitHub CLI:
      - `gh repo clone ArthurAtangana/SYSC3303A_Project`
-2. Open Main.java
-3. Run the main function
+2. Add lib folder as a library
+   1. Right click lib folder in root directory
+   2. Select add as library
+   3. Leave settings as default, select ok
+3. Open Main.java
+4. Run the main function
 
 For test execution, see [test section](#test).
 
@@ -51,15 +57,15 @@ travel time and passenger (de)boarding time.
 The source file structure is organized using Java packages under the src/ folder. 
 See test README for test file structure.
 
-[Main](#main.java)<br>
+[Main](#main)<br>
 [ElevatorSubsystem](#elevatorsubsystem)<br>
 [FloorSubsystem](#floorsubsystem)<br>
 [SchedulerSubsystem](#schedulersubsystem)<br>
-[Messaging](#networking)<br>
+[Messaging](#messaging)<br>
 [Tests](#tests)<br>
 [UML](#uml)<br>
 
-### Main.java
+### Main
 - Initializes and maintains track of threads
 
 ### ElevatorSubsystem
