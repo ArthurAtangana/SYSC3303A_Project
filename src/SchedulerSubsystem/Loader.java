@@ -36,13 +36,10 @@ public class Loader implements Runnable {
     @Override
     public void run() {
         // Send command to get passengers from floor
-        //System.out.println("loader: ask passengers from the floor");
         txFloor.send(new SendPassengersCommand(elevatorState.currentFloor(), elevatorDirection, txThis));
         // Receiver passengers
-        //System.out.println("Loader: receive passengers from the floor");
         ArrayList<DestinationEvent> passengers = ((PassengerLoadEvent) receiver.receive()).passengers();
         // Send passengers to elevator
-        //System.out.println("Loader: send passengers to the elevator");
         txElevator.send(new MovePassengersCommand(elevatorState.elevatorNum(), passengers));
     }
 }

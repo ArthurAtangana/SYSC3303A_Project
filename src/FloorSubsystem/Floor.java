@@ -61,7 +61,6 @@ public class Floor implements Runnable {
         Direction currentDirection = sendPassengersCommand.dir();
         // Send passengers with current direction
         for (DestinationEvent dest : passengers) {
-            System.out.println(dest);
             if (dest.direction() == currentDirection) {
                 passengersToLoad.add(dest);
             }

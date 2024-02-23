@@ -42,7 +42,7 @@ public class DMA_Receiver implements Receiver{
      * @return A message sent from a transmitter.
      */
     @Override
-    public synchronized SystemMessage receive() {
+    public SystemMessage receive() {
         synchronized (msgBuf) {
             while (msgBuf.isEmpty()) {
                 try {

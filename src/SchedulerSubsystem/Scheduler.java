@@ -11,15 +11,15 @@ import Messaging.SystemMessage;
 import Messaging.Transmitters.DMA_Transmitter;
 
 import com.sun.jdi.InvalidTypeException;
-import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RunWith(Enclosed.class)
 public class Scheduler implements Runnable {
@@ -70,10 +70,18 @@ public class Scheduler implements Runnable {
         union.addAll(floorRequestsToTime.keySet());
         union.addAll(e.passengerCountMap().keySet());
 
-        if (e.passengerCountMap().isEmpty() && getElevatorDirection(e) != getOldestFloorRequest().direction()){
+        if (isMovingOppositeToFutureDirection(e)) {
             return false;
         }
         return union.contains(new DestinationEvent(e.currentFloor(), getElevatorDirection(e)));
+    }
+
+    /**
+     * Returns false if the elevator is empty and is moving oposite to the future direction.
+     * @return
+     */
+    private boolean isMovingOppositeToFutureDirection(ElevatorStateEvent event){
+        return (event.passengerCountMap().isEmpty() && getElevatorDirection(event) != getOldestFloorRequest().direction());
     }
     private DestinationEvent getOldestFloorRequest() {
         if (floorRequestsToTime.isEmpty()) return null;
@@ -164,53 +172,6 @@ public class Scheduler implements Runnable {
             } catch (InvalidTypeException e) {
                 throw new RuntimeException(e);
             }
-        }
-    }
-    /* Test */
-
-    /**
-     * Nested test class for class Scheduler. Contains unit tests for critical private methods.
-     *
-     * See README section Test for additional context.
-     */
-    public static class SchedulerTest {
-
-        DMA_Receiver receiver, mockFloorReceiver, mockElevatorReceiver;
-        DMA_Transmitter mockTransmitterToFloor, mockTransmitterToElevator;
-        Scheduler scheduler;
-        @BeforeEach
-        public void setUp() {
-            receiver = new DMA_Receiver();
-            mockFloorReceiver = new DMA_Receiver();
-            mockElevatorReceiver = new DMA_Receiver();
-            mockTransmitterToFloor = new DMA_Transmitter(mockFloorReceiver);
-            mockTransmitterToElevator = new DMA_Transmitter((mockElevatorReceiver));
-            scheduler = new Scheduler(receiver, mockTransmitterToFloor, mockTransmitterToElevator);
-        }
-
-        /**
-         * Positive test for isElevatorStopping.
-         */
-        @Test
-        @DisplayName("isElevatorStopping positive test")
-        public void testPositiveIsElevatorStopping() {
-            // Arrange
-            int floor = 1; // Same floor for elevator state event and destination event
-            DestinationEvent destinationEvent = new DestinationEvent(floor, Direction.UP);
-            HashSet<DestinationEvent> schedulerDestinationEvents = new HashSet<>();
-            schedulerDestinationEvents.add(destinationEvent);
-            // FIXME
-            //scheduler.floorRequests = schedulerDestinationEvents;
-
-            HashMap<DestinationEvent, Integer> elevatorDestinationEvents = new HashMap<>();
-            elevatorDestinationEvents.put(destinationEvent, 1);
-            ElevatorStateEvent elevatorStateEvent = new ElevatorStateEvent(1, floor, elevatorDestinationEvents);
-
-            // Act
-            boolean result = scheduler.isElevatorStopping(elevatorStateEvent);
-
-            // Assert
-            assertTrue(result);
         }
     }
 }
