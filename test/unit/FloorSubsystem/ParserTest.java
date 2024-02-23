@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ParserTest {
 
-    private String filename = "test/resources/input-file.txt";
+    private String filename = "test/resources/parser-input-file.txt";
     private Parser parser;
     private ArrayList<FloorInputEvent> floorInputEvents;
 

@@ -67,8 +67,8 @@ public class Main {
         // Instantiate Parser and parse input file to FloorInputEvents
         System.out.println("\n****** Generating System Input Events ******\n");
         Parser parser = new Parser();
-        String inputFilename = "res/input-file.txt";
-        //String inputFilename = "res/single-input-file.txt";
+        //String inputFilename = "res/input-file.txt";
+        String inputFilename = "test/resources/test-input-file.txt";
         ArrayList<FloorInputEvent> inputEvents = parser.parse(inputFilename);
 
         // Start dispatcher (want all systems to be ready before sending events)
