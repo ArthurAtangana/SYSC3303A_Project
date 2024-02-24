@@ -1,3 +1,9 @@
+package Messaging.Commands;
+
+import Messaging.Events.DestinationEvent;
+
+import java.util.ArrayList;
+
 /**
  * MovePassengersCommand Record, Command to elevator to load passengers onto the elevator (if applicable),
  * and offload passengers in the elevator (if applicable).
@@ -9,12 +15,6 @@
  * @author Alexandre Marques
  * @version Iteration-2
  */
-package Messaging.Commands;
-
-import Messaging.Events.DestinationEvent;
-
-import java.util.ArrayList;
-
 public record MovePassengersCommand(int elevNum, ArrayList<DestinationEvent> newPassengers) implements SystemCommand {
     /**
      * Match elevator number with the given key.

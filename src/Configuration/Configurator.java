@@ -1,3 +1,8 @@
+package Configuration;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.IOException;
+
 /**
  *  Configurator class which parses a given JSON file and makes its data
  *  publicly available in a constructed Config Java object.
@@ -5,12 +10,6 @@
  * @author M. Desantis
  * @version Iteration 2
  */
-
-package Configuration;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.io.IOException;
-
 public class Configurator {
 
     /* Instance Variables */

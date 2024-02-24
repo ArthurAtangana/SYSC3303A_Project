@@ -1,12 +1,3 @@
-/**
- * DestinationDispatcher class sends DestinationEvents as they occur through an input handler.
- * The purpose of this component is to simulate events external to the system occurring in real time
- * by using the time value in InputEvents to determine when to dispatch DestinationEvents.
- *
- * @author Alexandre Marques
- * @version Iteration-1
- */
-
 package FloorSubsystem;
 
 import Messaging.Commands.PassengerArrivedCommand;
@@ -18,6 +9,14 @@ import Messaging.Transmitters.Transmitter;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+/**
+ * DestinationDispatcher class sends DestinationEvents as they occur through an input handler.
+ * The purpose of this component is to simulate events external to the system occurring in real time
+ * by using the time value in InputEvents to determine when to dispatch DestinationEvents.
+ *
+ * @author Alexandre Marques
+ * @version Iteration-1
+ */
 public class DestinationDispatcher implements Runnable {
     private long lastEventTime; // Stores occurrence time of last processed event
     private final ArrayList<FloorInputEvent> eventQueue; // Stores occurrence time of last processed event

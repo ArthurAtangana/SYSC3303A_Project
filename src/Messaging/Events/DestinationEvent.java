@@ -1,3 +1,7 @@
+package Messaging.Events;
+
+import Messaging.Direction;
+
 /**
  * DestinationEvent record, holds data modelling a destination.
  * Floor requests, and passengers in the system can both be modeled as a destination to be served.
@@ -8,11 +12,6 @@
  * @version Iteration-1
  * @author Alexandre Marques
  */
-
-package Messaging.Events;
-
-import Messaging.Direction;
-
 public record DestinationEvent
         (int destinationFloor, Direction direction)
         implements SystemEvent {}

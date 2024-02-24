@@ -1,3 +1,7 @@
+package Messaging.Commands;
+
+import Messaging.Direction;
+
 /**
  * MoveElevatorCommand Record, Command to elevator to move until the next floor is reached.
  *
@@ -7,10 +11,6 @@
  * @author Alexandre Marques
  * @version Iteration-2
  */
-package Messaging.Commands;
-
-import Messaging.Direction;
-
 public record MoveElevatorCommand(int elevNum, Direction direction) implements SystemCommand{
     /**
      * Match elevator number with the given key.

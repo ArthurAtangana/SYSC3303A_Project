@@ -6,7 +6,7 @@
 1. [Authors](#authors)
 2. [Usage](#usage)
 3. [Description](#description)
-4. [Source Files](#source-files)
+4. [Design Considerations](#design-considerations)
 5. [Scope](#scope)
 6. [Tasks](#tasks)
 7. [Test](#test)
@@ -87,27 +87,8 @@ See test README for test file structure.
 | Scheduler               | SchedulerSubsystem     | Models a scheduler in the simulation.                                                         |
 | Main                    |                        | Models a scheduler in the simulation.                                                         |
 
-## Scope
+## Design Considerations
 
-### Iteration 1
-- Assumption 1: "Each line of input is to be sent" + "You should
-  develop a data structure which only passes then necessary information" = 
-  Only the relevant part of the input need to be sent to the scheduler. 
-  No timing is specified either, we send it when appropriate according to input or model time.
-- Assumption 2: "It is only necessary to create a test case showing that your program can read the input
-  file and pass the data back and forth." = The MVP for full marks. 
-  If these properties can be tested and demonstrated to work the system is at least fully functional for iteration 1.
-  For our testing strategy, this is covered by "system" tests.
-- Assumption 3: "The elevators will make calls to the Scheduler which will then reply when there is work to be
-  done." Is the only statement which describes how the communication occurs. 
-  We can implement this behavior with thread blocking on a monitor but all other communications 
-  can be implemented with the method we deem most fitting. 
-- Assumption 4: "Unit tests for all classes" only refers to classes which can be unit tested. 
-  More specifically, unit tests covering all public methods defined (excluding constructors, and run). 
-  Run methods being tested through system tests only because they depend on, and affect the overall system.
-  Constructors cannot be tested without getters which most classes don't implement.
-
-### Iteration 2
 - The scheduler algorithm prioritizes the prevention of starvation over achieving
 the highest throughput possible.
 
@@ -124,6 +105,9 @@ the amount of requests that can be serviced.
   destination within an appropriate amount of time.
   - Although throughput is important, serving each request fairly is the priority.
 - Ideally, the scheduler algorithm will be able to increase throughput while preventing starvation in future iterations.
+
+### Documentation
+- All public methods and classes require javadoc, private methods are optional.
 
 ## Tasks
 

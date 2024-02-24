@@ -1,9 +1,3 @@
-/**
- * Scheduler class which models a scheduler in the simulation.
- *
- * @version Iteration-2
- */
-
 package SchedulerSubsystem;
 
 import ElevatorSubsytem.ElevatorUtilities;
@@ -23,7 +17,11 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 
-
+/**
+ * Scheduler class which models a scheduler in the simulation.
+ *
+ * @version Iteration-2
+ */
 public class Scheduler implements Runnable {
     private final DMA_Transmitter transmitterToFloor;
     private final DMA_Transmitter transmitterToElevator;

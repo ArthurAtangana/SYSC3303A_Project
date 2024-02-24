@@ -1,3 +1,6 @@
+package Messaging.Commands;
+
+import Messaging.Events.DestinationEvent;
 /**
  * PassengerArrivedCommand Record, Command to floor that a passenger has arrived at the floor
  * with an intended destination.
@@ -8,11 +11,6 @@
  * @author Alexandre Marques
  * @version Iteration-2
  */
-
-package Messaging.Commands;
-
-import Messaging.Events.DestinationEvent;
-
 public record PassengerArrivedCommand(int floorNum, DestinationEvent passenger) implements SystemCommand {
     /**
      * Match floor number with the given key.

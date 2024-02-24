@@ -1,9 +1,3 @@
-/**
- * Floor class which models a floor in the simulation.
- *
- * @version Iteration-2
- */
-
 package FloorSubsystem;
 
 import Messaging.Commands.PassengerArrivedCommand;
@@ -18,6 +12,11 @@ import com.sun.jdi.InvalidTypeException;
 
 import java.util.ArrayList;
 
+/**
+ * Floor class which models a floor in the simulation.
+ *
+ * @version Iteration-2
+ */
 public class Floor implements Runnable {
     private int floorLamp;
     private final int floorNum;
