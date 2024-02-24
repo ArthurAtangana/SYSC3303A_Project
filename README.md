@@ -90,20 +90,15 @@ See test README for test file structure.
 ## Design Considerations
 
 - The scheduler algorithm prioritizes the prevention of starvation over achieving
-the highest throughput possible.
+the highest throughput possible.If the design can lead to starvation, it is an invalid design.
 
   - Throughout: A measure of efficiency. The rate at which the elevator control system can process
-passenger destination requests within a specified amount of time. A system that favours throughput 
-may only focus on servicing passengers that are close together to increase the amount of requests that can be serviced. 
+  passenger destination requests within a specified amount of time. A system that favours throughput 
+  may only focus on servicing passengers that are close together to increase the amount of requests that can be serviced. 
 
   - Starvation: A passenger can experience starvation if there is a possibility that they could never
-be serviced. This would happen if they are on a floor that is rarely used and far away. 
+  be serviced. This would happen if they are on a floor that is rarely used and far away. 
 
-- Assumption 1: If the design can lead to starvation, it is an invalid design. 
-  - The design guarantees that every passenger boarding an elevator will arrive at their intended 
-  destination within an appropriate amount of time.
-  - Although throughput is important, serving each request fairly is the priority.
-- Ideally, the scheduler algorithm will be able to increase throughput while preventing starvation in future iterations.
 
 ### Documentation
 - All public methods and classes require javadoc, private methods are optional.
