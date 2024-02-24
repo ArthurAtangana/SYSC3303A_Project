@@ -1,8 +1,3 @@
-package Messaging.Commands;
-
-import Messaging.Direction;
-import Messaging.Transmitters.DMA_Transmitter;
-
 /**
  * SendPassengersCommand Record, Command to floor to send passengers back through the provided transmitter.
  * Passing a transmitter allows for dynamic creation of receivers on the scheduler end.
@@ -13,6 +8,12 @@ import Messaging.Transmitters.DMA_Transmitter;
  * @author Alexandre Marques
  * @version Iteration-2
  */
+
+package Messaging.Commands;
+
+import Messaging.Direction;
+import Messaging.Transmitters.DMA_Transmitter;
+
 public record SendPassengersCommand(int floorNum, Direction dir, DMA_Transmitter tx) implements SystemCommand {
     /**
      * Match floor number with the given key.

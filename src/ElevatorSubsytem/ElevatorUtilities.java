@@ -1,8 +1,12 @@
+/**
+ * Contains static methods used by the Elevator.
+ *
+ * @version Iteration-2
+ */
 package ElevatorSubsytem;
 
 import Messaging.Direction;
 import Messaging.Events.DestinationEvent;
-import Messaging.Events.FloorRequestEvent;
 
 import java.util.Set;
 

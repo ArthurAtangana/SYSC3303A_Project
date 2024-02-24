@@ -1,7 +1,3 @@
-package Messaging.Events;
-
-import java.util.HashMap;
-
 /**
  * ElevatorStateEvent record, holds all data related to the state of an elevator during
  * operation.
@@ -14,6 +10,10 @@ import java.util.HashMap;
  * @author Alexandre Marques
  * @version Iteration-2
  */
+package Messaging.Events;
+
+import java.util.HashMap;
+
 public record ElevatorStateEvent
         (int elevatorNum, int currentFloor, HashMap<DestinationEvent, Integer> passengerCountMap)
         implements SystemEvent {}

@@ -1,11 +1,11 @@
-package Configuration;
-
 /**
  *  Config class which contains system configuration data.
  *
  * @author M. Desantis
- * @version 20240213
+ * @version Iteration-2
  */
+package Configuration;
+
 public class Config {
 
     /* Instance Variables */

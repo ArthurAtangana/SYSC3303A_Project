@@ -1,3 +1,9 @@
+/**
+ * Main initializes and maintains track of threads.
+ *
+ * @version Iteration-2
+ */
+
 import Configuration.Configurator;
 import Configuration.Config;
 import ElevatorSubsytem.Elevator;
@@ -10,12 +16,7 @@ import Messaging.Transmitters.DMA_Transmitter;
 import SchedulerSubsystem.Scheduler;
 
 import java.util.ArrayList;
-/**
- * Main initializes and maintains track of threads.
- * Note: For iteration 1, number of floors and elevators are stored as fields.
- *
- * @version 1.0
- */
+
 public class Main {
     // Note: our system starts counting floors at 0 :)
     private static final ArrayList<Thread> floorThreads = new ArrayList<>();

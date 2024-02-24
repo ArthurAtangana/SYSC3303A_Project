@@ -1,7 +1,7 @@
 /**
  * Enum to hold elevator state for directionality of travel.
  *
- * @version 20240202
+ * @version Iteration-2
  */
 
 package Messaging;

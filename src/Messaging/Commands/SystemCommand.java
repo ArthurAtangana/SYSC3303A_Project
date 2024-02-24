@@ -1,7 +1,3 @@
-package Messaging.Commands;
-
-import Messaging.SystemMessage;
-
 /**
  * Interface definition for all commands passed in the system to inherit.
  * Commands are defined as messages used to refer to a SPECIFIC instance of a subsystem (through key matching).
@@ -12,6 +8,11 @@ import Messaging.SystemMessage;
  * @author Alexandre Marques
  * @version Iteration 2
  */
+
+package Messaging.Commands;
+
+import Messaging.SystemMessage;
+
 public interface SystemCommand extends SystemMessage {
     /**
      * Matches the key provided against the intended key (stored in the command)

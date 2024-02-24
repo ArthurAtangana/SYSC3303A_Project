@@ -1,3 +1,13 @@
+/**
+ * Loader class is a thread that is used to load appropriate passengers into an elevator.
+ *
+ * The loader sends a SendPassengersCommand to the floor, receives passengers from
+ * the floor, and then sends a MovePassengersCommand to the elevator.
+ *
+ * @author Alexandre Marques
+ * @version Iteration-2
+ */
+
 package SchedulerSubsystem;
 
 import Messaging.Commands.MovePassengersCommand;

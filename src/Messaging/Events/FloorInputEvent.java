@@ -1,7 +1,3 @@
-package Messaging.Events;
-
-import Messaging.Direction;
-
 /**
  * FloorInputEvent record, models an input event to the system. These events
  * are be supplied to the system via an input file, which is then parsed to
@@ -15,6 +11,10 @@ import Messaging.Direction;
  * @author Alexandre Marques
  * @version Iteration-2
  */
+package Messaging.Events;
+
+import Messaging.Direction;
+
 public record FloorInputEvent
         (long time, int sourceFloor, Direction direction, int destinationFloor)
         implements SystemEvent {}

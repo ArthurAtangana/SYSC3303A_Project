@@ -39,7 +39,7 @@
  *      ArrayList<FloorInputEvent> floorInputEvents = parser.parse("input-file.txt");
  *
  * @author Michael De Santis
- * @version 20240202
+ * @version Iteration-1
  */
 
 package FloorSubsystem;
