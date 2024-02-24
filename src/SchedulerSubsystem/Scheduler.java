@@ -11,7 +11,8 @@ import Messaging.SystemMessage;
 import Messaging.Transmitters.DMA_Transmitter;
 
 import com.sun.jdi.InvalidTypeException;
-import java.util.ArrayList;
+
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
@@ -77,8 +78,7 @@ public class Scheduler implements Runnable {
     }
 
     /**
-     * Returns false if the elevator is empty and is moving oposite to the future direction.
-     * @return
+     * Returns false if the elevator is empty and is moving opposite to the future direction.
      */
     private boolean isMovingOppositeToFutureDirection(ElevatorStateEvent event){
         return (event.passengerCountMap().isEmpty() && getElevatorDirection(event) != getOldestFloorRequest().direction());
