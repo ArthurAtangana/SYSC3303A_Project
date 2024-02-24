@@ -22,7 +22,7 @@ public class Floor implements Runnable {
     private int floorLamp;
     private final int floorNum;
     private final DMA_Receiver receiver;
-    private ArrayList<DestinationEvent> passengers;
+    private final ArrayList<DestinationEvent> passengers;
 
     public Floor(int floorNumber, DMA_Receiver receiver) {
         this.floorNum = floorNumber;
@@ -38,7 +38,8 @@ public class Floor implements Runnable {
      */
     private void setLamp(int floorNumber) {
         floorLamp = floorNumber;
-        System.out.println("Floor #"+floorNum+": Lamp display updated to floor#"+ floorLamp + ".");
+        // TODO: Find a better way to display lamp. May make it a "static" view.
+//        System.out.println("Floor #"+floorNum+": Lamp display updated to floor#"+ floorLamp + ".");
     }
 
     /**
