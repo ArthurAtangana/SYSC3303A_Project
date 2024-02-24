@@ -93,12 +93,11 @@ See test README for test file structure.
 the highest throughput possible.
 
   - Throughout: A measure of efficiency. The rate at which the elevator control system can process
-passenger destination requests within a specified amount of time. 
+passenger destination requests within a specified amount of time. A system that favours throughput 
+may only focus on servicing passengers that are close together to increase the amount of requests that can be serviced. 
 
-  - Starvation: A passenger can experience starvation if they are left waiting for an elevator
-for an extended period of time. This would happen if they are on a floor that is rarely used and far away.
-A system that favours throughput may only focus on servicing passengers that are close together to increase 
-the amount of requests that can be serviced. 
+  - Starvation: A passenger can experience starvation if there is a possibility that they could never
+be serviced. This would happen if they are on a floor that is rarely used and far away. 
 
 - Assumption 1: If the design can lead to starvation, it is an invalid design. 
   - The design guarantees that every passenger boarding an elevator will arrive at their intended 
@@ -163,17 +162,6 @@ The testing framework used for unit tests is JUnit 5.8.1.
 
 For detailed test layout, see test README.
 
-### Nested Test Class in Production Class 
-(Not implemented for Iteration-2)
-
-Some unit tests for private methods are written in the production class as a *nested test class*. 
-For example, SchedulerTest.testPositiveIsElevatorStopping() is written directly in class Scheduler.
-
-This testing strategy preserves information hiding while enabling testing of critical private methods.
-
-This strategy should not be abused. Not all private methods merit unit tests.
-
-For additional reading on testing private methods, see this [article](https://www.artima.com/articles/testing-private-methods-with-junit-and-suiterunner). 
 
 ### Troubleshooting
 
