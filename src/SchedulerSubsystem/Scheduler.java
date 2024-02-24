@@ -11,17 +11,17 @@ import Messaging.SystemMessage;
 import Messaging.Transmitters.DMA_Transmitter;
 
 import com.sun.jdi.InvalidTypeException;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
-
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 
-
-@RunWith(Enclosed.class)
+/**
+ * Scheduler class which models a scheduler in the simulation.
+ *
+ * @version Iteration-2
+ */
 public class Scheduler implements Runnable {
     private final DMA_Transmitter transmitterToFloor;
     private final DMA_Transmitter transmitterToElevator;

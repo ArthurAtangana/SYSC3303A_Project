@@ -1,11 +1,3 @@
-/**
- * DMA_Receiver class, provides a way to receive messages from DMA_Transmitters.
- * DMA (Direct Memory Access) name comes from how the transmitters/receivers are implemented:
- * by storing an address to the receivers' buffers and setting messages in them.
- *
- * @author Alexandre Marques
- * @version Iteration-1
- */
 package Messaging.Receivers;
 
 import Messaging.Commands.SystemCommand;
@@ -14,6 +6,14 @@ import Messaging.SystemMessage;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DMA_Receiver class, provides a way to receive messages from DMA_Transmitters.
+ * DMA (Direct Memory Access) name comes from how the transmitters/receivers are implemented:
+ * by storing an address to the receivers' buffers and setting messages in them.
+ *
+ * @author Alexandre Marques
+ * @version Iteration-1
+ */
 public class DMA_Receiver implements Receiver{
     // Message buffer
     private final List<SystemMessage> msgBuf;

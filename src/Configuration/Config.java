@@ -4,7 +4,7 @@ package Configuration;
  *  Config class which contains system configuration data.
  *
  * @author M. Desantis
- * @version 20240213
+ * @version Iteration-2
  */
 public class Config {
 

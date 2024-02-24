@@ -8,7 +8,7 @@ import java.io.IOException;
  *  publicly available in a constructed Config Java object.
  *
  * @author M. Desantis
- * @version 20240213
+ * @version Iteration 2
  */
 public class Configurator {
 
