@@ -37,7 +37,7 @@ public class Main {
         DMA_Receiver elevatorReceiver = new DMA_Receiver(0);
         ArrayList<DMA_Receiver> floorReceivers = new ArrayList<>();
         for(int i=0; i < numFloors; i++){
-            floorReceivers.add(new DMA_Receiver());
+            floorReceivers.add(new DMA_Receiver(i));
         }
 
         // Create Transmitters (composes with receivers)
@@ -48,27 +48,32 @@ public class Main {
         // Start floor, elevator, and scheduler threads
         Scheduler scheduler = new Scheduler(schedulerReceiver, toFloorsTransmitter, toElevatorTransmitter);
         Thread schedulerThread = new Thread(scheduler);
+
+        schedulerThread.start();
+
         for (int i = 0; i < numFloors; ++i) {
             Thread newFloor = new Thread(new Floor(i, floorReceivers.get(i)));
             floorThreads.add(newFloor);
             newFloor.start();
         }
+
         for (int i = 0; i < numElevators; ++i) {
             Thread newElevator = new Thread(new Elevator(i, elevatorReceiver, toSchedulerTransmitter));
             elevatorThreads.add(newElevator);
             newElevator.start();
         }
-        schedulerThread.start();
+
 
         // Instantiate Parser and parse input file to FloorInputEvents
         System.out.println("\n****** Generating System Input Events ******\n");
         Parser parser = new Parser();
-        String inputFilename = "res/input-file.txt";
+        //String inputFilename = "res/input-file.txt";
+        String inputFilename = "test/resources/test-input-file.txt";
         ArrayList<FloorInputEvent> inputEvents = parser.parse(inputFilename);
 
         // Start dispatcher (want all systems to be ready before sending events)
         System.out.println("\n****** Begin Real-Time System Operation ******\n");
-        new Thread(new DestinationDispatcher(inputEvents, toSchedulerTransmitter)).start();
+        new Thread(new DestinationDispatcher(inputEvents, toSchedulerTransmitter, toFloorsTransmitter)).start();
 
         // Join floor, elevator, and scheduler threads
         for (Thread t: floorThreads) {

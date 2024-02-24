@@ -19,7 +19,6 @@ import Messaging.Transmitters.DMA_Transmitter;
 import com.sun.jdi.InvalidTypeException;
 
 import java.util.HashMap;
-import java.util.Set;
 
 public class Elevator implements Runnable {
     /** Single floor travel time */
@@ -53,52 +52,37 @@ public class Elevator implements Runnable {
      * @param direction the direction to travel towards.
      */
     private void move(Direction direction) {
-        System.out.println("Elevator: Going " + direction + ", from floor #" + currentFloor + ".");
+        System.out.println(String.format("Elevator %s: Going %s from floor %s.",this.elevNum,direction,this.currentFloor));
         try {
-            Thread.sleep(travelTime);
+            Thread.sleep(this.travelTime);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
         currentFloor += direction.getDisplacement();
 
-        System.out.println("Elevator: Elevator reached floor #" + this.currentFloor + ".");
-    }
-
-    /**
-     *
-     * @return
-     */
-    private Direction elevatorDirection(){
-        Set<DestinationEvent> destinationEvents = passengerCountMap.keySet();
-
-        Direction direction = null;
-        for (DestinationEvent e : destinationEvents){
-            if (direction == null){
-                direction = e.direction();
-            }
-            if (direction != e.direction()){
-                throw new RuntimeException("Missmatched passenger direction in elevator");
-            }
-        }
-        return direction;
+        System.out.println(String.format("Elevator %s: Elevator reached floor #%s", this.elevNum, this.currentFloor));
     }
     private void unload(){
-        Direction direction = elevatorDirection();
-        if (elevatorDirection() == null){
+        Direction direction = ElevatorUtilities.getPassengersDirection(passengerCountMap.keySet());
+        if (direction == null){
             return;
         }
         try {
             // each passenger takes loadTime to leave the elevator.
+            System.out.println("Passenger unloading from the elevator: " + passengerCountMap.get(new DestinationEvent(currentFloor, direction)));
             Thread.sleep(loadTime * passengerCountMap.remove(new DestinationEvent(currentFloor,direction)));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        } catch (NullPointerException e) {
+            // no passengers to unload, do nothing.
         }
     }
     /**
      * Loads passengers in and/or out of the elevator
      */
     private void load(MovePassengersCommand command){
+        System.out.println("Loading passengers: " + command.newPassengers());
         // load passengers into the elevator, taking LOAD_TIME per passengers waiting on the floor.
         try {
             Thread.sleep(loadTime * command.newPassengers().size());
@@ -110,6 +94,7 @@ public class Elevator implements Runnable {
             passengerCountMap.merge(e,1, Integer::sum);
             // if the key exists in passengerCountMap, increment value by 1. if not, add new entry.
         }
+        System.out.println("Passengers in the elevator: " + passengerCountMap.toString());
     }
     /**
      * Update scheduler with this elevator's state.
@@ -140,12 +125,12 @@ public class Elevator implements Runnable {
     @Override
     public void run() {
         while (true){
+            sendStateUpdate();
             try {
                 processMessage(receiver.receive());
             } catch (InvalidTypeException e) {
                 throw new RuntimeException(e);
             }
-            sendStateUpdate();
         }
     }
 }

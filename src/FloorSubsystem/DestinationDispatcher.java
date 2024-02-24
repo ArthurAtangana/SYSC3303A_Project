@@ -50,7 +50,6 @@ public class DestinationDispatcher implements Runnable {
     private void waitEvent(){
         long curTime = eventQueue.get(0).time();
         long delay = curTime - lastEventTime;
-        System.out.println("Floor: Waiting for next floor request.");
         try {
             Thread.sleep(delay);
         } catch (InterruptedException e) {

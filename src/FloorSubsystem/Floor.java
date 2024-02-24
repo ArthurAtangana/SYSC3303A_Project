@@ -6,6 +6,7 @@
 
 package FloorSubsystem;
 
+import Messaging.Commands.PassengerArrivedCommand;
 import Messaging.Commands.SendPassengersCommand;
 import Messaging.Direction;
 import Messaging.Events.DestinationEvent;
@@ -21,14 +22,14 @@ public class Floor implements Runnable {
     private int floorLamp;
     private final int floorNum;
     private final DMA_Receiver receiver;
-    private ArrayList<DestinationEvent> floorRequests;
+    private ArrayList<DestinationEvent> passengers;
 
     public Floor(int floorNumber, DMA_Receiver receiver) {
         this.floorNum = floorNumber;
         this.receiver = receiver;
         // Start elevator location at 0 until an update is received
         floorLamp = 0;
-        floorRequests = new ArrayList<>();
+        passengers = new ArrayList<>();
     }
     /**
      * Setting the lamp to display which floor the elevator is on.
@@ -43,10 +44,10 @@ public class Floor implements Runnable {
     /**
      * Storing the floor request made by a passenger.
      *
-     * @param destinationEvent Destination event received from the scheduler.
+     * @param cmd passenger cmd received from the scheduler.
      */
-    private void storeDestination(DestinationEvent destinationEvent) {
-        floorRequests.add(destinationEvent);
+    private void storePassenger(PassengerArrivedCommand cmd) {
+        passengers.add(cmd.passenger());
     }
 
     /**
@@ -59,13 +60,13 @@ public class Floor implements Runnable {
         ArrayList<DestinationEvent> passengersToLoad = new ArrayList<>();
         Direction currentDirection = sendPassengersCommand.dir();
         // Send passengers with current direction
-        for (DestinationEvent dest : floorRequests) {
+        for (DestinationEvent dest : passengers) {
             if (dest.direction() == currentDirection) {
                 passengersToLoad.add(dest);
             }
         }
         sendPassengersCommand.tx().send(new PassengerLoadEvent(passengersToLoad));
-        floorRequests.removeAll(passengersToLoad);
+        passengers.removeAll(passengersToLoad);
     }
 
     /**
@@ -80,9 +81,8 @@ public class Floor implements Runnable {
             setLamp(((ElevatorStateEvent) event).currentFloor());
         else if (event instanceof SendPassengersCommand) {
             sendPassengers((SendPassengersCommand) event);
-        }
-        else if (event instanceof DestinationEvent) {
-            storeDestination((DestinationEvent) event);
+        } else if (event instanceof PassengerArrivedCommand) {
+            storePassenger((PassengerArrivedCommand) event);
         }
         else // Default, should never happen
             throw new InvalidTypeException("Event type received cannot be handled by this subsystem.");

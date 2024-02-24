@@ -1,5 +1,6 @@
 package SchedulerSubsystem;
 
+import ElevatorSubsytem.ElevatorUtilities;
 import Messaging.Commands.MoveElevatorCommand;
 import Messaging.Direction;
 import Messaging.Events.DestinationEvent;
@@ -8,19 +9,17 @@ import Messaging.Events.FloorRequestEvent;
 import Messaging.Receivers.DMA_Receiver;
 import Messaging.SystemMessage;
 import Messaging.Transmitters.DMA_Transmitter;
+
 import com.sun.jdi.InvalidTypeException;
-import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
+import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RunWith(Enclosed.class)
 public class Scheduler implements Runnable {
@@ -28,12 +27,14 @@ public class Scheduler implements Runnable {
     private final DMA_Transmitter transmitterToElevator;
     private final DMA_Receiver receiver;
     private final Map<DestinationEvent, Long> floorRequestsToTime;
+    private ArrayList<ElevatorStateEvent> idleElevators;
 
     public Scheduler(DMA_Receiver receiver, DMA_Transmitter transmitterToFloor, DMA_Transmitter transmitterToElevator) {
         this.receiver = receiver;
         this.transmitterToElevator = transmitterToElevator;
         this.transmitterToFloor = transmitterToFloor;
         floorRequestsToTime = new HashMap<>();
+        idleElevators = new ArrayList<ElevatorStateEvent>();
     }
 
     /**
@@ -42,12 +43,15 @@ public class Scheduler implements Runnable {
      * @param event Event to process.
      */
     private void storeFloorRequest(FloorRequestEvent event) {
+        System.out.println("Floor " + event.destinationEvent().destinationFloor() + ": request made: " + event.destinationEvent().direction() + ".");
         // Store event locally to use in scheduling
         if (!floorRequestsToTime.containsKey(event.destinationEvent()))
             // Only store request if it does not already exist
             floorRequestsToTime.put(event.destinationEvent(), event.time());
+        if (!idleElevators.isEmpty()){
+            processElevatorEvent(idleElevators.remove(0));
+        }
     }
-
     /**
      * Returns true if elevator should stop, false otherwise.
      *
@@ -66,7 +70,40 @@ public class Scheduler implements Runnable {
         union.addAll(floorRequestsToTime.keySet());
         union.addAll(e.passengerCountMap().keySet());
 
+        if (isMovingOppositeToFutureDirection(e)) {
+            return false;
+        }
         return union.contains(new DestinationEvent(e.currentFloor(), getElevatorDirection(e)));
+    }
+
+    /**
+     * Returns false if the elevator is empty and is moving oposite to the future direction.
+     * @return
+     */
+    private boolean isMovingOppositeToFutureDirection(ElevatorStateEvent event){
+        return (event.passengerCountMap().isEmpty() && getElevatorDirection(event) != getOldestFloorRequest().direction());
+    }
+    private DestinationEvent getOldestFloorRequest() {
+        if (floorRequestsToTime.isEmpty()) return null;
+        Long waitTime = Long.MAX_VALUE;
+        DestinationEvent oldestFloor = null;
+        for (Map.Entry<DestinationEvent, Long> request : floorRequestsToTime.entrySet()) {
+            if (request.getValue() < waitTime) {
+                waitTime = request.getValue();
+                oldestFloor = request.getKey();
+            }
+        }
+        return oldestFloor;
+    }
+    /**
+     * Returns the direction of the oldest floor request based on the elevator's current floor.
+     *
+     * @param currentFloor The floor number the elevator is currently on.
+     * @return Direction of oldest floor request relative to currentFloor, null if there are no floor requests.
+     */
+    private Direction getDirectionToOldestFloor(int currentFloor) {
+        int sourceFloor = getOldestFloorRequest().destinationFloor();
+        return (sourceFloor > currentFloor) ? Direction.UP : Direction.DOWN;
     }
 
     /**
@@ -78,44 +115,21 @@ public class Scheduler implements Runnable {
      */
     private Direction getElevatorDirection(ElevatorStateEvent event) {
         // Find direction in elevator if elevator has passengers.
-        Direction direction = null;
-        for (DestinationEvent e : event.passengerCountMap().keySet()) {
-            if (direction == null) {
-                direction = e.direction();
-            }
-            if (direction != e.direction()) {
-                throw new RuntimeException("Mismatched passenger direction in elevator");
-            }
+        Direction direction = ElevatorUtilities.getPassengersDirection(event.passengerCountMap().keySet());
+        if (direction != null){
+            return direction;
         }
-        // Find direction from oldest floor request.
-        if (direction == null) {
-            direction = getOldestFloorDirFromElevator(event.currentFloor());
-        }
-        // No passengers on elevator and no floor requests. (Goes against precondition)
-        if (direction == null) {
+        if (floorRequestsToTime.isEmpty()){
             throw new RuntimeException("No passenger on elevator and no floor requests");
         }
-        return direction;
+        // If on the same floor as the oldest floor request, return direction of the floor request.
+        if (event.currentFloor() == getOldestFloorRequest().destinationFloor()){
+            return getOldestFloorRequest().direction();
+        }
+        // Find direction to oldest floor request.
+        return getDirectionToOldestFloor(event.currentFloor());
     }
 
-    /**
-     * Returns the direction of the oldest floor request based on the elevator's current floor.
-     *
-     * @param currentFloor The floor number the elevator is currently on.
-     * @return Direction of oldest floor request relative to currentFloor, null if there are no floor requests.
-     */
-    private Direction getOldestFloorDirFromElevator(int currentFloor) {
-        if (floorRequestsToTime.isEmpty()) return null;
-        Long waitTime = Long.MAX_VALUE;
-        int sourceFloor = -1;
-        for (Map.Entry<DestinationEvent, Long> request : floorRequestsToTime.entrySet()) {
-            if (request.getValue() < waitTime) {
-                waitTime = request.getValue();
-                sourceFloor = request.getKey().destinationFloor();
-            }
-        }
-        return (sourceFloor > currentFloor) ? Direction.UP : Direction.DOWN;
-    }
 
     /**
      *  process elevator event with elevator state (current floor, direction, passengerList)
@@ -123,9 +137,14 @@ public class Scheduler implements Runnable {
      * @param event an elevator state event
      */
     private void processElevatorEvent(ElevatorStateEvent event) {
-        if (isElevatorStopping(event)) // Stop elevator for a load
-            new Thread(new Loader(event, transmitterToFloor, transmitterToElevator)).start();
-        else // Keep moving
+        if (floorRequestsToTime.isEmpty() && event.passengerCountMap().isEmpty()) {
+            System.out.println(String.format("Elevator %s idle", event.elevatorNum()));
+            idleElevators.add(event);
+        } else if (isElevatorStopping(event)) { // Stop elevator for a load
+            System.out.println(String.format("Elevator %s stopped.", event.elevatorNum()));
+            new Thread(new Loader(event, transmitterToFloor, transmitterToElevator, getElevatorDirection(event))).start();
+            floorRequestsToTime.remove(new DestinationEvent(event.currentFloor(),getElevatorDirection(event)));
+        } else// Keep moving
             transmitterToElevator.send(new MoveElevatorCommand(event.elevatorNum(), getElevatorDirection(event)));
     }
 
@@ -153,54 +172,6 @@ public class Scheduler implements Runnable {
             } catch (InvalidTypeException e) {
                 throw new RuntimeException(e);
             }
-        }
-    }
-
-    /* Test */
-
-    /**
-     * Nested test class for class Scheduler. Contains unit tests for critical private methods.
-     *
-     * See README section Test for additional context.
-     */
-    public static class SchedulerTest {
-
-        DMA_Receiver receiver, mockFloorReceiver, mockElevatorReceiver;
-        DMA_Transmitter mockTransmitterToFloor, mockTransmitterToElevator;
-        Scheduler scheduler;
-        @BeforeEach
-        public void setUp() {
-            receiver = new DMA_Receiver();
-            mockFloorReceiver = new DMA_Receiver();
-            mockElevatorReceiver = new DMA_Receiver();
-            mockTransmitterToFloor = new DMA_Transmitter(mockFloorReceiver);
-            mockTransmitterToElevator = new DMA_Transmitter((mockElevatorReceiver));
-            scheduler = new Scheduler(receiver, mockTransmitterToFloor, mockTransmitterToElevator);
-        }
-
-        /**
-         * Positive test for isElevatorStopping.
-         */
-        @Test
-        @DisplayName("isElevatorStopping positive test")
-        public void testPositiveIsElevatorStopping() {
-            // Arrange
-            int floor = 1; // Same floor for elevator state event and destination event
-            DestinationEvent destinationEvent = new DestinationEvent(floor, Direction.UP);
-            HashSet<DestinationEvent> schedulerDestinationEvents = new HashSet<>();
-            schedulerDestinationEvents.add(destinationEvent);
-            // FIXME
-            scheduler.floorRequests = schedulerDestinationEvents;
-
-            HashMap<DestinationEvent, Integer> elevatorDestinationEvents = new HashMap<>();
-            elevatorDestinationEvents.put(destinationEvent, 1);
-            ElevatorStateEvent elevatorStateEvent = new ElevatorStateEvent(1, floor, elevatorDestinationEvents);
-
-            // Act
-            boolean result = scheduler.isElevatorStopping(elevatorStateEvent);
-
-            // Assert
-            assertTrue(result);
         }
     }
 }

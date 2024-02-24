@@ -1,80 +1,118 @@
-C:\Users\Testo\.jdks\corretto-18.0.2\bin\java.exe "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA 2022.2.3\lib\idea_rt.jar=50568:C:\Program Files\JetBrains\IntelliJ IDEA 2022.2.3\bin" -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\Testo\IdeaProjects\SYSC3303A_Project\out\production\SYSC3303A_Project Main
+****** Configuring System ******
+
+Reading system configuration from "res/system-config-00.json"...
+Launching system under the following configuration:
+-- numFloors: 8
+-- numElevators: 1
+-- travelTime: 8500 [ms]
+-- loadTime: 1000 [ms]
+
+Configuring Elevator 0...
 
 ****** Generating System Input Events ******
 
-Parser: Reading input file: input-file.txt
-Parser: Created 20 FloorInputEvents from input file input-file.txt.
+Parser: Reading input file: res/single-input-file.txt
+Elevator 0 idle
+Parser: Created 7 FloorInputEvents from input file res/single-input-file.txt.
 
 ****** Begin Real-Time System Operation ******
 
-Floor: Waiting for next floor request.
-Floor: Sending destination, DestinationEvent[destinationFloor=7, direction=UP]
-Floor: Waiting for next floor request.
-Elevator: Going in UP direction.
-Elevator: Going to floor 7.
-Elevator: Elevator is on floor 7.
-Floor #4: Lamp display updated to floor#7.
-Floor #2: Lamp display updated to floor#7.
-Floor #3: Lamp display updated to floor#7.
-Floor #7: Lamp display updated to floor#7.
-Floor #5: Lamp display updated to floor#7.
-Floor #6: Lamp display updated to floor#7.
-Floor #0: Lamp display updated to floor#7.
-Floor #1: Lamp display updated to floor#7.
-Floor: Sending destination, DestinationEvent[destinationFloor=3, direction=UP]
-Floor: Waiting for next floor request.
-Elevator: Going in UP direction.
-Elevator: Going to floor 3.
-Floor: Sending destination, DestinationEvent[destinationFloor=6, direction=UP]
-Floor: Waiting for next floor request.
-Elevator: Elevator is on floor 3.
-Elevator: Going in UP direction.
-Elevator: Going to floor 6.
-Floor #7: Lamp display updated to floor#3.
-Floor #1: Lamp display updated to floor#3.
-Floor #2: Lamp display updated to floor#3.
-Floor #4: Lamp display updated to floor#3.
-Floor #5: Lamp display updated to floor#3.
-Floor #3: Lamp display updated to floor#3.
-Floor #0: Lamp display updated to floor#3.
-Floor #6: Lamp display updated to floor#3.
-Elevator: Elevator is on floor 6.
-Floor #3: Lamp display updated to floor#6.
-Floor #0: Lamp display updated to floor#6.
-Floor #5: Lamp display updated to floor#6.
-Floor #4: Lamp display updated to floor#6.
-Floor #1: Lamp display updated to floor#6.
-Floor #6: Lamp display updated to floor#6.
-Floor #2: Lamp display updated to floor#6.
-Floor #7: Lamp display updated to floor#6.
-Floor: Sending destination, DestinationEvent[destinationFloor=4, direction=DOWN]
-Floor: Waiting for next floor request.
-Elevator: Going in DOWN direction.
-Elevator: Going to floor 4.
-Elevator: Elevator is on floor 4.
-Floor #0: Lamp display updated to floor#4.
-Floor #6: Lamp display updated to floor#4.
-Floor #7: Lamp display updated to floor#4.
-Floor #2: Lamp display updated to floor#4.
-Floor #4: Lamp display updated to floor#4.
-Floor #1: Lamp display updated to floor#4.
-Floor #5: Lamp display updated to floor#4.
-Floor #3: Lamp display updated to floor#4.
-Floor: Sending destination, DestinationEvent[destinationFloor=5, direction=UP]
-Floor: Waiting for next floor request.
-Elevator: Going in UP direction.
-Elevator: Going to floor 5.
-Elevator: Elevator is on floor 5.
-Floor #1: Lamp display updated to floor#5.
-Floor #3: Lamp display updated to floor#5.
-Floor #5: Lamp display updated to floor#5.
-Floor #2: Lamp display updated to floor#5.
-Floor #4: Lamp display updated to floor#5.
-Floor #6: Lamp display updated to floor#5.
-Floor #7: Lamp display updated to floor#5.
-Floor #0: Lamp display updated to floor#5.
-Elevator: Going to floor 2.
-Floor: Sending destination, DestinationEvent[destinationFloor=1, direction=DOWN]
-Floor: Waiting for next floor request.
-Floor: Sending destination, DestinationEvent[destinationFloor=1, direction=DOWN]
-Floor: Waiting for next floor request.
+Floor 1: request made: UP.
+Elevator 0: Going UP from floor 0.
+Elevator 0: Elevator reached floor #1
+Elevator 0 stopped.
+Loading passengers: [DestinationEvent[destinationFloor=7, direction=UP]]
+Passengers in the elevator: {DestinationEvent[destinationFloor=7, direction=UP]=1}
+Elevator 0: Going UP from floor 1.
+Elevator 0: Elevator reached floor #2
+Elevator 0: Going UP from floor 2.
+Elevator 0: Elevator reached floor #3
+Elevator 0: Going UP from floor 3.
+Floor 1: request made: UP.
+Elevator 0: Elevator reached floor #4
+Elevator 0: Going UP from floor 4.
+Floor 6: request made: DOWN.
+Floor 5: request made: UP.
+Floor 3: request made: DOWN.
+Elevator 0: Elevator reached floor #5
+Elevator 0 stopped.
+Passenger unloading from the elevator: null
+Loading passengers: [DestinationEvent[destinationFloor=6, direction=UP]]
+Passengers in the elevator: {DestinationEvent[destinationFloor=7, direction=UP]=1, DestinationEvent[destinationFloor=6, direction=UP]=1}
+Elevator 0: Going UP from floor 5.
+Floor 1: request made: UP.
+Elevator 0: Elevator reached floor #6
+Elevator 0 stopped.
+Passenger unloading from the elevator: 1
+Loading passengers: []
+Passengers in the elevator: {DestinationEvent[destinationFloor=7, direction=UP]=1}
+Elevator 0: Going UP from floor 6.
+Elevator 0: Elevator reached floor #7
+Elevator 0 stopped.
+Passenger unloading from the elevator: 1
+Loading passengers: []
+Passengers in the elevator: {}
+Elevator 0: Going DOWN from floor 7.
+Floor 2: request made: UP.
+Elevator 0: Elevator reached floor #6
+Elevator 0: Going DOWN from floor 6.
+Elevator 0: Elevator reached floor #5
+Elevator 0: Going DOWN from floor 5.
+Elevator 0: Elevator reached floor #4
+Elevator 0: Going DOWN from floor 4.
+Elevator 0: Elevator reached floor #3
+Elevator 0: Going DOWN from floor 3.
+Elevator 0: Elevator reached floor #2
+Elevator 0: Going DOWN from floor 2.
+Elevator 0: Elevator reached floor #1
+Elevator 0 stopped.
+Loading passengers: [DestinationEvent[destinationFloor=3, direction=UP], DestinationEvent[destinationFloor=6, direction=UP]]
+Passengers in the elevator: {DestinationEvent[destinationFloor=3, direction=UP]=1, DestinationEvent[destinationFloor=6, direction=UP]=1}
+Elevator 0: Going UP from floor 1.
+Elevator 0: Elevator reached floor #2
+Elevator 0 stopped.
+Passenger unloading from the elevator: null
+Loading passengers: [DestinationEvent[destinationFloor=6, direction=UP]]
+Passengers in the elevator: {DestinationEvent[destinationFloor=3, direction=UP]=1, DestinationEvent[destinationFloor=6, direction=UP]=2}
+Elevator 0: Going UP from floor 2.
+Elevator 0: Elevator reached floor #3
+Elevator 0 stopped.
+Passenger unloading from the elevator: 1
+Loading passengers: []
+Passengers in the elevator: {DestinationEvent[destinationFloor=6, direction=UP]=2}
+Elevator 0: Going UP from floor 3.
+Elevator 0: Elevator reached floor #4
+Elevator 0: Going UP from floor 4.
+Elevator 0: Elevator reached floor #5
+Elevator 0: Going UP from floor 5.
+Elevator 0: Elevator reached floor #6
+Elevator 0 stopped.
+Passenger unloading from the elevator: 2
+Loading passengers: []
+Passengers in the elevator: {}
+Elevator 0 stopped.
+Loading passengers: [DestinationEvent[destinationFloor=2, direction=DOWN]]
+Passengers in the elevator: {DestinationEvent[destinationFloor=2, direction=DOWN]=1}
+Elevator 0: Going DOWN from floor 6.
+Elevator 0: Elevator reached floor #5
+Elevator 0: Going DOWN from floor 5.
+Elevator 0: Elevator reached floor #4
+Elevator 0: Going DOWN from floor 4.
+Elevator 0: Elevator reached floor #3
+Elevator 0 stopped.
+Passenger unloading from the elevator: null
+Loading passengers: [DestinationEvent[destinationFloor=1, direction=DOWN]]
+Passengers in the elevator: {DestinationEvent[destinationFloor=1, direction=DOWN]=1, DestinationEvent[destinationFloor=2, direction=DOWN]=1}
+Elevator 0: Going DOWN from floor 3.
+Elevator 0: Elevator reached floor #2
+Elevator 0 stopped.
+Passenger unloading from the elevator: 1
+Loading passengers: []
+Passengers in the elevator: {DestinationEvent[destinationFloor=1, direction=DOWN]=1}
+Elevator 0: Going DOWN from floor 2.
+Elevator 0: Elevator reached floor #1
+Elevator 0 stopped.
+Passenger unloading from the elevator: 1
+Loading passengers: []
+Passengers in the elevator: {}
+Elevator 0 idle
