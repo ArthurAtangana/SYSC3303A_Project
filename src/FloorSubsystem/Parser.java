@@ -1,8 +1,16 @@
+package FloorSubsystem;
+
+import Messaging.Direction;
+import Messaging.Events.FloorInputEvent;
+
+import java.io.*;
+import java.util.*;
+
 /**
  * Parser class which parses an input text file to simulate input events to
  * the system. As per the project requirements, each well-formed line of
  * the input file will be parsed into a discrete data object containing the
- * necessary information to model a system input at its boundaries. These 
+ * necessary information to model a system input at its boundaries. These
  * data objects are accumulated to an array, and are made available to a
  * relevant dispatcher class that will be responsible for coordinating their
  * issuance in real-time.
@@ -33,24 +41,14 @@
  * 1. Instantiate a Parser object.
  *
  *      Parser parser = new Parser();
- *      
+ *
  * 2. Parse an input file and catch the returned ArrayList of objects.
  *
  *      ArrayList<FloorInputEvent> floorInputEvents = parser.parse("input-file.txt");
  *
  * @author Michael De Santis
- * @version 20240202
+ * @version Iteration-1
  */
-
-package FloorSubsystem;
-
-import Messaging.Direction;
-import Messaging.Events.FloorInputEvent;
-
-import java.io.*;
-import java.util.*;
-
-
 public class Parser {
 
     /* Constants */

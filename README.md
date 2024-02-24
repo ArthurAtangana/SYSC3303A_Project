@@ -6,7 +6,7 @@
 1. [Authors](#authors)
 2. [Usage](#usage)
 3. [Description](#description)
-4. [Source Files](#source-files)
+4. [Design Considerations](#design-considerations)
 5. [Scope](#scope)
 6. [Tasks](#tasks)
 7. [Test](#test)
@@ -57,139 +57,51 @@ travel time and passenger (de)boarding time.
 The source file structure is organized using Java packages under the src/ folder. 
 See test README for test file structure.
 
-[Main](#main)<br>
-[ElevatorSubsystem](#elevatorsubsystem)<br>
-[FloorSubsystem](#floorsubsystem)<br>
-[SchedulerSubsystem](#schedulersubsystem)<br>
-[Messaging](#messaging)<br>
-[Tests](#tests)<br>
-[UML](#uml)<br>
+| File                    | Package                | Description                                                                                   |
+|-------------------------|------------------------|-----------------------------------------------------------------------------------------------|
+| Config                  | Configuration          | Contains system configuration data.                                                           |
+| Configurator            | Configuration          | Parses a JSON file and makes its data publicly available in a constructed Config Java object. |
+| Elevator                | ElevatorSubsystem      | Models an elevator in the simulation.                                                         |
+| Elevator Utilities      | ElevatorSubsystem      | Contains static methods used by the Elevator.                                                 |
+| DestinationDispatcher   | FloorSubsystem         | Simulate events external to the system occurring in real time.                                |
+| Floor                   | FloorSubsystem         | Models a floor in the simulation.                                                             |
+| Parser                  | FloorSubsystem         | Parses an input text file to simulate input events to the system.                             |
+| MoveElevatorCommand     | Messaging/Commands     | Command to elevator to move until the next floor is reached.                                  |
+| MovePassengersCommand   | Messaging/Commands     | Command to elevator to load/offload passengers onto/into the elevator (when applicable).      |
+| PassengerArrivedCommand | Messaging/Commands     | Command to floor that a passenger has arrived with an intended destination.                   |
+| SendPassengersCommand   | Messaging/Commands     | Command to floor to send passengers back through the provided transmitter.                    |
+| SystemCommand           | Messaging/Commands     | Interface definition for all commands passed in the system to inherit.                        |
+| DestinationEvent        | Messaging/Events       | Holds data modelling a destination.                                                           |
+| ElevatorStateEvent      | Messaging/Events       | Holds all data related to the state of an elevator during operation.                          |
+| FloorInputEvent         | Messaging/Events       | Models an input event to the system.                                                          |
+| FloorRequestEvent       | Messaging/Events       | Holds a destination event and the time the system received the request.                       |
+| PassengerLoadEvent      | Messaging/Events       | Holds a list of passengers to load onto an elevator.                                          |
+| SystemEvent             | Messaging/Events       | Interface definition for all events passed in the system to inherit.                          |
+| DMA_Receiver            | Messaging/Receivers    | Provides a way to receive messages from DMA_Transmitters.                                     |
+| Receiver                | Messaging/Receivers    | Defines methods required to receive Events from transmitters.                                 |
+| DMA_Transmitter         | Messaging/Transmitters | Provides a way to send messages to DMA_Receivers.                                             |
+| Transmitter             | Messaging/Transmitters | Defines methods required to transmit Events to receivers.                                     |
+| Direction               | Messaging              | Holds elevator state for directionality of travel.                                            |
+| SystemMessage           | Messaging              | Interface definition for all messages passed in the system to inherit.                        |
+| Loader                  | SchedulerSubsystem     | Loads appropriate passengers into an elevator.                                                |
+| Scheduler               | SchedulerSubsystem     | Models a scheduler in the simulation.                                                         |
+| Main                    |                        | Models a scheduler in the simulation.                                                         |
 
-### Main
-- Initializes and maintains track of threads
+## Design Considerations
 
-### ElevatorSubsystem
+- The scheduler algorithm prioritizes the prevention of starvation over achieving
+the highest throughput possible.If the design can lead to starvation, it is an invalid design.
 
-**Elevator.java**
-- Receives DestinationEvent records from Scheduler
-- Travels to floors
-- Sends ElevatorStateEvent records to Scheduler
+  - Throughout: A measure of efficiency. The rate at which the elevator control system can process
+  passenger destination requests within a specified amount of time. A system that favours throughput 
+  may only focus on servicing passengers that are close together to increase the amount of requests that can be serviced. 
 
-### FloorSubsystem
-
-**Floor.java**
-- Receives ElevatorStateEvent records from Scheduler
-- Sets lamp
-
-**Parser.java**
-- Parses input-file.txt to simulate input events to the system
-
-**DestinationDispatcher.java**
-- Sends DestinationEvent records to the scheduler
-
-### SchedulerSubsystem
-
-**Scheduler.java**
-- Receives ElevatorStateEvent records from the Elevator
-- Receives DestinationEvent records from the DestinationDispatcher
-- Sends DestinationEvent records to the Elevator
-- Sends ElevatorStateEvent records to the Floor
-
-### Messaging
-
-#### <u>Events</u>
-
-**ElevatorSystemEvent.java** 
-- Interface for elevator system events
-
-**DestinationEvent.java**
-- Holds destination floor and direction
-
-**ElevatorStateEvent.java**
-- Holds current floor, direction, and FloorInputEvents
-
-**FloorInputEvent.java**
-- Holds arrival time, source floor, direction, and destination floor
-
-#### <u>Receivers</u>
-
-**Receiver.java**
-- Interface for receivers
-
-**DMA_Receiver.java**
-- Receives ElevatorSystemEvent records and stores them in a buffer
-
-#### <u>Transmitters</u>
-
-**Transmitter.java**
-- Interface for transmitters
-
-**DMA_Transmitter.java**
-- Sends ElevatorSystemEvent records to DMA_Receiver objects
-
-**Direction.java**
-- Enum of directions (UP, DOWN, STOPPED)
-
-### Configuration
-
-**Configuration.java** 
-- Class which parses JSON configuration file into Config object.
-
-**Config.java** 
-- Class which contains system configuration data.
+  - Starvation: A passenger can experience starvation if there is a possibility that they could never
+  be serviced. This would happen if they are on a floor that is rarely used and far away. 
 
 
-### Tests
-
-#### <u>resources</u>
-
-**input-file.txt**
-- File used to test Parser class
-
-#### <u>unit</u>
-
-<u>FloorSubsystem</u>
-**ParserTest.java**
-- Tests parser class
-
-<u>Messaging</u>
-**DMA_ReceiverTest.java**
-- Tests DMA_Receiver class
-
-**DMA_TransmitterTest.java**
-- Tests DMA_Transmitter class
-
-### UML
-<u>01</u>
-
-**class-diagram-system-01.png**
-
-**sequence-diagram-subsystem-communication-01.png**
-
-**sequence-diagram-subsystem-receives-01.png**
-
-**sequence-diagram-subsystem-transmits-01.png**
-
-
-## Scope
-
-### Iteration 1
-- Assumption 1: "Each line of input is to be sent" + "You should
-  develop a data structure which only passes then necessary information" = 
-  Only the relevant part of the input need to be sent to the scheduler. 
-  No timing is specified either, we send it when appropriate according to input or model time.
-- Assumption 2: "It is only necessary to create a test case showing that your program can read the input
-  file and pass the data back and forth." = The MVP for full marks. 
-  If these properties can be tested and demonstrated to work the system is at least fully functional for iteration 1.
-  For our testing strategy, this is covered by "system" tests.
-- Assumption 3: "The elevators will make calls to the Scheduler which will then reply when there is work to be
-  done." Is the only statement which describes how the communication occurs. 
-  We can implement this behavior with thread blocking on a monitor but all other communications 
-  can be implemented with the method we deem most fitting. 
-- Assumption 4: "Unit tests for all classes" only refers to classes which can be unit tested. 
-  More specifically, unit tests covering all public methods defined (excluding constructors, and run). 
-  Run methods being tested through system tests only because they depend on, and affect the overall system.
-  Constructors cannot be tested without getters which most classes don't implement.
+### Documentation
+- All public methods and classes require javadoc, private methods are optional.
 
 ## Tasks
 
@@ -197,7 +109,7 @@ See test README for test file structure.
 
 | Task | Assignee|
 |------|---------|
-| Project Structure|Victoria Malouf|
+|Project Structure|Victoria Malouf|
 |Floor Model| Victoria Malouf|
 |Elevator Model|Arthur Atangana|
 |Scheduler Model|Arthur Atangana|
@@ -206,6 +118,27 @@ See test README for test file structure.
 |Event Handling|Alexandre Marques|
 |Diagrams|Braeden Kloke|
 |Testing|Braeden Kloke|
+
+### Iteration 2
+
+| Task                    | Assignee|
+|-------------------------|---------|
+| Config file integration |Michael De Santis|
+| UML class diagrams      |Michael De Santis|
+| UML sequence diagrams   |Michael De Santis|
+| State diagrams          |Braeden Kloke|
+| Scheduler logic         |Braeden Kloke|
+| Networking diagrams     |Victoria Malouf|
+| Elevator utlitlity test |Victoria Malouf|
+| Floor logic             |Victoria Malouf|
+| State diagrams          |Alexandre Marques|
+| Command/Event classes   |Alexandre Marques|
+| Elevator logic          |Alexandre Marques|
+| Scheduler logic         |Alexandre Marques|
+| Loader class            |Alexandre Marques|
+| Elevator logic          |Arthur Atangana|
+| Scheduler logic         |Arthur Atangana|
+| System test             |Arthur Atangana|
 
 ## Test
 
@@ -224,15 +157,6 @@ The testing framework used for unit tests is JUnit 5.8.1.
 
 For detailed test layout, see test README.
 
-### Nested Test Class in Production Class
-Some unit tests for private methods are written in the production class as a *nested test class*. 
-For example, SchedulerTest.testPositiveIsElevatorStopping() is written directly in class Scheduler.
-
-This testing strategy preserves information hiding while enabling testing of critical private methods.
-
-This strategy should not be abused. Not all private methods merit unit tests.
-
-For additional reading on testing private methods, see this [article](https://www.artima.com/articles/testing-private-methods-with-junit-and-suiterunner). 
 
 ### Troubleshooting
 

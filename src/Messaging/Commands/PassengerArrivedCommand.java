@@ -1,9 +1,12 @@
 package Messaging.Commands;
 
 import Messaging.Events.DestinationEvent;
-
 /**
- * TODO: Docs
+ * PassengerArrivedCommand Record, Command to floor that a passenger has arrived at the floor
+ * with an intended destination.
+ *
+ * @param floorNum The floor number the command is addressed to.
+ * @param passenger The destination the passenger would like to go to.
  *
  * @author Alexandre Marques
  * @version Iteration-2

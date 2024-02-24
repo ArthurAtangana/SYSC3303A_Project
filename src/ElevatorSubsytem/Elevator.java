@@ -1,9 +1,3 @@
-/**
- * Elevator class which models an elevator in the simulation.
- *
- * @version 20240202
- */
-
 package ElevatorSubsytem;
 
 import Configuration.Config;
@@ -20,6 +14,11 @@ import com.sun.jdi.InvalidTypeException;
 
 import java.util.HashMap;
 
+/**
+ * Elevator class which models an elevator in the simulation.
+ *
+ * @version Iteration-2
+ */
 public class Elevator implements Runnable {
     /** Single floor travel time */
     private final int elevNum;
