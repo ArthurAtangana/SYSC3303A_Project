@@ -11,30 +11,23 @@ import Messaging.SystemMessage;
 import Messaging.Transmitters.DMA_Transmitter;
 
 import com.sun.jdi.InvalidTypeException;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 
 
-@RunWith(Enclosed.class)
 public class Scheduler implements Runnable {
     private final DMA_Transmitter transmitterToFloor;
     private final DMA_Transmitter transmitterToElevator;
     private final DMA_Receiver receiver;
     private final Map<DestinationEvent, Long> floorRequestsToTime;
-    private ArrayList<ElevatorStateEvent> idleElevators;
+    private final LinkedList<ElevatorStateEvent> idleElevators;
 
     public Scheduler(DMA_Receiver receiver, DMA_Transmitter transmitterToFloor, DMA_Transmitter transmitterToElevator) {
         this.receiver = receiver;
         this.transmitterToElevator = transmitterToElevator;
         this.transmitterToFloor = transmitterToFloor;
         floorRequestsToTime = new HashMap<>();
-        idleElevators = new ArrayList<ElevatorStateEvent>();
+        idleElevators = new LinkedList<>();
     }
 
     /**
@@ -49,7 +42,7 @@ public class Scheduler implements Runnable {
             // Only store request if it does not already exist
             floorRequestsToTime.put(event.destinationEvent(), event.time());
         if (!idleElevators.isEmpty()){
-            processElevatorEvent(idleElevators.remove(0));
+            processElevatorEvent(idleElevators.removeFirst());
         }
     }
     /**
@@ -78,7 +71,6 @@ public class Scheduler implements Runnable {
 
     /**
      * Returns false if the elevator is empty and is moving oposite to the future direction.
-     * @return
      */
     private boolean isMovingOppositeToFutureDirection(ElevatorStateEvent event){
         return (event.passengerCountMap().isEmpty() && getElevatorDirection(event) != getOldestFloorRequest().direction());
@@ -137,11 +129,12 @@ public class Scheduler implements Runnable {
      * @param event an elevator state event
      */
     private void processElevatorEvent(ElevatorStateEvent event) {
+        transmitterToFloor.send(event);
         if (floorRequestsToTime.isEmpty() && event.passengerCountMap().isEmpty()) {
-            System.out.println(String.format("Elevator %s idle", event.elevatorNum()));
+            System.out.printf("Elevator %s idle%n", event.elevatorNum());
             idleElevators.add(event);
         } else if (isElevatorStopping(event)) { // Stop elevator for a load
-            System.out.println(String.format("Elevator %s stopped.", event.elevatorNum()));
+            System.out.printf("Elevator %s stopped.%n", event.elevatorNum());
             new Thread(new Loader(event, transmitterToFloor, transmitterToElevator, getElevatorDirection(event))).start();
             floorRequestsToTime.remove(new DestinationEvent(event.currentFloor(),getElevatorDirection(event)));
         } else// Keep moving
