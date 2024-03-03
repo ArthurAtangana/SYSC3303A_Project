@@ -27,7 +27,7 @@ class TransmitterDMATest {
     void send() {
         systemEvent = new DestinationEvent(2, Direction.UP);
         transmitter.send(systemEvent);
-        DestinationEvent event = (DestinationEvent) receiver.receive();
+        DestinationEvent event = (DestinationEvent) receiver.dequeueMessage();
         assertEquals(2, event.destinationFloor());
         assertEquals(Direction.UP, event.direction());
     }

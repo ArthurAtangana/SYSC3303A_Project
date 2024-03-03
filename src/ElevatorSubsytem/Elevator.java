@@ -126,7 +126,7 @@ public class Elevator implements Runnable {
         while (true){
             sendStateUpdate();
             try {
-                processMessage(receiver.receive());
+                processMessage(receiver.dequeueMessage());
             } catch (InvalidTypeException e) {
                 throw new RuntimeException(e);
             }

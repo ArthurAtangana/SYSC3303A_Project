@@ -49,7 +49,7 @@ public class Loader implements Runnable {
         // Send command to get passengers from floor
         txFloor.send(new SendPassengersCommand(elevatorState.currentFloor(), elevatorDirection, txThis));
         // Receiver passengers
-        ArrayList<DestinationEvent> passengers = ((PassengerLoadEvent) receiver.receive()).passengers();
+        ArrayList<DestinationEvent> passengers = ((PassengerLoadEvent) receiver.dequeueMessage()).passengers();
         // Send passengers to elevator
         txElevator.send(new MovePassengersCommand(elevatorState.elevatorNum(), passengers));
     }

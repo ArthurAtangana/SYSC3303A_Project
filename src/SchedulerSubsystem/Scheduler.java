@@ -168,7 +168,7 @@ public class Scheduler implements Runnable {
     public void run() {
         while (true){
             try {
-                processMessage(receiver.receive());
+                processMessage(receiver.dequeueMessage());
             } catch (InvalidTypeException e) {
                 throw new RuntimeException(e);
             }

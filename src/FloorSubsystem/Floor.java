@@ -91,7 +91,7 @@ public class Floor implements Runnable {
         while (true) {
             // receiver.receive = receive state. ProcessEvent "selects" the action
             try {
-                processMessage(receiver.receive());
+                processMessage(receiver.dequeueMessage());
             } catch (InvalidTypeException e) {
                 throw new RuntimeException(e);
             }

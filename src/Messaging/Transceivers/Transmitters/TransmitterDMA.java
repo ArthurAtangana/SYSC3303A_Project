@@ -9,10 +9,7 @@
 package Messaging.Transceivers.Transmitters;
 
 import Messaging.Messages.SystemMessage;
-import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Receivers.ReceiverDMA;
-
-import java.util.ArrayList;
 
 public class TransmitterDMA extends Transmitter<ReceiverDMA> {
     /**
@@ -30,6 +27,6 @@ public class TransmitterDMA extends Transmitter<ReceiverDMA> {
      */
     @Override
     public void send(SystemMessage event) {
-        destinationReceivers.forEach(d -> d.setMessage(event));
+        destinationReceivers.forEach(d -> d.receiveDMA(event));
     }
 }

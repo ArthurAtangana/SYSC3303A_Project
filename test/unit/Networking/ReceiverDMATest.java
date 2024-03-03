@@ -23,9 +23,9 @@ class ReceiverDMATest {
     void setReceiveEvent() {
         // Verify single set/receive scenario works
         SystemEvent sndEvent = new DestinationEvent(2, Direction.UP);
-        receiver.setMessage(sndEvent);
+        receiver.receiveDMA(sndEvent);
 
-        SystemMessage receivedEvent = receiver.receive();
+        SystemMessage receivedEvent = receiver.dequeueMessage();
         assertEquals(receivedEvent, sndEvent);
     }
 
@@ -33,15 +33,15 @@ class ReceiverDMATest {
     void setReceiveEventFIFO() {
         // Verify receiver Queue behavior (FIFO)
         SystemEvent sndEvent = new DestinationEvent(1, Direction.UP);
-        receiver.setMessage(sndEvent);
+        receiver.receiveDMA(sndEvent);
         SystemEvent sndEvent2 = new DestinationEvent(2, Direction.UP);
-        receiver.setMessage(sndEvent2);
+        receiver.receiveDMA(sndEvent2);
         SystemEvent sndEvent3 = new DestinationEvent(3, Direction.UP);
-        receiver.setMessage(sndEvent3);
+        receiver.receiveDMA(sndEvent3);
 
-        assertEquals(receiver.receive(), sndEvent);
-        assertEquals(receiver.receive(), sndEvent2);
-        assertEquals(receiver.receive(), sndEvent3);
+        assertEquals(receiver.dequeueMessage(), sndEvent);
+        assertEquals(receiver.dequeueMessage(), sndEvent2);
+        assertEquals(receiver.dequeueMessage(), sndEvent3);
     }
 
     @Test
@@ -50,12 +50,12 @@ class ReceiverDMATest {
 
         // Key == 1, does not match with receiver key (0), should be ignored
         SystemCommand sndCommand1 = new MoveElevatorCommand(1, null);
-        receiver.setMessage(sndCommand1);
+        receiver.receiveDMA(sndCommand1);
         // Key == 0, matches, should be received
         SystemCommand sndCommand2 = new MoveElevatorCommand(0, null);
-        receiver.setMessage(sndCommand2);
+        receiver.receiveDMA(sndCommand2);
 
         // Check that first message is ignored, and second received (since receiver has queue behavior)
-        assertEquals(receiver.receive(), sndCommand2);
+        assertEquals(receiver.dequeueMessage(), sndCommand2);
     }
 }
