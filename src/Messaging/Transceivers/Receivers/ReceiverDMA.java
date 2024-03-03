@@ -14,24 +14,13 @@ import java.util.List;
  * @author Alexandre Marques
  * @version Iteration-1
  */
-public class ReceiverDMA implements Receiver{
-    // Message buffer
-    private final List<SystemMessage> msgBuf;
-    private final int key;
-
-    /**
-     * Default DMA_Receiver constructor.
-     */
-    public ReceiverDMA(){
-        this(-1); // invalid key, will not match against anything
-    }
+public class ReceiverDMA extends Receiver{
 
     /**
      * DMA_Receiver with key to check commands against.
      */
     public ReceiverDMA(int key) {
-        this.key = key;
-        this.msgBuf = new ArrayList<>();
+        super(key);
     }
 
     /**
@@ -43,16 +32,8 @@ public class ReceiverDMA implements Receiver{
      */
     @Override
     public SystemMessage receive() {
-        synchronized (msgBuf) {
-            while (msgBuf.isEmpty()) {
-                try {
-                    msgBuf.wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-        return msgBuf.remove(0);
+        // TODO: May remove/rename when UDP implemented, keeping as is for legacy code atm.
+        return dequeueMessage();
     }
 
     /**
@@ -61,7 +42,7 @@ public class ReceiverDMA implements Receiver{
      */
     public void setMessage(SystemMessage msg) {
         // GUARD: If the message type is a command, only accept it if it is addressed to this receiver.
-        if (msg instanceof SystemCommand && !((SystemCommand) msg).matchKey(this.key)) {
+        if (msg instanceof SystemCommand && !((SystemCommand) msg).matchKey(key)) {
             return;
         }
         // Store message and notify if waiting.

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DMA_TransmitterTest {
+class TransmitterDMATest {
 
     private ReceiverDMA receiver;
     private TransmitterDMA transmitter;
@@ -18,7 +18,7 @@ class DMA_TransmitterTest {
 
     @BeforeEach
     void setUp(){
-        this.receiver = new ReceiverDMA();
+        this.receiver = new ReceiverDMA(-1);
         this.transmitter = new TransmitterDMA(receiver);
     }
 

@@ -33,7 +33,7 @@ public class Main {
         int numElevators = config.getNumElevators();
 
         // Create receivers
-        ReceiverDMA schedulerReceiver = new ReceiverDMA(); // Scheduler is unique, no need for keys/commands.
+        ReceiverDMA schedulerReceiver = new ReceiverDMA(0); // Scheduler is unique, no need for keys/commands.
         ReceiverDMA elevatorReceiver = new ReceiverDMA(0);
         ArrayList<ReceiverDMA> floorReceivers = new ArrayList<>();
         for(int i=0; i < numFloors; i++){

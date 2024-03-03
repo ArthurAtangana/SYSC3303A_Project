@@ -9,13 +9,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DMA_ReceiverTest {
+class ReceiverDMATest {
 
     ReceiverDMA receiver;
     SystemEvent systemEvent;
     @BeforeEach
     void setUp() {
-        this.receiver = new ReceiverDMA();
+        this.receiver = new ReceiverDMA(-1);
     }
     @Test
     void setAndReceiveMessage() {
