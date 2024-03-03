@@ -1,6 +1,9 @@
 package Messaging.Commands;
 
 import Messaging.Events.DestinationEvent;
+
+import java.io.Serializable;
+
 /**
  * PassengerArrivedCommand Record, Command to floor that a passenger has arrived at the floor
  * with an intended destination.
@@ -11,7 +14,7 @@ import Messaging.Events.DestinationEvent;
  * @author Alexandre Marques
  * @version Iteration-2
  */
-public record PassengerArrivedCommand(int floorNum, DestinationEvent passenger) implements SystemCommand {
+public record PassengerArrivedCommand(int floorNum, DestinationEvent passenger) implements SystemCommand, Serializable {
     /**
      * Match floor number with the given key.
      *

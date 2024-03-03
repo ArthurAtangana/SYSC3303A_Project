@@ -1,5 +1,6 @@
 package Messaging.Events;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -10,5 +11,5 @@ import java.util.ArrayList;
  * @author Alexandre Marques
  * @version Iteration-2
  */
-public record PassengerLoadEvent(ArrayList<DestinationEvent> passengers) implements SystemEvent {
+public record PassengerLoadEvent(ArrayList<DestinationEvent> passengers) implements SystemEvent, Serializable {
 }

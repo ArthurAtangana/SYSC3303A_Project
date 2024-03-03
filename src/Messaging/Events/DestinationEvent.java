@@ -2,6 +2,8 @@ package Messaging.Events;
 
 import Messaging.Direction;
 
+import java.io.Serializable;
+
 /**
  * DestinationEvent record, holds data modelling a destination.
  * Floor requests, and passengers in the system can both be modeled as a destination to be served.
@@ -14,4 +16,4 @@ import Messaging.Direction;
  */
 public record DestinationEvent
         (int destinationFloor, Direction direction)
-        implements SystemEvent {}
+        implements SystemEvent, Serializable {}

@@ -3,6 +3,8 @@ package Messaging.Commands;
 import Messaging.Direction;
 import Messaging.Transmitters.DMA_Transmitter;
 
+import java.io.Serializable;
+
 /**
  * SendPassengersCommand Record, Command to floor to send passengers back through the provided transmitter.
  * Passing a transmitter allows for dynamic creation of receivers on the scheduler end.
@@ -13,7 +15,7 @@ import Messaging.Transmitters.DMA_Transmitter;
  * @author Alexandre Marques
  * @version Iteration-2
  */
-public record SendPassengersCommand(int floorNum, Direction dir, DMA_Transmitter tx) implements SystemCommand {
+public record SendPassengersCommand(int floorNum, Direction dir, DMA_Transmitter tx) implements SystemCommand, Serializable {
     /**
      * Match floor number with the given key.
      * @param key The floor number of the floor trying to process this event.
