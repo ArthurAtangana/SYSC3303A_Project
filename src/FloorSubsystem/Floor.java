@@ -6,7 +6,7 @@ import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import Messaging.Messages.Events.PassengerLoadEvent;
-import Messaging.Transceivers.Receivers.DMA_Receiver;
+import Messaging.Transceivers.Receivers.ReceiverDMA;
 import Messaging.Messages.SystemMessage;
 import com.sun.jdi.InvalidTypeException;
 
@@ -20,10 +20,10 @@ import java.util.ArrayList;
 public class Floor implements Runnable {
     private int floorLamp;
     private final int floorNum;
-    private final DMA_Receiver receiver;
+    private final ReceiverDMA receiver;
     private ArrayList<DestinationEvent> passengers;
 
-    public Floor(int floorNumber, DMA_Receiver receiver) {
+    public Floor(int floorNumber, ReceiverDMA receiver) {
         this.floorNum = floorNumber;
         this.receiver = receiver;
         // Start elevator location at 0 until an update is received

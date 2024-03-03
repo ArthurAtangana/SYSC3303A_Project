@@ -14,7 +14,7 @@ import java.util.List;
  * @author Alexandre Marques
  * @version Iteration-1
  */
-public class DMA_Receiver implements Receiver{
+public class ReceiverDMA implements Receiver{
     // Message buffer
     private final List<SystemMessage> msgBuf;
     private final int key;
@@ -22,14 +22,14 @@ public class DMA_Receiver implements Receiver{
     /**
      * Default DMA_Receiver constructor.
      */
-    public DMA_Receiver(){
+    public ReceiverDMA(){
         this(-1); // invalid key, will not match against anything
     }
 
     /**
      * DMA_Receiver with key to check commands against.
      */
-    public DMA_Receiver(int key) {
+    public ReceiverDMA(int key) {
         this.key = key;
         this.msgBuf = new ArrayList<>();
     }

@@ -1,7 +1,7 @@
 package Messaging.Messages.Commands;
 
 import Messaging.Messages.Direction;
-import Messaging.Transceivers.Transmitters.DMA_Transmitter;
+import Messaging.Transceivers.Transmitters.TransmitterDMA;
 
 /**
  * SendPassengersCommand Record, Command to floor to send passengers back through the provided transmitter.
@@ -13,7 +13,7 @@ import Messaging.Transceivers.Transmitters.DMA_Transmitter;
  * @author Alexandre Marques
  * @version Iteration-2
  */
-public record SendPassengersCommand(int floorNum, Direction dir, DMA_Transmitter tx) implements SystemCommand {
+public record SendPassengersCommand(int floorNum, Direction dir, TransmitterDMA tx) implements SystemCommand {
     /**
      * Match floor number with the given key.
      * @param key The floor number of the floor trying to process this event.

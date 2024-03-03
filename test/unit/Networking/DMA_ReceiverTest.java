@@ -3,7 +3,7 @@ package unit.Networking;
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.SystemEvent;
-import Messaging.Transceivers.Receivers.DMA_Receiver;
+import Messaging.Transceivers.Receivers.ReceiverDMA;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,11 +11,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DMA_ReceiverTest {
 
-    DMA_Receiver receiver;
+    ReceiverDMA receiver;
     SystemEvent systemEvent;
     @BeforeEach
     void setUp() {
-        this.receiver = new DMA_Receiver();
+        this.receiver = new ReceiverDMA();
     }
     @Test
     void setAndReceiveMessage() {

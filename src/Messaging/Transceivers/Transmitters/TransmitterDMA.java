@@ -9,20 +9,20 @@
 package Messaging.Transceivers.Transmitters;
 
 import Messaging.Messages.SystemMessage;
-import Messaging.Transceivers.Receivers.DMA_Receiver;
+import Messaging.Transceivers.Receivers.ReceiverDMA;
 
 import java.util.ArrayList;
 
-public class DMA_Transmitter implements Transmitter {
+public class TransmitterDMA implements Transmitter {
     // The receivers to send messages to (can be seen as a list of "pointers" to update)
-    private final ArrayList<DMA_Receiver> destinationReceivers;
+    private final ArrayList<ReceiverDMA> destinationReceivers;
 
     /**
      * DMA_Transmitter single receiver constructor.
      *
      * @param destReceiver The receiver to send messages to from this transmitter.
      */
-    public DMA_Transmitter(DMA_Receiver destReceiver) {
+    public TransmitterDMA(ReceiverDMA destReceiver) {
         // Wraps receiver into array to maintain same behavior with many receivers
         destinationReceivers = new ArrayList<>();
         destinationReceivers.add(destReceiver);
@@ -33,7 +33,7 @@ public class DMA_Transmitter implements Transmitter {
      *
      * @param destReceivers The receivers to send messages to from this transmitter.
      */
-    public DMA_Transmitter(ArrayList<DMA_Receiver> destReceivers) {
+    public TransmitterDMA(ArrayList<ReceiverDMA> destReceivers) {
         destinationReceivers = destReceivers;
     }
 

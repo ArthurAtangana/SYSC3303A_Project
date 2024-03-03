@@ -7,8 +7,8 @@ import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import Messaging.Messages.Events.PassengerLoadEvent;
-import Messaging.Transceivers.Receivers.DMA_Receiver;
-import Messaging.Transceivers.Transmitters.DMA_Transmitter;
+import Messaging.Transceivers.Receivers.ReceiverDMA;
+import Messaging.Transceivers.Transmitters.TransmitterDMA;
 
 import java.util.ArrayList;
 
@@ -24,20 +24,20 @@ import java.util.ArrayList;
  */
 public class Loader implements Runnable {
     private final ElevatorStateEvent elevatorState;
-    private final DMA_Transmitter txElevator;
-    private final DMA_Transmitter txFloor;
-    private final DMA_Receiver receiver;
-    private final DMA_Transmitter txThis;
+    private final TransmitterDMA txElevator;
+    private final TransmitterDMA txFloor;
+    private final ReceiverDMA receiver;
+    private final TransmitterDMA txThis;
     private final Direction elevatorDirection;
 
-    public Loader(ElevatorStateEvent event, DMA_Transmitter txFloor, DMA_Transmitter txElevator, Direction elevatorDirection) {
+    public Loader(ElevatorStateEvent event, TransmitterDMA txFloor, TransmitterDMA txElevator, Direction elevatorDirection) {
         elevatorState = event;
         this.txFloor = txFloor;
         this.txElevator = txElevator;
         this.elevatorDirection = elevatorDirection;
 
-        this.receiver = new DMA_Receiver();
-        this.txThis = new DMA_Transmitter(receiver);
+        this.receiver = new ReceiverDMA();
+        this.txThis = new TransmitterDMA(receiver);
     }
     /**
      * Runs this operation.

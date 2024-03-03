@@ -5,8 +5,8 @@ import FloorSubsystem.DestinationDispatcher;
 import FloorSubsystem.Floor;
 import FloorSubsystem.Parser;
 import Messaging.Messages.Events.FloorInputEvent;
-import Messaging.Transceivers.Receivers.DMA_Receiver;
-import Messaging.Transceivers.Transmitters.DMA_Transmitter;
+import Messaging.Transceivers.Receivers.ReceiverDMA;
+import Messaging.Transceivers.Transmitters.TransmitterDMA;
 import SchedulerSubsystem.Scheduler;
 
 import java.util.ArrayList;
@@ -33,17 +33,17 @@ public class Main {
         int numElevators = config.getNumElevators();
 
         // Create receivers
-        DMA_Receiver schedulerReceiver = new DMA_Receiver(); // Scheduler is unique, no need for keys/commands.
-        DMA_Receiver elevatorReceiver = new DMA_Receiver(0);
-        ArrayList<DMA_Receiver> floorReceivers = new ArrayList<>();
+        ReceiverDMA schedulerReceiver = new ReceiverDMA(); // Scheduler is unique, no need for keys/commands.
+        ReceiverDMA elevatorReceiver = new ReceiverDMA(0);
+        ArrayList<ReceiverDMA> floorReceivers = new ArrayList<>();
         for(int i=0; i < numFloors; i++){
-            floorReceivers.add(new DMA_Receiver(i));
+            floorReceivers.add(new ReceiverDMA(i));
         }
 
         // Create Transmitters (composes with receivers)
-        DMA_Transmitter toSchedulerTransmitter = new DMA_Transmitter(schedulerReceiver);
-        DMA_Transmitter toElevatorTransmitter = new DMA_Transmitter(elevatorReceiver);
-        DMA_Transmitter toFloorsTransmitter = new DMA_Transmitter(floorReceivers);
+        TransmitterDMA toSchedulerTransmitter = new TransmitterDMA(schedulerReceiver);
+        TransmitterDMA toElevatorTransmitter = new TransmitterDMA(elevatorReceiver);
+        TransmitterDMA toFloorsTransmitter = new TransmitterDMA(floorReceivers);
 
         // Start floor, elevator, and scheduler threads
         Scheduler scheduler = new Scheduler(schedulerReceiver, toFloorsTransmitter, toElevatorTransmitter);

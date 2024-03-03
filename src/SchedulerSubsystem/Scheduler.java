@@ -6,9 +6,9 @@ import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import Messaging.Messages.Events.FloorRequestEvent;
-import Messaging.Transceivers.Receivers.DMA_Receiver;
+import Messaging.Transceivers.Receivers.ReceiverDMA;
 import Messaging.Messages.SystemMessage;
-import Messaging.Transceivers.Transmitters.DMA_Transmitter;
+import Messaging.Transceivers.Transmitters.TransmitterDMA;
 
 import com.sun.jdi.InvalidTypeException;
 import java.util.ArrayList;
@@ -23,13 +23,13 @@ import java.util.HashSet;
  * @version Iteration-2
  */
 public class Scheduler implements Runnable {
-    private final DMA_Transmitter transmitterToFloor;
-    private final DMA_Transmitter transmitterToElevator;
-    private final DMA_Receiver receiver;
+    private final TransmitterDMA transmitterToFloor;
+    private final TransmitterDMA transmitterToElevator;
+    private final ReceiverDMA receiver;
     private final Map<DestinationEvent, Long> floorRequestsToTime;
     private ArrayList<ElevatorStateEvent> idleElevators;
 
-    public Scheduler(DMA_Receiver receiver, DMA_Transmitter transmitterToFloor, DMA_Transmitter transmitterToElevator) {
+    public Scheduler(ReceiverDMA receiver, TransmitterDMA transmitterToFloor, TransmitterDMA transmitterToElevator) {
         this.receiver = receiver;
         this.transmitterToElevator = transmitterToElevator;
         this.transmitterToFloor = transmitterToFloor;
