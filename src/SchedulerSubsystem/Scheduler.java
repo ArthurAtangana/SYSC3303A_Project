@@ -10,6 +10,8 @@ import Messaging.Receivers.DMA_Receiver;
 import Messaging.SystemMessage;
 import Messaging.Transmitters.DMA_Transmitter;
 
+import StatePatternLib.Context;
+import Subsystem.SubsystemContext;
 import com.sun.jdi.InvalidTypeException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -22,7 +24,8 @@ import java.util.HashSet;
  *
  * @version Iteration-2
  */
-public class Scheduler implements Runnable {
+public class Scheduler extends SubsystemContext {
+    private static int key_count = 0;
     private final DMA_Transmitter transmitterToFloor;
     private final DMA_Transmitter transmitterToElevator;
     private final DMA_Receiver receiver;
@@ -30,11 +33,13 @@ public class Scheduler implements Runnable {
     private ArrayList<ElevatorStateEvent> idleElevators;
 
     public Scheduler(DMA_Receiver receiver, DMA_Transmitter transmitterToFloor, DMA_Transmitter transmitterToElevator) {
+        super(++key_count);
         this.receiver = receiver;
         this.transmitterToElevator = transmitterToElevator;
         this.transmitterToFloor = transmitterToFloor;
         floorRequestsToTime = new HashMap<>();
         idleElevators = new ArrayList<ElevatorStateEvent>();
+        setState(new ReceivingState(this));
     }
 
     /**
@@ -42,7 +47,7 @@ public class Scheduler implements Runnable {
      *
      * @param event Event to process.
      */
-    private void storeFloorRequest(FloorRequestEvent event) {
+    void storeFloorRequest(FloorRequestEvent event) {
         System.out.println("Floor " + event.destinationEvent().destinationFloor() + ": request made: " + event.destinationEvent().direction() + ".");
         // Store event locally to use in scheduling
         if (!floorRequestsToTime.containsKey(event.destinationEvent()))
@@ -136,7 +141,7 @@ public class Scheduler implements Runnable {
      *  and sends it to the floor.
      * @param event an elevator state event
      */
-    private void processElevatorEvent(ElevatorStateEvent event) {
+    public void processElevatorEvent(ElevatorStateEvent event) {
         if (floorRequestsToTime.isEmpty() && event.passengerCountMap().isEmpty()) {
             System.out.println(String.format("Elevator %s idle", event.elevatorNum()));
             idleElevators.add(event);
@@ -154,7 +159,7 @@ public class Scheduler implements Runnable {
      * @param event The event to process
      * @throws InvalidTypeException If it receives an event type this class cannot handle
      */
-    private void processMessage(SystemMessage event) throws InvalidTypeException {
+    public void processMessage(SystemMessage event) throws InvalidTypeException {
         // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.
         if (event instanceof ElevatorStateEvent)
             processElevatorEvent((ElevatorStateEvent) event);
@@ -163,7 +168,7 @@ public class Scheduler implements Runnable {
         else // Default, should never happen
             throw new InvalidTypeException("Event type received cannot be handled by this subsystem.");
     }
-
+/**
     @Override
     public void run() {
         while (true){
@@ -174,4 +179,5 @@ public class Scheduler implements Runnable {
             }
         }
     }
+    */
 }
