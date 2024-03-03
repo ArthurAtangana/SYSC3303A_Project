@@ -36,8 +36,10 @@ public class Loader implements Runnable {
         this.txElevator = txElevator;
         this.elevatorDirection = elevatorDirection;
 
-        this.receiver = new ReceiverDMA(0);
-        this.txThis = new TransmitterDMA(receiver);
+        receiver = new ReceiverDMA(0);
+        // Create transmitter with reference to itself, to pass on to floor later
+        txThis = new TransmitterDMA();
+        txThis.addReceiver(receiver);
     }
     /**
      * Runs this operation.

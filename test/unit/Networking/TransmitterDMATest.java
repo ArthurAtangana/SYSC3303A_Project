@@ -19,7 +19,8 @@ class TransmitterDMATest {
     @BeforeEach
     void setUp(){
         this.receiver = new ReceiverDMA(-1);
-        this.transmitter = new TransmitterDMA(receiver);
+        this.transmitter = new TransmitterDMA();
+        this.transmitter.addReceiver(receiver);
     }
 
     @Test
