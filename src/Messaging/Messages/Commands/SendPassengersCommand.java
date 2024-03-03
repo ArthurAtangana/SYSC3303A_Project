@@ -3,6 +3,8 @@ package Messaging.Messages.Commands;
 import Messaging.Messages.Direction;
 import Messaging.Transceivers.Transmitters.TransmitterDMA;
 
+import java.io.Serializable;
+
 /**
  * SendPassengersCommand Record, Command to floor to send passengers back through the provided transmitter.
  * Passing a transmitter allows for dynamic creation of receivers on the scheduler end.
