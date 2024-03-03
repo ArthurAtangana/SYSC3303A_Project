@@ -5,6 +5,10 @@ import Messaging.Messages.SystemMessage;
 
 import java.util.LinkedList;
 
+/**
+ * TODO: docs,
+ *  - note the receive function may be reworked/renamed once UDP is fully implemented
+ */
 public abstract class Receiver {
     // Message buffer TODO: replace w/ priority queue class (prioritizes based on message class)
     protected final LinkedList<SystemMessage> msgBuf;

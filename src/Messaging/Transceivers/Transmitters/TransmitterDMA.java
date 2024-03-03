@@ -9,34 +9,18 @@
 package Messaging.Transceivers.Transmitters;
 
 import Messaging.Messages.SystemMessage;
+import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Receivers.ReceiverDMA;
 
 import java.util.ArrayList;
 
-public class TransmitterDMA implements Transmitter {
-    // The receivers to send messages to (can be seen as a list of "pointers" to update)
-    private final ArrayList<ReceiverDMA> destinationReceivers;
-
+public class TransmitterDMA extends Transmitter<ReceiverDMA> {
     /**
-     * DMA_Transmitter single receiver constructor.
-     *
-     * @param destReceiver The receiver to send messages to from this transmitter.
+     * DMA_Transmitter constructor.
      */
-    public TransmitterDMA(ReceiverDMA destReceiver) {
-        // Wraps receiver into array to maintain same behavior with many receivers
-        destinationReceivers = new ArrayList<>();
-        destinationReceivers.add(destReceiver);
+    public TransmitterDMA() {
+        super();
     }
-
-    /**
-     * DMA_Transmitter list constructor. Supports multiple receiver addresses.
-     *
-     * @param destReceivers The receivers to send messages to from this transmitter.
-     */
-    public TransmitterDMA(ArrayList<ReceiverDMA> destReceivers) {
-        destinationReceivers = destReceivers;
-    }
-
 
     /**
      * Sends a message (event) to receivers.
