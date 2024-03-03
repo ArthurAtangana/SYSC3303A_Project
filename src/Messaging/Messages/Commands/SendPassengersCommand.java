@@ -1,7 +1,7 @@
-package Messaging.Commands;
+package Messaging.Messages.Commands;
 
-import Messaging.Direction;
-import Messaging.Transmitters.DMA_Transmitter;
+import Messaging.Messages.Direction;
+import Messaging.Transceivers.Transmitters.DMA_Transmitter;
 
 /**
  * SendPassengersCommand Record, Command to floor to send passengers back through the provided transmitter.

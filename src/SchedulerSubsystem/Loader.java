@@ -1,14 +1,14 @@
 package SchedulerSubsystem;
 
-import Messaging.Commands.MovePassengersCommand;
-import Messaging.Commands.SendPassengersCommand;
+import Messaging.Messages.Commands.MovePassengersCommand;
+import Messaging.Messages.Commands.SendPassengersCommand;
 
-import Messaging.Direction;
-import Messaging.Events.DestinationEvent;
-import Messaging.Events.ElevatorStateEvent;
-import Messaging.Events.PassengerLoadEvent;
-import Messaging.Receivers.DMA_Receiver;
-import Messaging.Transmitters.DMA_Transmitter;
+import Messaging.Messages.Direction;
+import Messaging.Messages.Events.DestinationEvent;
+import Messaging.Messages.Events.ElevatorStateEvent;
+import Messaging.Messages.Events.PassengerLoadEvent;
+import Messaging.Transceivers.Receivers.DMA_Receiver;
+import Messaging.Transceivers.Transmitters.DMA_Transmitter;
 
 import java.util.ArrayList;
 

@@ -2,14 +2,14 @@ package ElevatorSubsytem;
 
 import Configuration.Config;
 import Configuration.Configurator;
-import Messaging.Commands.MoveElevatorCommand;
-import Messaging.Commands.MovePassengersCommand;
-import Messaging.Direction;
-import Messaging.Events.DestinationEvent;
-import Messaging.Events.ElevatorStateEvent;
-import Messaging.Receivers.DMA_Receiver;
-import Messaging.SystemMessage;
-import Messaging.Transmitters.DMA_Transmitter;
+import Messaging.Messages.Commands.MoveElevatorCommand;
+import Messaging.Messages.Commands.MovePassengersCommand;
+import Messaging.Messages.Direction;
+import Messaging.Messages.Events.DestinationEvent;
+import Messaging.Messages.Events.ElevatorStateEvent;
+import Messaging.Transceivers.Receivers.DMA_Receiver;
+import Messaging.Messages.SystemMessage;
+import Messaging.Transceivers.Transmitters.DMA_Transmitter;
 import com.sun.jdi.InvalidTypeException;
 
 import java.util.HashMap;

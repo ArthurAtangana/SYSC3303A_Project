@@ -1,6 +1,6 @@
-package Messaging.Events;
+package Messaging.Messages.Events;
 
-import Messaging.Direction;
+import Messaging.Messages.Direction;
 
 /**
  * DestinationEvent record, holds data modelling a destination.

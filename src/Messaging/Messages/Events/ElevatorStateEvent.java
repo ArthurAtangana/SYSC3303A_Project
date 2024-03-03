@@ -1,4 +1,4 @@
-package Messaging.Events;
+package Messaging.Messages.Events;
 
 import java.util.HashMap;
 

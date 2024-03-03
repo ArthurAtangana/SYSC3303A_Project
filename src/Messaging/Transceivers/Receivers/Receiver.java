@@ -1,6 +1,6 @@
-package Messaging.Receivers;
+package Messaging.Transceivers.Receivers;
 
-import Messaging.SystemMessage;
+import Messaging.Messages.SystemMessage;
 
 /**
  * Receiver Interface, defines methods required to receive Events from transmitters.

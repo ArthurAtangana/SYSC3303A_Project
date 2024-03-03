@@ -1,9 +1,9 @@
 package unit.Networking;
 
-import Messaging.Direction;
-import Messaging.Events.DestinationEvent;
-import Messaging.Events.SystemEvent;
-import Messaging.Receivers.DMA_Receiver;
+import Messaging.Messages.Direction;
+import Messaging.Messages.Events.DestinationEvent;
+import Messaging.Messages.Events.SystemEvent;
+import Messaging.Transceivers.Receivers.DMA_Receiver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

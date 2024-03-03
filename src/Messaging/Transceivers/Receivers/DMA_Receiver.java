@@ -1,7 +1,7 @@
-package Messaging.Receivers;
+package Messaging.Transceivers.Receivers;
 
-import Messaging.Commands.SystemCommand;
-import Messaging.SystemMessage;
+import Messaging.Messages.Commands.SystemCommand;
+import Messaging.Messages.SystemMessage;
 
 import java.util.ArrayList;
 import java.util.List;

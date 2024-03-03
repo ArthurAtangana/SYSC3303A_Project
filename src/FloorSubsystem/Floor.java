@@ -1,13 +1,13 @@
 package FloorSubsystem;
 
-import Messaging.Commands.PassengerArrivedCommand;
-import Messaging.Commands.SendPassengersCommand;
-import Messaging.Direction;
-import Messaging.Events.DestinationEvent;
-import Messaging.Events.ElevatorStateEvent;
-import Messaging.Events.PassengerLoadEvent;
-import Messaging.Receivers.DMA_Receiver;
-import Messaging.SystemMessage;
+import Messaging.Messages.Commands.PassengerArrivedCommand;
+import Messaging.Messages.Commands.SendPassengersCommand;
+import Messaging.Messages.Direction;
+import Messaging.Messages.Events.DestinationEvent;
+import Messaging.Messages.Events.ElevatorStateEvent;
+import Messaging.Messages.Events.PassengerLoadEvent;
+import Messaging.Transceivers.Receivers.DMA_Receiver;
+import Messaging.Messages.SystemMessage;
 import com.sun.jdi.InvalidTypeException;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
-package Messaging.Commands;
+package Messaging.Messages.Commands;
 
-import Messaging.Direction;
+import Messaging.Messages.Direction;
 
 /**
  * MoveElevatorCommand Record, Command to elevator to move until the next floor is reached.

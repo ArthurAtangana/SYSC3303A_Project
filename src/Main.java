@@ -4,9 +4,9 @@ import ElevatorSubsytem.Elevator;
 import FloorSubsystem.DestinationDispatcher;
 import FloorSubsystem.Floor;
 import FloorSubsystem.Parser;
-import Messaging.Events.FloorInputEvent;
-import Messaging.Receivers.DMA_Receiver;
-import Messaging.Transmitters.DMA_Transmitter;
+import Messaging.Messages.Events.FloorInputEvent;
+import Messaging.Transceivers.Receivers.DMA_Receiver;
+import Messaging.Transceivers.Transmitters.DMA_Transmitter;
 import SchedulerSubsystem.Scheduler;
 
 import java.util.ArrayList;
