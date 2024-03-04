@@ -13,10 +13,10 @@ import java.util.ArrayList;
  */
 public abstract class Transmitter<R extends Receiver> {
     // The receivers to send messages to (can be seen as a list of "pointers" to update)
-    protected final ArrayList<R> destinationReceivers;
+    protected final ArrayList<R> receivers;
 
     protected Transmitter() {
-        this.destinationReceivers = new ArrayList<>();
+        this.receivers = new ArrayList<>();
     }
 
     /**
@@ -33,6 +33,6 @@ public abstract class Transmitter<R extends Receiver> {
      * @param destReceiver The receiver to bind to this transmitter.
      */
     public void addReceiver(R destReceiver) {
-        destinationReceivers.add(destReceiver);
+        receivers.add(destReceiver);
     }
 }
