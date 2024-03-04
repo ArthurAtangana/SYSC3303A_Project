@@ -1,5 +1,6 @@
-package Messaging.Transmitters;
-import Messaging.SystemMessage;
+package Messaging.Transceivers.Transmitters;
+
+import Messaging.Messages.SystemMessage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

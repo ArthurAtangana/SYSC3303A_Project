@@ -1,13 +1,13 @@
-package Messaging.Receivers;
+package Messaging.Transceivers.Receivers;
 
-import Messaging.SystemMessage;
+import Messaging.Messages.SystemMessage;
 
 import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.net.DatagramSocket;
-
 import java.io.IOException;
-import java.net.*;
+import java.io.ObjectInputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
