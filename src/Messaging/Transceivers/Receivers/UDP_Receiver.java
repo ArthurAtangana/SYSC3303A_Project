@@ -8,16 +8,13 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * UDP_Receiver class, provides a way to receive messages from UDP_Transmitters.
  *
  * @version Iteration-3
  */
-public class UDP_Receiver implements Runnable, Receiver {
-    private final List<SystemMessage> msgBuf;
+public class UDP_Receiver extends Receiver implements Runnable {
     public final int MAX_MSG_SIZE = 255;
     private final DatagramSocket receiveSocket;
 
@@ -26,32 +23,13 @@ public class UDP_Receiver implements Runnable, Receiver {
      *
      * @param receivePort Port number to listen on.
      */
-    public UDP_Receiver(int receivePort){
-        this.msgBuf = new ArrayList<>();
+    public UDP_Receiver(int key, int receivePort) {
+        super(key);
         try {
             this.receiveSocket = new DatagramSocket(receivePort);
         } catch (SocketException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * Waits until msgBuf is not empty and returns the first SystemMessage stored.
-     *
-     * @return SystemMessage that has been received.
-     */
-    @Override
-    public SystemMessage receive() {
-        synchronized (msgBuf) {
-            while (msgBuf.isEmpty()) {
-                try {
-                    msgBuf.wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-        return msgBuf.remove(0);
     }
 
     /**
@@ -68,10 +46,7 @@ public class UDP_Receiver implements Runnable, Receiver {
         }
         SystemMessage deserializedMessage = deserializeSystemMessage(packet.getData());
 
-        synchronized (msgBuf) {
-            msgBuf.add(deserializedMessage);
-            msgBuf.notifyAll();
-        }
+        enqueueMessage(deserializedMessage);
     }
 
     /**
