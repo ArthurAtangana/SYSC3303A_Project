@@ -141,8 +141,9 @@ public class Scheduler implements Runnable {
             System.out.println(String.format("Elevator %s idle", event.elevatorNum()));
             idleElevators.add(event);
         } else if (isElevatorStopping(event)) { // Stop elevator for a load
-            System.out.println(String.format("Elevator %s stopped.", event.elevatorNum()));
-            new Thread(new Loader(event, transmitterToFloor, transmitterToElevator, getElevatorDirection(event))).start();
+            System.out.printf("Elevator %s stopped.%n", event.elevatorNum());
+            // TODO: Re-implement loading directly in scheduler!!
+//            new Thread(new Loader(event, transmitterToFloor, transmitterToElevator, getElevatorDirection(event))).start();
             floorRequestsToTime.remove(new DestinationEvent(event.currentFloor(),getElevatorDirection(event)));
         } else// Keep moving
             transmitterToElevator.send(new MoveElevatorCommand(event.elevatorNum(), getElevatorDirection(event)));
