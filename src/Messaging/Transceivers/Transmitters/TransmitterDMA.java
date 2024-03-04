@@ -16,7 +16,8 @@ public class TransmitterDMA extends Transmitter<ReceiverDMA> {
      * DMA_Transmitter constructor.
      */
     public TransmitterDMA() {
-        super();
+        // IMPORTANT: The class written here has to be the same as the concrete generic in the class definition "<>"
+        super(ReceiverDMA.class);
     }
 
     /**

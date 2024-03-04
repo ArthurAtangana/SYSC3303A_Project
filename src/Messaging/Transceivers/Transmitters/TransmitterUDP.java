@@ -24,7 +24,8 @@ public class TransmitterUDP extends Transmitter<ReceiverUDP> {
      */
     // TODO: Late bind, instead of bind on port (make use of super class)
     public TransmitterUDP() {
-        super();
+        // IMPORTANT: The class written here has to be the same as the concrete generic in the class definition "<>"
+        super(ReceiverUDP.class);
         // Initialize socket to send messages on
         try {
             this.sendSocket = new DatagramSocket();
