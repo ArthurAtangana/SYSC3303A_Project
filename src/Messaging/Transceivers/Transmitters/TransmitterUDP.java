@@ -8,22 +8,22 @@ import java.io.ObjectOutputStream;
 import java.net.*;
 
 /**
- * UDP_Transmitter class, provides a way to send messages to UDP_Receivers.
+ * TransmitterUDP class, provides a way to send messages to UDP_Receivers.
  *
  * @version Iteration-3
  */
-public class UDP_Transmitter extends Transmitter {
+public class TransmitterUDP extends Transmitter {
     private final DatagramSocket sendSocket;
     private final int sendPort;
 
-    // private final UDP_Receiver replyReceiver;
+    // private final ReceiverUDP replyReceiver;
 
     /**
      * Initializes a UDP DatagramSocket that will send SystemMessages to the specified port.
      *
      * @param sendPort Port number the UDP_transmitter is sending a DatagramPacket to.
      */
-    public UDP_Transmitter(int sendPort) {
+    public TransmitterUDP(int sendPort) {
         super();
         this.sendPort = sendPort;
         try {
@@ -31,7 +31,7 @@ public class UDP_Transmitter extends Transmitter {
         } catch (SocketException e) {
             throw new RuntimeException(e);
         }
-        // replyReceiver = new UDP_Receiver(sendSocket.getPort());
+        // replyReceiver = new ReceiverUDP(sendSocket.getPort());
     }
 
     /**
