@@ -38,7 +38,15 @@ public class Floor implements Runnable {
         // Start elevator location at 0 until an update is received
         floorLamp = 0;
         passengers = new ArrayList<>();
+
+        // Init receivers
+        subsystemReceiver = receiver;
         inputEventReceiver = new ReceiverDMA(floorNumber);
+        receiverComposite = new ReceiverComposite(floorNumber);
+        // Start threads on receivers to claim their queues in the composite
+        receiverComposite.claimReceiver(inputEventReceiver);
+        receiverComposite.claimReceiver(subsystemReceiver);
+
         allFloorsDMATransmitter.addReceiver(inputEventReceiver);
     }
 
