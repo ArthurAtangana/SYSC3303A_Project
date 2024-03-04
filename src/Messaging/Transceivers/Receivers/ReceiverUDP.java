@@ -33,6 +33,15 @@ public class ReceiverUDP extends Receiver implements Runnable {
     }
 
     /**
+     * Get the port this receiver's socket is receiving on.
+     *
+     * @return The port this receiver is receiving on.
+     */
+    public int getPort() {
+        return receiveSocket.getLocalPort();
+    }
+
+    /**
      * Calls receive from the receiveSocket and adds the deserializedMessage to msgBuf.
      */
     private void receiveUDP() {
