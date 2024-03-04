@@ -1,37 +1,36 @@
 package Messaging.Transceivers.Transmitters;
 
 import Messaging.Messages.SystemMessage;
+import Messaging.Transceivers.Receivers.ReceiverUDP;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
 
 /**
  * TransmitterUDP class, provides a way to send messages to UDP_Receivers.
  *
  * @version Iteration-3
  */
-public class TransmitterUDP extends Transmitter {
+public class TransmitterUDP extends Transmitter<ReceiverUDP> {
     private final DatagramSocket sendSocket;
-    private final int sendPort;
-
-    // private final ReceiverUDP replyReceiver;
 
     /**
-     * Initializes a UDP DatagramSocket that will send SystemMessages to the specified port.
-     *
-     * @param sendPort Port number the UDP_transmitter is sending a DatagramPacket to.
+     * Initializes a UDP DatagramSocket that will send SystemMessages to its receivers.
      */
-    public TransmitterUDP(int sendPort) {
+    // TODO: Late bind, instead of bind on port (make use of super class)
+    public TransmitterUDP() {
         super();
-        this.sendPort = sendPort;
+        // Initialize socket to send messages on
         try {
             this.sendSocket = new DatagramSocket();
         } catch (SocketException e) {
             throw new RuntimeException(e);
         }
-        // replyReceiver = new ReceiverUDP(sendSocket.getPort());
     }
 
     /**
@@ -41,18 +40,17 @@ public class TransmitterUDP extends Transmitter {
      */
     @Override
     public void send(SystemMessage message) {
-        DatagramPacket packet = null;
-        try {
-            byte[] msg = serializeSystemMessage(message);
-            packet = new DatagramPacket(msg, msg.length, InetAddress.getLocalHost(), sendPort);
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
+        // Try to send this message to each receiver bound to this transmitter
+        byte[] msg = serializeSystemMessage(message);
 
-        try {
-            sendSocket.send(packet);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        for (ReceiverUDP rx : receivers) {
+            try {
+                System.out.println(rx.getPort());
+                DatagramPacket packet = new DatagramPacket(msg, msg.length, InetAddress.getLocalHost(), rx.getPort());
+                sendSocket.send(packet);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

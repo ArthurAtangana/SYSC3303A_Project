@@ -19,7 +19,8 @@ public class TransceiverTestUDP {
         receiver.start();
 
         System.out.println("Initialize TransmitterUDP to send to port 5000.");
-        TransmitterUDP udp_transmitter = new TransmitterUDP(5000);
+        TransmitterUDP udp_transmitter = new TransmitterUDP();
+        udp_transmitter.addReceiver(udp_receiver);
 
         System.out.println("Create a DestinationEvent SystemMessage.");
         DestinationEvent destEvent = new DestinationEvent(2, Direction.UP);
