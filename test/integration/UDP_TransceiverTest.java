@@ -1,9 +1,9 @@
 package integration;
 
-import Messaging.Direction;
-import Messaging.Events.DestinationEvent;
-import Messaging.Receivers.UDP_Receiver;
-import Messaging.Transmitters.UDP_Transmitter;
+import Messaging.Messages.Direction;
+import Messaging.Messages.Events.DestinationEvent;
+import Messaging.Transceivers.Receivers.UDP_Receiver;
+import Messaging.Transceivers.Transmitters.UDP_Transmitter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
