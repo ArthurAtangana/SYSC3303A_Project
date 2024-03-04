@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static ElevatorSubsytem.ElevatorUtilities.getPassengersDirection;
+import static Subsystem.ElevatorSubsytem.ElevatorUtilities.getPassengersDirection;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ElevatorUtilitiesTest {

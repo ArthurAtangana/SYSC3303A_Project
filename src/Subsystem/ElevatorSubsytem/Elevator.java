@@ -1,4 +1,4 @@
-package ElevatorSubsytem;
+package Subsystem.ElevatorSubsytem;
 
 import Configuration.Config;
 import Configuration.Configurator;

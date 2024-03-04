@@ -1,4 +1,4 @@
-package FloorSubsystem;
+package Subsystem.FloorSubsystem;
 
 import Messaging.Messages.Commands.PassengerArrivedCommand;
 import Messaging.Messages.Commands.SendPassengersCommand;
@@ -6,6 +6,7 @@ import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import Messaging.Messages.Events.PassengerLoadEvent;
+import Messaging.Messages.Events.ReceiverBindingEvent;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Receivers.ReceiverComposite;
@@ -53,6 +54,9 @@ public class Floor implements Runnable {
         receiverComposite.claimReceiver(subsystemReceiver);
 
         allFloorsDMATransmitter.addReceiver(inputEventReceiver);
+
+        // Notify scheduler of new subsystem creation -> could fit in subsystem super class
+        this.transmitterToScheduler.send(new ReceiverBindingEvent(subsystemReceiver, this.getClass()));
     }
 
     public static TransmitterDMA getFloorsTransmitter() {

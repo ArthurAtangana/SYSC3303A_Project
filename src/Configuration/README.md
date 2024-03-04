@@ -22,7 +22,9 @@ For example, to extract the number of floors that the system will simulate:
 ```java
     int numFloors = config.getNumFloors();
 ```
-In the future, when Subsystems are run as separate programs on dedicated machines, identical config files should be supplied to each Subsystem, and each Subsystem can extract relevant data as required.
+
+In the future, when Subsystems are run as separate programs on dedicated machines, identical config files should be
+supplied to each Subsystem.Subsystem, and each Subsystem.Subsystem can extract relevant data as required.
 
 
 

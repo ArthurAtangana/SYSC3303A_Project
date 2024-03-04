@@ -1,17 +1,15 @@
-package SchedulerSubsystem;
+package Subsystem.SchedulerSubsystem;
 
-import ElevatorSubsytem.ElevatorUtilities;
 import Messaging.Messages.Commands.MoveElevatorCommand;
 import Messaging.Messages.Commands.MovePassengersCommand;
 import Messaging.Messages.Commands.SendPassengersCommand;
 import Messaging.Messages.Direction;
-import Messaging.Messages.Events.DestinationEvent;
-import Messaging.Messages.Events.ElevatorStateEvent;
-import Messaging.Messages.Events.FloorRequestEvent;
-import Messaging.Messages.Events.PassengerLoadEvent;
+import Messaging.Messages.Events.*;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
+import Subsystem.ElevatorSubsytem.Elevator;
+import Subsystem.ElevatorSubsytem.ElevatorUtilities;
 import com.sun.jdi.InvalidTypeException;
 
 import java.util.*;
@@ -21,7 +19,7 @@ import java.util.*;
  *
  * @version Iteration-2
  */
-public class Scheduler implements Runnable {
+public class Scheduler implements Runnable, Subsystem {
     private final Transmitter<? extends Receiver> transmitterToFloor;
     private final Transmitter<? extends Receiver> transmitterToElevator;
     private final Receiver receiver;

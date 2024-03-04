@@ -1,4 +1,4 @@
-package FloorSubsystem;
+package Subsystem.FloorSubsystem;
 
 import Messaging.Messages.Commands.PassengerArrivedCommand;
 import Messaging.Messages.Events.DestinationEvent;
