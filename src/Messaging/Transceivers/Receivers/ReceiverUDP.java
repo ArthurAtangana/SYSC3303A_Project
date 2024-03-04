@@ -10,11 +10,11 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 
 /**
- * UDP_Receiver class, provides a way to receive messages from UDP_Transmitters.
+ * ReceiverUDP class, provides a way to receive messages from UDP_Transmitters.
  *
  * @version Iteration-3
  */
-public class UDP_Receiver extends Receiver implements Runnable {
+public class ReceiverUDP extends Receiver implements Runnable {
     public final int MAX_MSG_SIZE = 255;
     private final DatagramSocket receiveSocket;
 
@@ -23,7 +23,7 @@ public class UDP_Receiver extends Receiver implements Runnable {
      *
      * @param receivePort Port number to listen on.
      */
-    public UDP_Receiver(int key, int receivePort) {
+    public ReceiverUDP(int key, int receivePort) {
         super(key);
         try {
             this.receiveSocket = new DatagramSocket(receivePort);
