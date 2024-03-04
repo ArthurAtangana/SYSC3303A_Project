@@ -27,6 +27,6 @@ public class TransmitterDMA extends Transmitter<ReceiverDMA> {
      */
     @Override
     public void send(SystemMessage event) {
-        destinationReceivers.forEach(d -> d.receiveDMA(event));
+        receivers.forEach(d -> d.receiveDMA(event));
     }
 }
