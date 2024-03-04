@@ -7,9 +7,11 @@ import Messaging.Messages.Commands.MovePassengersCommand;
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
+import Messaging.Messages.Events.ReceiverBindingEvent;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
+import Subsystem.Subsystem;
 import com.sun.jdi.InvalidTypeException;
 
 import java.util.HashMap;
@@ -19,7 +21,7 @@ import java.util.HashMap;
  *
  * @version Iteration-2
  */
-public class Elevator implements Runnable {
+public class Elevator implements Runnable, Subsystem {
     /** Single floor travel time */
     private final int elevNum;
     private int currentFloor;
@@ -43,6 +45,9 @@ public class Elevator implements Runnable {
         this.passengerCountMap = new HashMap<>();
         this.transmitterToScheduler = transmitter;
         this.receiver = receiver;
+
+        // Notify scheduler of new subsystem creation -> could fit in subsystem super class
+        this.transmitterToScheduler.send(new ReceiverBindingEvent(receiver, this.getClass()));
     }
 
     /**

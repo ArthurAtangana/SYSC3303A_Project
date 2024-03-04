@@ -10,6 +10,8 @@ import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
 import Subsystem.ElevatorSubsytem.Elevator;
 import Subsystem.ElevatorSubsytem.ElevatorUtilities;
+import Subsystem.FloorSubsystem.Floor;
+import Subsystem.Subsystem;
 import com.sun.jdi.InvalidTypeException;
 
 import java.util.*;
@@ -157,12 +159,23 @@ public class Scheduler implements Runnable, Subsystem {
      */
     private void processMessage(SystemMessage event) throws InvalidTypeException {
         // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.
+        // TODO: Refactor with state pattern to clean up this nested mess
         if (event instanceof ElevatorStateEvent esEvent)
             processElevatorEvent(esEvent);
         else if (event instanceof FloorRequestEvent frEvent)
             storeFloorRequest(frEvent);
         else if (event instanceof PassengerLoadEvent plEvent) {
             transmitterToElevator.send(new MovePassengersCommand(plEvent.elevNumber(), plEvent.passengers()));
+        } else if (event instanceof ReceiverBindingEvent rbEvent) {
+            System.out.println("Bound with: " + rbEvent);
+            Class<? extends Subsystem> subsystemType = rbEvent.subsystemType();
+            if (subsystemType.equals(Elevator.class)) {
+                transmitterToElevator.addReceiver(rbEvent.receiver());
+            } else if (subsystemType.equals(Floor.class)) {
+                transmitterToFloor.addReceiver(rbEvent.receiver());
+            } else
+                throw new InvalidTypeException("Unknown subsystem (" + subsystemType +
+                        ") attempted to bind to scheduler.");
         }
         else // Default, should never happen
             throw new InvalidTypeException("Event type (" + event.getClass() +

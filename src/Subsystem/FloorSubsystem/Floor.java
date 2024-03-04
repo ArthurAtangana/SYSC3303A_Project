@@ -13,6 +13,7 @@ import Messaging.Transceivers.Receivers.ReceiverComposite;
 import Messaging.Transceivers.Receivers.ReceiverDMA;
 import Messaging.Transceivers.Transmitters.Transmitter;
 import Messaging.Transceivers.Transmitters.TransmitterDMA;
+import Subsystem.Subsystem;
 import com.sun.jdi.InvalidTypeException;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
  *
  * @version Iteration-2
  */
-public class Floor implements Runnable {
+public class Floor implements Runnable, Subsystem {
     private static final TransmitterDMA allFloorsDMATransmitter = new TransmitterDMA();
 
     private int floorLamp;
@@ -30,8 +31,6 @@ public class Floor implements Runnable {
 
     // Receivers
     private final ReceiverComposite receiverComposite; // Groups multiple receivers into 1 queue
-    private final Receiver subsystemReceiver;
-    private final ReceiverDMA inputEventReceiver;
 
     // Transmitter
     private final Transmitter<? extends Receiver> transmitterToScheduler;
@@ -46,17 +45,16 @@ public class Floor implements Runnable {
         passengers = new ArrayList<>();
 
         // Init receivers
-        subsystemReceiver = receiver;
-        inputEventReceiver = new ReceiverDMA(floorNumber);
+        ReceiverDMA inputEventReceiver = new ReceiverDMA(floorNumber);
         receiverComposite = new ReceiverComposite(floorNumber);
         // Start threads on receivers to claim their queues in the composite
         receiverComposite.claimReceiver(inputEventReceiver);
-        receiverComposite.claimReceiver(subsystemReceiver);
+        receiverComposite.claimReceiver(receiver);
 
         allFloorsDMATransmitter.addReceiver(inputEventReceiver);
 
         // Notify scheduler of new subsystem creation -> could fit in subsystem super class
-        this.transmitterToScheduler.send(new ReceiverBindingEvent(subsystemReceiver, this.getClass()));
+        this.transmitterToScheduler.send(new ReceiverBindingEvent(receiver, this.getClass()));
     }
 
     public static TransmitterDMA getFloorsTransmitter() {
