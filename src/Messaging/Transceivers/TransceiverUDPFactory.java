@@ -27,7 +27,9 @@ public class TransceiverUDPFactory implements TransceiverFactory {
      */
     @Override
     public Receiver createClientReceiver(int key) {
-        return new ReceiverUDP(key);
+        ReceiverUDP clientReceiver = new ReceiverUDP(key);
+        new Thread(clientReceiver).start(); // Activate receiver
+        return clientReceiver;
     }
 
     /**
