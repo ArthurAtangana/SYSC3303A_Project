@@ -1,13 +1,13 @@
 package FloorSubsystem;
 
-import Messaging.Commands.PassengerArrivedCommand;
-import Messaging.Commands.SendPassengersCommand;
-import Messaging.Direction;
-import Messaging.Events.DestinationEvent;
-import Messaging.Events.ElevatorStateEvent;
-import Messaging.Events.PassengerLoadEvent;
-import Messaging.Receivers.DMA_Receiver;
-import Messaging.SystemMessage;
+import Messaging.Messages.Commands.PassengerArrivedCommand;
+import Messaging.Messages.Commands.SendPassengersCommand;
+import Messaging.Messages.Direction;
+import Messaging.Messages.Events.DestinationEvent;
+import Messaging.Messages.Events.ElevatorStateEvent;
+import Messaging.Messages.Events.PassengerLoadEvent;
+import Messaging.Transceivers.Receivers.ReceiverDMA;
+import Messaging.Messages.SystemMessage;
 import com.sun.jdi.InvalidTypeException;
 
 import java.util.ArrayList;
@@ -20,10 +20,10 @@ import java.util.ArrayList;
 public class Floor implements Runnable {
     private int floorLamp;
     private final int floorNum;
-    private final DMA_Receiver receiver;
+    private final ReceiverDMA receiver;
     private ArrayList<DestinationEvent> passengers;
 
-    public Floor(int floorNumber, DMA_Receiver receiver) {
+    public Floor(int floorNumber, ReceiverDMA receiver) {
         this.floorNum = floorNumber;
         this.receiver = receiver;
         // Start elevator location at 0 until an update is received
@@ -91,7 +91,7 @@ public class Floor implements Runnable {
         while (true) {
             // receiver.receive = receive state. ProcessEvent "selects" the action
             try {
-                processMessage(receiver.receive());
+                processMessage(receiver.dequeueMessage());
             } catch (InvalidTypeException e) {
                 throw new RuntimeException(e);
             }

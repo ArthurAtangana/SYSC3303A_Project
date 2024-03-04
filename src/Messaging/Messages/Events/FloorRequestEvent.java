@@ -1,4 +1,4 @@
-package Messaging.Events;
+package Messaging.Messages.Events;
 
 /**
  * FloorRequestEvent record, holds a destination event referring to the source floor

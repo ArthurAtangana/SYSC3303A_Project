@@ -1,4 +1,4 @@
-package Messaging;
+package Messaging.Messages;
 
 /**
  * Enum to hold elevator state for directionality of travel.

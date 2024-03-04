@@ -2,14 +2,14 @@ package ElevatorSubsytem;
 
 import Configuration.Config;
 import Configuration.Configurator;
-import Messaging.Commands.MoveElevatorCommand;
-import Messaging.Commands.MovePassengersCommand;
-import Messaging.Direction;
-import Messaging.Events.DestinationEvent;
-import Messaging.Events.ElevatorStateEvent;
-import Messaging.Receivers.DMA_Receiver;
-import Messaging.SystemMessage;
-import Messaging.Transmitters.DMA_Transmitter;
+import Messaging.Messages.Commands.MoveElevatorCommand;
+import Messaging.Messages.Commands.MovePassengersCommand;
+import Messaging.Messages.Direction;
+import Messaging.Messages.Events.DestinationEvent;
+import Messaging.Messages.Events.ElevatorStateEvent;
+import Messaging.Transceivers.Receivers.ReceiverDMA;
+import Messaging.Messages.SystemMessage;
+import Messaging.Transceivers.Transmitters.TransmitterDMA;
 import com.sun.jdi.InvalidTypeException;
 
 import java.util.HashMap;
@@ -26,10 +26,10 @@ public class Elevator implements Runnable {
     private final long travelTime;
     private final long loadTime;
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
-    private final DMA_Transmitter transmitterToScheduler;
-    private final DMA_Receiver receiver;
+    private final TransmitterDMA transmitterToScheduler;
+    private final ReceiverDMA receiver;
 
-    public Elevator(int elevNum, DMA_Receiver receiver, DMA_Transmitter transmitter) {
+    public Elevator(int elevNum, ReceiverDMA receiver, TransmitterDMA transmitter) {
 
         // Configure Elevator from JSON
         String jsonFilename = "res/system-config-00.json";
@@ -126,7 +126,7 @@ public class Elevator implements Runnable {
         while (true){
             sendStateUpdate();
             try {
-                processMessage(receiver.receive());
+                processMessage(receiver.dequeueMessage());
             } catch (InvalidTypeException e) {
                 throw new RuntimeException(e);
             }

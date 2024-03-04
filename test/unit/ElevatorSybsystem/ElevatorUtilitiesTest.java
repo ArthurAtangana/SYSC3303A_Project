@@ -1,7 +1,7 @@
 package unit.ElevatorSybsystem;
 
-import Messaging.Direction;
-import Messaging.Events.DestinationEvent;
+import Messaging.Messages.Direction;
+import Messaging.Messages.Events.DestinationEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

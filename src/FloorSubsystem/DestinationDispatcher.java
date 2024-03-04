@@ -1,10 +1,10 @@
 package FloorSubsystem;
 
-import Messaging.Commands.PassengerArrivedCommand;
-import Messaging.Events.DestinationEvent;
-import Messaging.Events.FloorInputEvent;
-import Messaging.Events.FloorRequestEvent;
-import Messaging.Transmitters.Transmitter;
+import Messaging.Messages.Commands.PassengerArrivedCommand;
+import Messaging.Messages.Events.DestinationEvent;
+import Messaging.Messages.Events.FloorInputEvent;
+import Messaging.Messages.Events.FloorRequestEvent;
+import Messaging.Transceivers.Transmitters.Transmitter;
 
 import java.util.ArrayList;
 import java.util.Comparator;

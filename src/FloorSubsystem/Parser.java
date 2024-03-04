@@ -1,7 +1,7 @@
 package FloorSubsystem;
 
-import Messaging.Direction;
-import Messaging.Events.FloorInputEvent;
+import Messaging.Messages.Direction;
+import Messaging.Messages.Events.FloorInputEvent;
 
 import java.io.*;
 import java.util.*;

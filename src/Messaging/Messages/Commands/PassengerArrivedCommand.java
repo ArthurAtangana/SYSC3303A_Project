@@ -1,6 +1,6 @@
-package Messaging.Commands;
+package Messaging.Messages.Commands;
 
-import Messaging.Events.DestinationEvent;
+import Messaging.Messages.Events.DestinationEvent;
 /**
  * PassengerArrivedCommand Record, Command to floor that a passenger has arrived at the floor
  * with an intended destination.
