@@ -12,7 +12,7 @@ import java.net.*;
  *
  * @version Iteration-3
  */
-public class UDP_Transmitter implements Transmitter {
+public class UDP_Transmitter extends Transmitter {
     private final DatagramSocket sendSocket;
     private final int sendPort;
 
@@ -24,6 +24,7 @@ public class UDP_Transmitter implements Transmitter {
      * @param sendPort Port number the UDP_transmitter is sending a DatagramPacket to.
      */
     public UDP_Transmitter(int sendPort) {
+        super();
         this.sendPort = sendPort;
         try {
             this.sendSocket = new DatagramSocket();

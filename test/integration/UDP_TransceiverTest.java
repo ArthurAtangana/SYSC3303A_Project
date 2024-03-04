@@ -14,7 +14,7 @@ public class UDP_TransceiverTest {
 
     public static void main(String[] args) {
         System.out.println("Initialize UDP_Receiver thread to receive from port 5000.");
-        UDP_Receiver udp_receiver = new UDP_Receiver(5000);
+        UDP_Receiver udp_receiver = new UDP_Receiver(0, 5000);
         Thread receiver = new Thread(udp_receiver);
         receiver.start();
 
@@ -26,7 +26,7 @@ public class UDP_TransceiverTest {
         udp_transmitter.send(destEvent);
 
         System.out.println("Call receive on the UDP_Receiver to read the SystemMessage.");
-        DestinationEvent receivedDestEvent = (DestinationEvent) udp_receiver.receive();
+        DestinationEvent receivedDestEvent = (DestinationEvent) udp_receiver.dequeueMessage();
 
         System.out.println("Assert correct information is received.");
         assertEquals(receivedDestEvent.destinationFloor(), 2);

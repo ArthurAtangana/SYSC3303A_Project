@@ -3,7 +3,6 @@ package Messaging.Transceivers.Receivers;
 import Messaging.Messages.Commands.SystemCommand;
 import Messaging.Messages.SystemMessage;
 
-
 import java.util.LinkedList;
 
 /**
@@ -14,7 +13,7 @@ import java.util.LinkedList;
  */
 public abstract class Receiver {
     // Message buffer TODO: replace w/ priority queue class (prioritizes based on message class)
-    protected final LinkedList<SystemMessage> msgBuf;
+    private final LinkedList<SystemMessage> msgBuf;
     private final int key;
 
     protected Receiver(int key) {
