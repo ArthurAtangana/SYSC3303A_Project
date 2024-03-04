@@ -7,9 +7,9 @@ import Messaging.Messages.Commands.MovePassengersCommand;
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
-import Messaging.Transceivers.Receivers.ReceiverDMA;
 import Messaging.Messages.SystemMessage;
-import Messaging.Transceivers.Transmitters.TransmitterDMA;
+import Messaging.Transceivers.Receivers.Receiver;
+import Messaging.Transceivers.Transmitters.Transmitter;
 import com.sun.jdi.InvalidTypeException;
 
 import java.util.HashMap;
@@ -26,10 +26,10 @@ public class Elevator implements Runnable {
     private final long travelTime;
     private final long loadTime;
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
-    private final TransmitterDMA transmitterToScheduler;
-    private final ReceiverDMA receiver;
+    private final Transmitter<Receiver> transmitterToScheduler;
+    private final Receiver receiver;
 
-    public Elevator(int elevNum, ReceiverDMA receiver, TransmitterDMA transmitter) {
+    public Elevator(int elevNum, Receiver receiver, Transmitter transmitter) {
 
         // Configure Elevator from JSON
         String jsonFilename = "res/system-config-00.json";
@@ -51,7 +51,7 @@ public class Elevator implements Runnable {
      * @param direction the direction to travel towards.
      */
     private void move(Direction direction) {
-        System.out.println(String.format("Elevator %s: Going %s from floor %s.",this.elevNum,direction,this.currentFloor));
+        System.out.printf("Elevator %s: Going %s from floor %s.%n",this.elevNum,direction,this.currentFloor);
         try {
             Thread.sleep(this.travelTime);
         } catch (InterruptedException e) {
@@ -60,7 +60,7 @@ public class Elevator implements Runnable {
 
         currentFloor += direction.getDisplacement();
 
-        System.out.println(String.format("Elevator %s: Elevator reached floor #%s", this.elevNum, this.currentFloor));
+        System.out.printf("Elevator %s: Elevator reached floor #%s%n", this.elevNum, this.currentFloor);
     }
     private void unload(){
         Direction direction = ElevatorUtilities.getPassengersDirection(passengerCountMap.keySet());

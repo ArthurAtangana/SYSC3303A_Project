@@ -6,16 +6,12 @@ import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import Messaging.Messages.Events.FloorRequestEvent;
-import Messaging.Transceivers.Receivers.ReceiverDMA;
 import Messaging.Messages.SystemMessage;
-import Messaging.Transceivers.Transmitters.TransmitterDMA;
-
+import Messaging.Transceivers.Receivers.Receiver;
+import Messaging.Transceivers.Transmitters.Transmitter;
 import com.sun.jdi.InvalidTypeException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
+
+import java.util.*;
 
 /**
  * Scheduler class which models a scheduler in the simulation.
@@ -23,13 +19,15 @@ import java.util.HashSet;
  * @version Iteration-2
  */
 public class Scheduler implements Runnable {
-    private final TransmitterDMA transmitterToFloor;
-    private final TransmitterDMA transmitterToElevator;
-    private final ReceiverDMA receiver;
+    private final Transmitter<? extends Receiver> transmitterToFloor;
+    private final Transmitter<? extends Receiver> transmitterToElevator;
+    private final Receiver receiver;
     private final Map<DestinationEvent, Long> floorRequestsToTime;
-    private ArrayList<ElevatorStateEvent> idleElevators;
+    private final ArrayList<ElevatorStateEvent> idleElevators;
 
-    public Scheduler(ReceiverDMA receiver, TransmitterDMA transmitterToFloor, TransmitterDMA transmitterToElevator) {
+    public Scheduler(Receiver receiver,
+                     Transmitter<? extends Receiver> transmitterToFloor,
+                     Transmitter<? extends Receiver> transmitterToElevator) {
         this.receiver = receiver;
         this.transmitterToElevator = transmitterToElevator;
         this.transmitterToFloor = transmitterToFloor;
@@ -138,7 +136,7 @@ public class Scheduler implements Runnable {
      */
     private void processElevatorEvent(ElevatorStateEvent event) {
         if (floorRequestsToTime.isEmpty() && event.passengerCountMap().isEmpty()) {
-            System.out.println(String.format("Elevator %s idle", event.elevatorNum()));
+            System.out.printf("Elevator %s idle%n", event.elevatorNum());
             idleElevators.add(event);
         } else if (isElevatorStopping(event)) { // Stop elevator for a load
             System.out.printf("Elevator %s stopped.%n", event.elevatorNum());

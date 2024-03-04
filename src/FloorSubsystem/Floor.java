@@ -6,8 +6,11 @@ import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import Messaging.Messages.Events.PassengerLoadEvent;
-import Messaging.Transceivers.Receivers.ReceiverDMA;
 import Messaging.Messages.SystemMessage;
+import Messaging.Transceivers.Receivers.Receiver;
+import Messaging.Transceivers.Receivers.ReceiverComposite;
+import Messaging.Transceivers.Receivers.ReceiverDMA;
+import Messaging.Transceivers.Transmitters.TransmitterDMA;
 import com.sun.jdi.InvalidTypeException;
 
 import java.util.ArrayList;
@@ -18,18 +21,31 @@ import java.util.ArrayList;
  * @version Iteration-2
  */
 public class Floor implements Runnable {
+    private static final TransmitterDMA allFloorsDMATransmitter = new TransmitterDMA();
+
     private int floorLamp;
     private final int floorNum;
-    private final ReceiverDMA receiver;
-    private ArrayList<DestinationEvent> passengers;
 
-    public Floor(int floorNumber, ReceiverDMA receiver) {
+    // Receivers
+    private final ReceiverComposite receiverComposite; // Groups multiple receivers into 1 queue
+    private final Receiver subsystemReceiver;
+    private final ReceiverDMA inputEventReceiver;
+
+    private final ArrayList<DestinationEvent> passengers;
+
+    public Floor(int floorNumber, Receiver receiver) {
         this.floorNum = floorNumber;
-        this.receiver = receiver;
         // Start elevator location at 0 until an update is received
         floorLamp = 0;
         passengers = new ArrayList<>();
+        inputEventReceiver = new ReceiverDMA(floorNumber);
+        allFloorsDMATransmitter.addReceiver(inputEventReceiver);
     }
+
+    public static TransmitterDMA getFloorsTransmitter() {
+        return allFloorsDMATransmitter;
+    }
+
     /**
      * Setting the lamp to display which floor the elevator is on.
      *
@@ -91,7 +107,7 @@ public class Floor implements Runnable {
         while (true) {
             // receiver.receive = receive state. ProcessEvent "selects" the action
             try {
-                processMessage(receiver.dequeueMessage());
+                processMessage(receiverComposite.dequeueMessage());
             } catch (InvalidTypeException e) {
                 throw new RuntimeException(e);
             }
