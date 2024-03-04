@@ -33,6 +33,18 @@ public class ReceiverUDP extends Receiver implements Runnable {
     }
 
     /**
+     * Initializes a UDP DatagramSocket that binds on any available port (wildcard).
+     */
+    public ReceiverUDP(int key) {
+        super(key);
+        try {
+            this.receiveSocket = new DatagramSocket();
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Get the port this receiver's socket is receiving on.
      *
      * @return The port this receiver is receiving on.

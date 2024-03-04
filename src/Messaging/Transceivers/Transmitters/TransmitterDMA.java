@@ -1,3 +1,8 @@
+package Messaging.Transceivers.Transmitters;
+
+import Messaging.Messages.SystemMessage;
+import Messaging.Transceivers.Receivers.ReceiverDMA;
+
 /**
  * DMA_Transmitter class, provides a way to send messages to DMA_Receivers.
  * DMA (Direct Memory Access) name comes from how the transmitters/receivers are implemented:
@@ -6,11 +11,6 @@
  * @author Alexandre Marques
  * @version Iteration-1
  */
-package Messaging.Transceivers.Transmitters;
-
-import Messaging.Messages.SystemMessage;
-import Messaging.Transceivers.Receivers.ReceiverDMA;
-
 public class TransmitterDMA extends Transmitter<ReceiverDMA> {
     /**
      * DMA_Transmitter constructor.
