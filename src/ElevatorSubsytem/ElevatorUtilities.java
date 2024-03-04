@@ -1,7 +1,7 @@
 package ElevatorSubsytem;
 
-import Messaging.Direction;
-import Messaging.Events.DestinationEvent;
+import Messaging.Messages.Direction;
+import Messaging.Messages.Events.DestinationEvent;
 
 import java.util.Set;
 

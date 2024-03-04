@@ -1,14 +1,14 @@
 package SchedulerSubsystem;
 
-import Messaging.Commands.MovePassengersCommand;
-import Messaging.Commands.SendPassengersCommand;
+import Messaging.Messages.Commands.MovePassengersCommand;
+import Messaging.Messages.Commands.SendPassengersCommand;
 
-import Messaging.Direction;
-import Messaging.Events.DestinationEvent;
-import Messaging.Events.ElevatorStateEvent;
-import Messaging.Events.PassengerLoadEvent;
-import Messaging.Receivers.DMA_Receiver;
-import Messaging.Transmitters.DMA_Transmitter;
+import Messaging.Messages.Direction;
+import Messaging.Messages.Events.DestinationEvent;
+import Messaging.Messages.Events.ElevatorStateEvent;
+import Messaging.Messages.Events.PassengerLoadEvent;
+import Messaging.Transceivers.Receivers.ReceiverDMA;
+import Messaging.Transceivers.Transmitters.TransmitterDMA;
 
 import java.util.ArrayList;
 
@@ -24,20 +24,22 @@ import java.util.ArrayList;
  */
 public class Loader implements Runnable {
     private final ElevatorStateEvent elevatorState;
-    private final DMA_Transmitter txElevator;
-    private final DMA_Transmitter txFloor;
-    private final DMA_Receiver receiver;
-    private final DMA_Transmitter txThis;
+    private final TransmitterDMA txElevator;
+    private final TransmitterDMA txFloor;
+    private final ReceiverDMA receiver;
+    private final TransmitterDMA txThis;
     private final Direction elevatorDirection;
 
-    public Loader(ElevatorStateEvent event, DMA_Transmitter txFloor, DMA_Transmitter txElevator, Direction elevatorDirection) {
+    public Loader(ElevatorStateEvent event, TransmitterDMA txFloor, TransmitterDMA txElevator, Direction elevatorDirection) {
         elevatorState = event;
         this.txFloor = txFloor;
         this.txElevator = txElevator;
         this.elevatorDirection = elevatorDirection;
 
-        this.receiver = new DMA_Receiver();
-        this.txThis = new DMA_Transmitter(receiver);
+        receiver = new ReceiverDMA(0);
+        // Create transmitter with reference to itself, to pass on to floor later
+        txThis = new TransmitterDMA();
+        txThis.addReceiver(receiver);
     }
     /**
      * Runs this operation.
@@ -47,7 +49,7 @@ public class Loader implements Runnable {
         // Send command to get passengers from floor
         txFloor.send(new SendPassengersCommand(elevatorState.currentFloor(), elevatorDirection, txThis));
         // Receiver passengers
-        ArrayList<DestinationEvent> passengers = ((PassengerLoadEvent) receiver.receive()).passengers();
+        ArrayList<DestinationEvent> passengers = ((PassengerLoadEvent) receiver.dequeueMessage()).passengers();
         // Send passengers to elevator
         txElevator.send(new MovePassengersCommand(elevatorState.elevatorNum(), passengers));
     }
