@@ -10,6 +10,7 @@ import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Receivers.ReceiverComposite;
 import Messaging.Transceivers.Receivers.ReceiverDMA;
+import Messaging.Transceivers.Transmitters.Transmitter;
 import Messaging.Transceivers.Transmitters.TransmitterDMA;
 import com.sun.jdi.InvalidTypeException;
 
@@ -31,10 +32,14 @@ public class Floor implements Runnable {
     private final Receiver subsystemReceiver;
     private final ReceiverDMA inputEventReceiver;
 
+    // Transmitter
+    private final Transmitter<? extends Receiver> transmitterToScheduler;
+
     private final ArrayList<DestinationEvent> passengers;
 
-    public Floor(int floorNumber, Receiver receiver) {
+    public Floor(int floorNumber, Receiver receiver, Transmitter<? extends Receiver> transmitterToScheduler) {
         this.floorNum = floorNumber;
+        this.transmitterToScheduler = transmitterToScheduler;
         // Start elevator location at 0 until an update is received
         floorLamp = 0;
         passengers = new ArrayList<>();
@@ -88,7 +93,8 @@ public class Floor implements Runnable {
                 passengersToLoad.add(dest);
             }
         }
-        sendPassengersCommand.tx().send(new PassengerLoadEvent(passengersToLoad));
+
+        transmitterToScheduler.send(new PassengerLoadEvent(sendPassengersCommand.elevNum(), passengersToLoad));
         passengers.removeAll(passengersToLoad);
     }
 

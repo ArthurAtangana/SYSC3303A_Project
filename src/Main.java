@@ -52,14 +52,15 @@ public class Main {
 
         // 2. Start Scheduler threads
         Scheduler scheduler = new Scheduler(schedulerReceiver,
-                transceiverFactory.createClientTransmitter(),
-                transceiverFactory.createClientTransmitter());
+                transceiverFactory.createServerTransmitter(),
+                transceiverFactory.createServerTransmitter());
         Thread schedulerThread = new Thread(scheduler);
         schedulerThread.start();
 
         // 3 + 4. Create then immediately start floors, and elevators
         for (int i = 0; i < numFloors; ++i) {
-            new Thread(new Floor(i, floorReceivers.get(i))).start();
+            new Thread(new Floor(i, floorReceivers.get(i),
+                    transceiverFactory.createClientTransmitter())).start();
         }
         for (int i = 0; i < numElevators; ++i) {
             new Thread(new Elevator(i, elevatorReceivers.get(i),
