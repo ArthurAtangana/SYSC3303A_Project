@@ -14,8 +14,10 @@ import java.util.ArrayList;
 public abstract class Transmitter<R extends Receiver> {
     // The receivers to send messages to (can be seen as a list of "pointers" to update)
     protected final ArrayList<R> receivers;
+    private final Class<R> receiverType;
 
-    protected Transmitter() {
+    protected Transmitter(Class<R> receiverType) {
+        this.receiverType = receiverType;
         this.receivers = new ArrayList<>();
     }
 
@@ -29,10 +31,17 @@ public abstract class Transmitter<R extends Receiver> {
      * Provides a way to "late-bind" receivers to transmitters,
      * as they may be created after the transmitter is created or
      * the reference may be difficult to access on construction.
+     * Will ignore receivers that don't match this transmitter type.
      *
-     * @param destReceiver The receiver to bind to this transmitter.
+     * @param receiver The receiver to bind to this transmitter.
      */
-    public void addReceiver(R destReceiver) {
-        receivers.add(destReceiver);
+    public void addReceiver(Receiver receiver) {
+        // Add IFF the receiver matches the expected type
+        if (receiverType != null && receiverType.isInstance(receiver)) {
+            // Cast to the specific subclass.
+            @SuppressWarnings("unchecked") // JVM warns due to type erasure, but we do type checking above
+            R specificReceiver = (R) receiver;
+            receivers.add(specificReceiver);
+        }
     }
 }

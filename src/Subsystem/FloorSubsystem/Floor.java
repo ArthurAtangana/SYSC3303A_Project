@@ -1,4 +1,4 @@
-package FloorSubsystem;
+package Subsystem.FloorSubsystem;
 
 import Messaging.Messages.Commands.PassengerArrivedCommand;
 import Messaging.Messages.Commands.SendPassengersCommand;
@@ -6,8 +6,14 @@ import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import Messaging.Messages.Events.PassengerLoadEvent;
-import Messaging.Transceivers.Receivers.ReceiverDMA;
+import Messaging.Messages.Events.ReceiverBindingEvent;
 import Messaging.Messages.SystemMessage;
+import Messaging.Transceivers.Receivers.Receiver;
+import Messaging.Transceivers.Receivers.ReceiverComposite;
+import Messaging.Transceivers.Receivers.ReceiverDMA;
+import Messaging.Transceivers.Transmitters.Transmitter;
+import Messaging.Transceivers.Transmitters.TransmitterDMA;
+import Subsystem.Subsystem;
 import com.sun.jdi.InvalidTypeException;
 
 import java.util.ArrayList;
@@ -17,19 +23,44 @@ import java.util.ArrayList;
  *
  * @version Iteration-2
  */
-public class Floor implements Runnable {
+public class Floor implements Runnable, Subsystem {
+    private static final TransmitterDMA allFloorsDMATransmitter = new TransmitterDMA();
+
     private int floorLamp;
     private final int floorNum;
-    private final ReceiverDMA receiver;
-    private ArrayList<DestinationEvent> passengers;
 
-    public Floor(int floorNumber, ReceiverDMA receiver) {
+    // Receivers
+    private final ReceiverComposite receiverComposite; // Groups multiple receivers into 1 queue
+
+    // Transmitter
+    private final Transmitter<? extends Receiver> transmitterToScheduler;
+
+    private final ArrayList<DestinationEvent> passengers;
+
+    public Floor(int floorNumber, Receiver receiver, Transmitter<? extends Receiver> transmitterToScheduler) {
         this.floorNum = floorNumber;
-        this.receiver = receiver;
+        this.transmitterToScheduler = transmitterToScheduler;
         // Start elevator location at 0 until an update is received
         floorLamp = 0;
         passengers = new ArrayList<>();
+
+        // Init receivers
+        ReceiverDMA inputEventReceiver = new ReceiverDMA(floorNumber);
+        receiverComposite = new ReceiverComposite(floorNumber);
+        // Start threads on receivers to claim their queues in the composite
+        receiverComposite.claimReceiver(inputEventReceiver);
+        receiverComposite.claimReceiver(receiver);
+
+        allFloorsDMATransmitter.addReceiver(inputEventReceiver);
+
+        // Notify scheduler of new subsystem creation -> could fit in subsystem super class
+        this.transmitterToScheduler.send(new ReceiverBindingEvent(receiver, this.getClass()));
     }
+
+    public static TransmitterDMA getFloorsTransmitter() {
+        return allFloorsDMATransmitter;
+    }
+
     /**
      * Setting the lamp to display which floor the elevator is on.
      *
@@ -64,7 +95,8 @@ public class Floor implements Runnable {
                 passengersToLoad.add(dest);
             }
         }
-        sendPassengersCommand.tx().send(new PassengerLoadEvent(passengersToLoad));
+
+        transmitterToScheduler.send(new PassengerLoadEvent(sendPassengersCommand.elevNum(), passengersToLoad));
         passengers.removeAll(passengersToLoad);
     }
 
@@ -91,7 +123,7 @@ public class Floor implements Runnable {
         while (true) {
             // receiver.receive = receive state. ProcessEvent "selects" the action
             try {
-                processMessage(receiver.dequeueMessage());
+                processMessage(receiverComposite.dequeueMessage());
             } catch (InvalidTypeException e) {
                 throw new RuntimeException(e);
             }

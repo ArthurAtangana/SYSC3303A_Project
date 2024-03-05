@@ -6,9 +6,9 @@
  */
 package unit.FloorSubsystem;
 
-import FloorSubsystem.Parser;
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.FloorInputEvent;
+import Subsystem.FloorSubsystem.Parser;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ParserTest {
 
-    private String filename = "test/resources/parser-input-file.txt";
+    private final String filename = "test/resources/parser-input-file.txt";
     private Parser parser;
     private ArrayList<FloorInputEvent> floorInputEvents;
 
