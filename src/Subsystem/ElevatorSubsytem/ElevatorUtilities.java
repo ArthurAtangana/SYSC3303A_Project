@@ -1,4 +1,4 @@
-package ElevatorSubsytem;
+package Subsystem.ElevatorSubsytem;
 
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;

@@ -1,40 +1,41 @@
-package SchedulerSubsystem;
+package Subsystem.SchedulerSubsystem;
 
-import ElevatorSubsytem.ElevatorUtilities;
 import Messaging.Messages.Commands.MoveElevatorCommand;
+import Messaging.Messages.Commands.MovePassengersCommand;
+import Messaging.Messages.Commands.SendPassengersCommand;
 import Messaging.Messages.Direction;
-import Messaging.Messages.Events.DestinationEvent;
-import Messaging.Messages.Events.ElevatorStateEvent;
-import Messaging.Messages.Events.FloorRequestEvent;
-import Messaging.Transceivers.Receivers.ReceiverDMA;
+import Messaging.Messages.Events.*;
 import Messaging.Messages.SystemMessage;
-import Messaging.Transceivers.Transmitters.TransmitterDMA;
-
+import Messaging.Transceivers.Receivers.Receiver;
+import Messaging.Transceivers.Transmitters.Transmitter;
+import Subsystem.ElevatorSubsytem.Elevator;
+import Subsystem.ElevatorSubsytem.ElevatorUtilities;
+import Subsystem.FloorSubsystem.Floor;
+import Subsystem.Subsystem;
 import com.sun.jdi.InvalidTypeException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
+
+import java.util.*;
 
 /**
  * Scheduler class which models a scheduler in the simulation.
  *
  * @version Iteration-2
  */
-public class Scheduler implements Runnable {
-    private final TransmitterDMA transmitterToFloor;
-    private final TransmitterDMA transmitterToElevator;
-    private final ReceiverDMA receiver;
+public class Scheduler implements Runnable, Subsystem {
+    private final Transmitter<? extends Receiver> transmitterToFloor;
+    private final Transmitter<? extends Receiver> transmitterToElevator;
+    private final Receiver receiver;
     private final Map<DestinationEvent, Long> floorRequestsToTime;
-    private ArrayList<ElevatorStateEvent> idleElevators;
+    private final ArrayList<ElevatorStateEvent> idleElevators;
 
-    public Scheduler(ReceiverDMA receiver, TransmitterDMA transmitterToFloor, TransmitterDMA transmitterToElevator) {
+    public Scheduler(Receiver receiver,
+                     Transmitter<? extends Receiver> transmitterToFloor,
+                     Transmitter<? extends Receiver> transmitterToElevator) {
         this.receiver = receiver;
         this.transmitterToElevator = transmitterToElevator;
         this.transmitterToFloor = transmitterToFloor;
         floorRequestsToTime = new HashMap<>();
-        idleElevators = new ArrayList<ElevatorStateEvent>();
+        idleElevators = new ArrayList<>();
     }
 
     /**
@@ -77,7 +78,7 @@ public class Scheduler implements Runnable {
     }
 
     /**
-     * Returns false if the elevator is empty and is moving oposite to the future direction.
+     * Returns false if the elevator is empty and is moving opposite to the future direction.
      * @return
      */
     private boolean isMovingOppositeToFutureDirection(ElevatorStateEvent event){
@@ -138,11 +139,13 @@ public class Scheduler implements Runnable {
      */
     private void processElevatorEvent(ElevatorStateEvent event) {
         if (floorRequestsToTime.isEmpty() && event.passengerCountMap().isEmpty()) {
-            System.out.println(String.format("Elevator %s idle", event.elevatorNum()));
+            System.out.printf("Elevator %s idle%n", event.elevatorNum());
             idleElevators.add(event);
         } else if (isElevatorStopping(event)) { // Stop elevator for a load
-            System.out.println(String.format("Elevator %s stopped.", event.elevatorNum()));
-            new Thread(new Loader(event, transmitterToFloor, transmitterToElevator, getElevatorDirection(event))).start();
+            System.out.printf("Elevator %s stopped.%n", event.elevatorNum());
+            transmitterToFloor.send(new SendPassengersCommand(event.currentFloor(),
+                    event.elevatorNum(),
+                    getElevatorDirection(event)));
             floorRequestsToTime.remove(new DestinationEvent(event.currentFloor(),getElevatorDirection(event)));
         } else// Keep moving
             transmitterToElevator.send(new MoveElevatorCommand(event.elevatorNum(), getElevatorDirection(event)));
@@ -156,12 +159,27 @@ public class Scheduler implements Runnable {
      */
     private void processMessage(SystemMessage event) throws InvalidTypeException {
         // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.
-        if (event instanceof ElevatorStateEvent)
-            processElevatorEvent((ElevatorStateEvent) event);
-        else if (event instanceof FloorRequestEvent)
-            storeFloorRequest((FloorRequestEvent) event);
+        // TODO: Refactor with state pattern to clean up this nested mess
+        if (event instanceof ElevatorStateEvent esEvent)
+            processElevatorEvent(esEvent);
+        else if (event instanceof FloorRequestEvent frEvent)
+            storeFloorRequest(frEvent);
+        else if (event instanceof PassengerLoadEvent plEvent) {
+            transmitterToElevator.send(new MovePassengersCommand(plEvent.elevNumber(), plEvent.passengers()));
+        } else if (event instanceof ReceiverBindingEvent rbEvent) {
+            System.out.println("Bound with: " + rbEvent);
+            Class<? extends Subsystem> subsystemType = rbEvent.subsystemType();
+            if (subsystemType.equals(Elevator.class)) {
+                transmitterToElevator.addReceiver(rbEvent.receiver());
+            } else if (subsystemType.equals(Floor.class)) {
+                transmitterToFloor.addReceiver(rbEvent.receiver());
+            } else
+                throw new InvalidTypeException("Unknown subsystem (" + subsystemType +
+                        ") attempted to bind to scheduler.");
+        }
         else // Default, should never happen
-            throw new InvalidTypeException("Event type received cannot be handled by this subsystem.");
+            throw new InvalidTypeException("Event type (" + event.getClass() +
+                    ") received cannot be handled by this subsystem.");
     }
 
     @Override

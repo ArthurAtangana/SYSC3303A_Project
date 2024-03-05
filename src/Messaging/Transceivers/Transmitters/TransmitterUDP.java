@@ -4,7 +4,7 @@ import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.ReceiverUDP;
 import Messaging.Transceivers.TransceiverUtility;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 
@@ -22,7 +22,8 @@ public class TransmitterUDP extends Transmitter<ReceiverUDP> {
      */
     // TODO: Late bind, instead of bind on port (make use of super class)
     public TransmitterUDP() {
-        super();
+        // IMPORTANT: The class written here has to be the same as the concrete generic in the class definition "<>"
+        super(ReceiverUDP.class);
         this.receiverKeys = new ArrayList<>();
         // Initialize socket to send messages on
         try {
