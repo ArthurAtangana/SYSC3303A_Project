@@ -11,7 +11,6 @@ import Messaging.Messages.Events.ReceiverBindingEvent;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
-import Subsystem.ElevatorSubsytem.States.ReceivingState;
 import Subsystem.Subsystem;
 import com.sun.jdi.InvalidTypeException;
 import StatePatternLib.*;
@@ -34,8 +33,6 @@ public class Elevator extends Context implements Runnable, Subsystem {
     private final Receiver receiver;
 
     public Elevator(int elevNum, Receiver receiver, Transmitter transmitter) {
-        // Context constructor
-        super(new ReceivingState());
 
         // Configure Elevator from JSON
         String jsonFilename = "res/system-config-00.json";
@@ -132,6 +129,12 @@ public class Elevator extends Context implements Runnable, Subsystem {
 
     @Override
     public void run() {
+        // Set initial state.
+        //
+        // Decision to set initial state in method run because the elevator
+        // has no state until method run is invoked.
+        setState(new ReceivingState(this));
+
         while (true){
             sendStateUpdate();
             try {
@@ -139,6 +142,28 @@ public class Elevator extends Context implements Runnable, Subsystem {
             } catch (InvalidTypeException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    /**
+     * Class representing receiving state for Elevator.
+     *
+     * ReceivingState is a subclass of Elevator in order to access private methods
+     * in Elevator.
+     *
+     * @author Braeden Kloke
+     * @version March 4, 2024
+     */
+    public class ReceivingState extends State {
+
+        public ReceivingState(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void entry() {
+            Elevator elevator = (Elevator) this.context;
+            elevator.sendStateUpdate();
         }
     }
 }

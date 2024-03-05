@@ -11,16 +11,15 @@ public abstract class Context {
     State state; // Current state of state machine
 
     /**
-     * Parametric constructor for state machine.
+     * Default constructor for state machine.
      *
-     * @param initialState Initial state of state machine.
+     * Newly constructed state machine requires initial state to be set
+     * using method setState.
      *
      * @author Braeden Kloke
      * @version March 4, 2024
      */
-    public Context(State initialState) {
-        setState(initialState);
-    }
+    public Context() { this.state = null; }
 
     /**
      * Transitions the state machine to the given state.
@@ -32,5 +31,6 @@ public abstract class Context {
      */
     public void setState(State state) {
         this.state = state;
+        this.state.entry();
     }
 }
