@@ -13,6 +13,7 @@ import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
 import Subsystem.Subsystem;
 import com.sun.jdi.InvalidTypeException;
+import StatePatternLib.*;
 
 import java.util.HashMap;
 
@@ -21,7 +22,7 @@ import java.util.HashMap;
  *
  * @version Iteration-2
  */
-public class Elevator implements Runnable, Subsystem {
+public class Elevator extends Context implements Runnable, Subsystem {
     /** Single floor travel time */
     private final int elevNum;
     private int currentFloor;
@@ -32,6 +33,8 @@ public class Elevator implements Runnable, Subsystem {
     private final Receiver receiver;
 
     public Elevator(int elevNum, Receiver receiver, Transmitter transmitter) {
+        // Context constructor
+        super(null);
 
         // Configure Elevator from JSON
         String jsonFilename = "res/system-config-00.json";
