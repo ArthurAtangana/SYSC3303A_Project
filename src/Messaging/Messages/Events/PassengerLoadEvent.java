@@ -11,5 +11,6 @@ import java.util.ArrayList;
  * @author Alexandre Marques
  * @version Iteration-2
  */
-public record PassengerLoadEvent(ArrayList<DestinationEvent> passengers) implements SystemEvent, Serializable {
+public record PassengerLoadEvent(int elevNumber,
+                                 ArrayList<DestinationEvent> passengers) implements SystemEvent, Serializable {
 }
