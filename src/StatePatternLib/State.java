@@ -7,4 +7,6 @@ package StatePatternLib;
  * @version March 4, 2024
  */
 public abstract class State {
+
+    public State() {}
 }

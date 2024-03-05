@@ -11,6 +11,7 @@ import Messaging.Messages.Events.ReceiverBindingEvent;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
+import Subsystem.ElevatorSubsytem.States.ReceivingState;
 import Subsystem.Subsystem;
 import com.sun.jdi.InvalidTypeException;
 import StatePatternLib.*;
@@ -34,7 +35,7 @@ public class Elevator extends Context implements Runnable, Subsystem {
 
     public Elevator(int elevNum, Receiver receiver, Transmitter transmitter) {
         // Context constructor
-        super(null);
+        super(new ReceivingState());
 
         // Configure Elevator from JSON
         String jsonFilename = "res/system-config-00.json";
