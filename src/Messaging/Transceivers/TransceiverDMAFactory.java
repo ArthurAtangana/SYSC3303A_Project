@@ -7,7 +7,7 @@ import Messaging.Transceivers.Transmitters.TransmitterDMA;
 
 public class TransceiverDMAFactory implements TransceiverFactory {
     // Define server_receiver as a singleton
-    private static final ReceiverDMA server_receiver = new ReceiverDMA(0);
+    private static final ReceiverDMA serverReceiver = new ReceiverDMA(0);
 
     /**
      * Receiver for the server, receives the client events.
@@ -16,7 +16,7 @@ public class TransceiverDMAFactory implements TransceiverFactory {
      */
     @Override
     public Receiver createServerReceiver() {
-        return server_receiver;
+        return serverReceiver;
     }
 
     /**
@@ -50,7 +50,7 @@ public class TransceiverDMAFactory implements TransceiverFactory {
     public Transmitter<ReceiverDMA> createClientTransmitter() {
         TransmitterDMA clientTransmitter = new TransmitterDMA();
         // Bind client to server
-        clientTransmitter.addReceiver(server_receiver);
+        clientTransmitter.addReceiver(serverReceiver);
         return clientTransmitter;
     }
 }

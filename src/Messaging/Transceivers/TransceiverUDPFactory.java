@@ -7,7 +7,7 @@ import Messaging.Transceivers.Transmitters.TransmitterUDP;
 
 public class TransceiverUDPFactory implements TransceiverFactory {
     // Define server_receiver as a singleton
-    private static final ReceiverUDP server_receiver = new ReceiverUDP(0, 8008);
+    private static final ReceiverUDP serverReceiver = new ReceiverUDP(0, 8008);
 
     /**
      * Receiver for the server, receives the client events.
@@ -16,7 +16,7 @@ public class TransceiverUDPFactory implements TransceiverFactory {
      */
     @Override
     public Receiver createServerReceiver() {
-        return server_receiver;
+        return serverReceiver;
     }
 
     /**
@@ -53,7 +53,7 @@ public class TransceiverUDPFactory implements TransceiverFactory {
     public Transmitter<ReceiverUDP> createClientTransmitter() {
         TransmitterUDP clientTransmitter = new TransmitterUDP();
         // Bind client to server
-        clientTransmitter.addReceiver(server_receiver);
+        clientTransmitter.addReceiver(serverReceiver);
         return clientTransmitter;
     }
 }
