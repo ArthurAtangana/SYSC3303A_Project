@@ -136,13 +136,42 @@ public class Elevator extends Context implements Runnable, Subsystem {
         setState(new ReceivingState(this));
 
         while (true){
-            sendStateUpdate();
-            try {
-                processMessage(receiver.dequeueMessage());
-            } catch (InvalidTypeException e) {
-                throw new RuntimeException(e);
+            // Wait until an event occurs in this state machine
+            event = receiver.dequeueMessage();
+
+            // Handle the event occurring in this state machine
+            if (event instanceof MoveElevatorCommand) {
+                ((ElevatorState) state).handleMoveElevatorCommand();
+            } else {
+                try {
+                    processMessage(event);
+                } catch (InvalidTypeException e) {
+                    throw new RuntimeException(e);
+                }
+                sendStateUpdate();
             }
         }
+    }
+
+    /**
+     * Abstract class representing an elevator state.
+     *
+     * @author Braeden Kloke
+     * @version March 4, 2024
+     */
+    public abstract class ElevatorState extends State {
+
+        public ElevatorState(Context context) {
+            super(context);
+        }
+
+        /**
+         * Handles state machine behaviour when event MoveElevatorCommand occurs.
+         *
+         * @author Braeden Kloke
+         * @version March 4, 2024
+         */
+        public void handleMoveElevatorCommand() {}
     }
 
     /**
@@ -154,7 +183,7 @@ public class Elevator extends Context implements Runnable, Subsystem {
      * @author Braeden Kloke
      * @version March 4, 2024
      */
-    public class ReceivingState extends State {
+    public class ReceivingState extends ElevatorState {
 
         public ReceivingState(Context context) {
             super(context);
@@ -164,6 +193,30 @@ public class Elevator extends Context implements Runnable, Subsystem {
         public void entry() {
             Elevator elevator = (Elevator) this.context;
             elevator.sendStateUpdate();
+        }
+
+        @Override
+        public void handleMoveElevatorCommand() {
+            setState(new MovingState(context));
+        }
+    }
+
+    /**
+     * Class representing the state for an elevator moving.
+     *
+     * @author Braeden Kloke
+     * @version March 5, 2024
+     */
+    public class MovingState extends ElevatorState {
+        public MovingState(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void doActivity() {
+            Elevator elevator = (Elevator) context;
+            elevator.move(((MoveElevatorCommand) event).direction());
+            setState(new ReceivingState(context));
         }
     }
 }

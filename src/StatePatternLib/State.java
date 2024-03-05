@@ -28,4 +28,14 @@ public abstract class State {
      * @version March 4, 2024
      */
     public void entry() {}
+
+    /**
+     * Activity to be performed by a state.
+     *
+     * Would have liked to name method 'do'. But 'do' is a reserved keyword in Java.
+     *
+     * @author Braeden Kloke
+     * @version March 5, 2024
+     */
+    public void doActivity() {}
 }

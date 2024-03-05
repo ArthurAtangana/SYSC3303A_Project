@@ -1,5 +1,7 @@
 package StatePatternLib;
 
+import Messaging.Messages.SystemMessage;
+
 /**
  * Abstract class representing the context of a state machine.
  *
@@ -8,7 +10,8 @@ package StatePatternLib;
  */
 public abstract class Context {
 
-    State state; // Current state of state machine
+    protected State state; // Current state of state machine
+    protected SystemMessage event; // Event occurring in state machine
 
     /**
      * Default constructor for state machine.
@@ -19,7 +22,10 @@ public abstract class Context {
      * @author Braeden Kloke
      * @version March 4, 2024
      */
-    public Context() { this.state = null; }
+    public Context() {
+        this.state = null;
+        this.event = null;
+    }
 
     /**
      * Transitions the state machine to the given state.
@@ -32,5 +38,6 @@ public abstract class Context {
     public void setState(State state) {
         this.state = state;
         this.state.entry();
+        this.state.doActivity();
     }
 }
