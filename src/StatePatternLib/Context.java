@@ -30,8 +30,8 @@ public abstract class Context {
      * @author Braeden Kloke
      */
     public Context() {
-        this.state = null;
-        this.event = null;
+        state = null;
+        event = null;
     }
 
     /**
@@ -43,9 +43,9 @@ public abstract class Context {
      * @author Braeden Kloke
      */
     public void changeState(State nextState) {
-        // this.state.exit()
-        this.state = nextState;
-        this.state.entry();
-        this.state.doActivity();
+        if (state != null) {state.exit();}
+        state = nextState;
+        state.entry();
+        state.doActivity();
     }
 }

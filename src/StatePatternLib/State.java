@@ -35,4 +35,13 @@ public abstract class State {
     public void doActivity() {
         // Would have liked to name method 'do'. But 'do' is a reserved keyword in Java.
     }
+
+    /**
+     * Action to be done upon exiting a state.
+     *
+     * @author Braeden Kloke
+     */
+    public void exit() {
+
+    }
 }
