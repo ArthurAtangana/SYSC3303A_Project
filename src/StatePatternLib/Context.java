@@ -6,16 +6,21 @@ import Messaging.Messages.SystemMessage;
  * Abstract class representing the context of a state machine.
  *
  * @author Braeden Kloke
- * @version March 5, 2024
+ * @version March 6, 2024
  */
 public abstract class Context {
 
     protected State state; // Current state of state machine
 
-    // Event occurring in state machine
+    // Event acting on state machine
     //
-    // Decision to store event as a protected attribute because various
-    // event handling methods require data contained in the event.
+    // Researched state machine patterns assume there is no attached data
+    // from events acting on the state machine. In other words, the fact
+    // that an event has happened is all the information the state machine
+    // needs to modify its state.
+    //
+    // However, our state machine design requires the data contained in the event.
+    // Thus, I've decided to store the event as a protected attribute.
     //
     // Alternative solution would be to pass event to every method but
     // this seems egregious.
