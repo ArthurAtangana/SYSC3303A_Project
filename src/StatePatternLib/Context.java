@@ -6,12 +6,20 @@ import Messaging.Messages.SystemMessage;
  * Abstract class representing the context of a state machine.
  *
  * @author Braeden Kloke
- * @version March 4, 2024
+ * @version March 5, 2024
  */
 public abstract class Context {
 
     protected State state; // Current state of state machine
-    protected SystemMessage event; // Event occurring in state machine
+
+    // Event occurring in state machine
+    //
+    // Decision to store event as a protected attribute because various
+    // event handling methods require data contained in the event.
+    //
+    // Alternative solution would be to pass event to every method but
+    // this seems egregious.
+    protected SystemMessage event;
 
     /**
      * Default constructor for state machine.
@@ -20,7 +28,6 @@ public abstract class Context {
      * using method setState.
      *
      * @author Braeden Kloke
-     * @version March 4, 2024
      */
     public Context() {
         this.state = null;
@@ -28,14 +35,15 @@ public abstract class Context {
     }
 
     /**
-     * Transitions the state machine to the given state.
+     * Transitions this state machine from its current state to the
+     * given state.
      *
      * @param state State to be transitioned to.
      *
      * @author Braeden Kloke
-     * @version March 4, 2024
      */
     public void setState(State state) {
+        // this.state.exit()
         this.state = state;
         this.state.entry();
         this.state.doActivity();

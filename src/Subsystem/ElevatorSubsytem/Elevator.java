@@ -8,7 +8,6 @@ import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import Messaging.Messages.Events.ReceiverBindingEvent;
-import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
 import Subsystem.Subsystem;
@@ -21,6 +20,13 @@ import java.util.HashMap;
  * Elevator class which models an elevator in the simulation.
  *
  * @version Iteration-2
+ *
+ * @author Braeden Kloke
+ * @version March 5, 2024
+ * Implemented state pattern. Decision to implement states as subclasses of Elevator
+ * to allow various state methods to access private methods within Elevator.
+ * Alternative would be making some Elevator methods public, but I'm sure this will cause
+ * the world to implode. So best not.
  */
 public class Elevator extends Context implements Runnable, Subsystem {
     /** Single floor travel time */
@@ -115,6 +121,9 @@ public class Elevator extends Context implements Runnable, Subsystem {
         //
         // Decision to set initial state in method run because the elevator
         // has no state until method run is invoked.
+        //
+        // Alternative would be setting initial state in constructor but this
+        // causes funny business with transmitters and receivers.
         setState(new ReceivingState(this));
 
         while (true){
@@ -137,7 +146,7 @@ public class Elevator extends Context implements Runnable, Subsystem {
      * Abstract class representing an elevator state.
      *
      * @author Braeden Kloke
-     * @version March 4, 2024
+     * @version March 5, 2024
      */
     public abstract class ElevatorState extends State {
 
@@ -149,7 +158,6 @@ public class Elevator extends Context implements Runnable, Subsystem {
          * Handles state machine behaviour when event MoveElevatorCommand occurs.
          *
          * @author Braeden Kloke
-         * @version March 4, 2024
          */
         public void handleMoveElevatorCommand() {}
 
@@ -157,19 +165,15 @@ public class Elevator extends Context implements Runnable, Subsystem {
          * Handles state machine behaviour when event MovePassengersCommand occurs.
          *
          * @author Braeden Kloke
-         * @version March 5, 2024
          */
         public void handleMovePassengersCommand() {}
     }
 
     /**
-     * Class representing receiving state for Elevator.
-     *
-     * ReceivingState is a subclass of Elevator in order to access private methods
-     * in Elevator.
+     * Class representing the state for an elevator receiving system messages.
      *
      * @author Braeden Kloke
-     * @version March 4, 2024
+     * @version March 5, 2024
      */
     public class ReceivingState extends ElevatorState {
 
@@ -207,8 +211,9 @@ public class Elevator extends Context implements Runnable, Subsystem {
 
         @Override
         public void doActivity() {
-            Elevator elevator = (Elevator) context;
-            elevator.move(((MoveElevatorCommand) event).direction());
+            ((Elevator) context).move(((MoveElevatorCommand) event).direction());
+
+            // Once done, transition back to receiving state
             setState(new ReceivingState(context));
         }
     }
@@ -233,7 +238,7 @@ public class Elevator extends Context implements Runnable, Subsystem {
         public void doActivity() {
             ((Elevator) context).load(((MovePassengersCommand) event));
 
-            // Once done, instantly transition back to receiving state
+            // Once done, transition back to receiving state
             setState(new ReceivingState(context));
         }
     }
