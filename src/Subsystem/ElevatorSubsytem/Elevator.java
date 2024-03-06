@@ -109,24 +109,6 @@ public class Elevator extends Context implements Runnable, Subsystem {
         transmitterToScheduler.send(stateEvent);
     }
 
-    /**
-     * Process the given event, identify type and select an action or activity based on it.
-     *
-     * @param event The event to process
-     * @throws InvalidTypeException If it receives an event type this class cannot handle
-     */
-    private void processMessage(SystemMessage event) throws InvalidTypeException {
-        // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.
-        if (event instanceof MoveElevatorCommand)
-            move(((MoveElevatorCommand) event).direction());
-        else if (event instanceof MovePassengersCommand) {
-            unload();
-            load((MovePassengersCommand) event);
-        }
-        else // Default, should never happen
-            throw new InvalidTypeException("Event type received cannot be handled by this subsystem.");
-    }
-
     @Override
     public void run() {
         // Set initial state.
@@ -145,14 +127,8 @@ public class Elevator extends Context implements Runnable, Subsystem {
             } else if (event instanceof MovePassengersCommand) {
                 ((ElevatorState) state).handleMovePassengersCommand();
             } else {
-                /*
-                try {
-                    processMessage(event);
-                } catch (InvalidTypeException e) {
-                    throw new RuntimeException(e);
-                }
-                sendStateUpdate();
-                 */
+                InvalidTypeException e = new InvalidTypeException("Event type received cannot be handled by this subsystem.");
+                throw new RuntimeException(e);
             }
         }
     }
