@@ -38,13 +38,13 @@ public abstract class Context {
      * Transitions this state machine from its current state to the
      * given state.
      *
-     * @param state State to be transitioned to.
+     * @param nextState State to be transitioned to.
      *
      * @author Braeden Kloke
      */
-    public void changeState(State state) {
+    public void changeState(State nextState) {
         // this.state.exit()
-        this.state = state;
+        this.state = nextState;
         this.state.entry();
         this.state.doActivity();
     }
