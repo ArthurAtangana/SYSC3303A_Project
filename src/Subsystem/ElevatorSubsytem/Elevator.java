@@ -121,7 +121,7 @@ public class Elevator extends Context implements Runnable, Subsystem {
         //
         // Alternative would be setting initial state in constructor but this
         // causes funny business with transmitters and receivers.
-        setState(new ReceivingState(this));
+        changeState(new ReceivingState(this));
 
         while (true){
             // Wait until an event occurs in this state machine

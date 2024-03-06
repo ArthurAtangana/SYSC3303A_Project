@@ -19,6 +19,6 @@ public class MovingState extends ElevatorState {
         ((Elevator) context).move(((MoveElevatorCommand) context.event).direction());
 
         // Once done, transition back to receiving state
-        context.setState(new ReceivingState(context));
+        context.changeState(new ReceivingState(context));
     }
 }

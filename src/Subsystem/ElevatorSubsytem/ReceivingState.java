@@ -22,11 +22,11 @@ public class ReceivingState extends ElevatorState {
 
     @Override
     public void handleMoveElevatorCommand() {
-        context.setState(new MovingState(context));
+        context.changeState(new MovingState(context));
     }
 
     @Override
     public void handleMovePassengersCommand() {
-        context.setState(new LoadingState(context));
+        context.changeState(new LoadingState(context));
     }
 }

@@ -42,7 +42,7 @@ public abstract class Context {
      *
      * @author Braeden Kloke
      */
-    public void setState(State state) {
+    public void changeState(State state) {
         // this.state.exit()
         this.state = state;
         this.state.entry();

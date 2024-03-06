@@ -24,6 +24,6 @@ public class LoadingState extends ElevatorState {
         ((Elevator) context).load(((MovePassengersCommand) context.event));
 
         // Once done, transition back to receiving state
-        context.setState(new ReceivingState(context));
+        context.changeState(new ReceivingState(context));
     }
 }
