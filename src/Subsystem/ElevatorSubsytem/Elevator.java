@@ -22,11 +22,8 @@ import java.util.HashMap;
  * @version Iteration-2
  *
  * @author Braeden Kloke
- * @version March 5, 2024
- * Implemented state pattern. Decision to implement states as subclasses of Elevator
- * to allow various state methods to access private methods within Elevator.
- * Alternative would be making some Elevator methods public and packaging up the states.
- * But I'm sure this will cause the world to implode. So best not.
+ * @version March 6, 2024
+ * Implemented state pattern.
  */
 public class Elevator extends Context implements Runnable, Subsystem {
     /** Single floor travel time */
@@ -62,7 +59,7 @@ public class Elevator extends Context implements Runnable, Subsystem {
      *
      * @param direction the direction to travel towards.
      */
-    private void move(Direction direction) {
+    void move(Direction direction) {
         System.out.printf("Elevator %s: Going %s from floor %s.%n",this.elevNum,direction,this.currentFloor);
         try {
             Thread.sleep(this.travelTime);
@@ -74,7 +71,7 @@ public class Elevator extends Context implements Runnable, Subsystem {
 
         System.out.printf("Elevator %s: Elevator reached floor #%s%n", this.elevNum, this.currentFloor);
     }
-    private void unload(){
+    void unload(){
         Direction direction = ElevatorUtilities.getPassengersDirection(passengerCountMap.keySet());
         if (direction == null){
             return;
@@ -92,7 +89,7 @@ public class Elevator extends Context implements Runnable, Subsystem {
     /**
      * Loads passengers in and/or out of the elevator
      */
-    private void load(MovePassengersCommand command){
+    void load(MovePassengersCommand command){
         System.out.println("Loading passengers: " + command.newPassengers());
         // load passengers into the elevator, taking LOAD_TIME per passengers waiting on the floor.
         try {
@@ -110,7 +107,7 @@ public class Elevator extends Context implements Runnable, Subsystem {
     /**
      * Update scheduler with this elevator's state.
      */
-    private void sendStateUpdate(){
+    void sendStateUpdate(){
         ElevatorStateEvent stateEvent = new ElevatorStateEvent(elevNum, currentFloor, passengerCountMap);
         transmitterToScheduler.send(stateEvent);
     }
@@ -139,107 +136,6 @@ public class Elevator extends Context implements Runnable, Subsystem {
                 InvalidTypeException e = new InvalidTypeException("Event type received cannot be handled by this subsystem.");
                 throw new RuntimeException(e);
             }
-        }
-    }
-
-    /**
-     * Abstract class representing an elevator state.
-     *
-     * @author Braeden Kloke
-     * @version March 5, 2024
-     */
-    public abstract class ElevatorState extends State {
-
-        public ElevatorState(Context context) {
-            super(context);
-        }
-
-        /**
-         * Handles state machine behaviour when event MoveElevatorCommand occurs.
-         *
-         * @author Braeden Kloke
-         */
-        public void handleMoveElevatorCommand() {}
-
-        /**
-         * Handles state machine behaviour when event MovePassengersCommand occurs.
-         *
-         * @author Braeden Kloke
-         */
-        public void handleMovePassengersCommand() {}
-    }
-
-    /**
-     * Class representing the state for an elevator receiving system messages.
-     *
-     * @author Braeden Kloke
-     * @version March 5, 2024
-     */
-    public class ReceivingState extends ElevatorState {
-
-        public ReceivingState(Context context) {
-            super(context);
-        }
-
-        @Override
-        public void entry() {
-            Elevator elevator = (Elevator) this.context;
-            elevator.sendStateUpdate();
-        }
-
-        @Override
-        public void handleMoveElevatorCommand() {
-            setState(new MovingState(context));
-        }
-
-        @Override
-        public void handleMovePassengersCommand() {
-            setState(new LoadingState(context));
-        }
-    }
-
-    /**
-     * Class representing the state for an elevator moving.
-     *
-     * @author Braeden Kloke
-     * @version March 5, 2024
-     */
-    public class MovingState extends ElevatorState {
-        public MovingState(Context context) {
-            super(context);
-        }
-
-        @Override
-        public void doActivity() {
-            ((Elevator) context).move(((MoveElevatorCommand) event).direction());
-
-            // Once done, transition back to receiving state
-            setState(new ReceivingState(context));
-        }
-    }
-
-    /**
-     * Class representing the state for an elevator loading / unloading passengers.
-     *
-     * @author Braeden Kloke
-     * @version March 5, 2024
-     */
-    public class LoadingState extends ElevatorState {
-
-        public LoadingState(Context context) {
-            super(context);
-        }
-
-        @Override
-        public void entry() {
-            ((Elevator) context).unload();
-        }
-        @Override
-        public void doActivity() {
-            ((Elevator) context).load(((MovePassengersCommand) event));
-
-            // Once done, transition back to receiving state
-            setState(new ReceivingState(context));
         }
     }
 }

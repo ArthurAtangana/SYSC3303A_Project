@@ -19,7 +19,7 @@ public abstract class Context {
     //
     // Alternative solution would be to pass event to every method but
     // this seems egregious.
-    protected SystemMessage event;
+    public SystemMessage event; // TODO: tmp public access modifier
 
     /**
      * Default constructor for state machine.
