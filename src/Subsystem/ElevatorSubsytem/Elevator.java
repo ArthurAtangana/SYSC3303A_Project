@@ -25,8 +25,8 @@ import java.util.HashMap;
  * @version March 5, 2024
  * Implemented state pattern. Decision to implement states as subclasses of Elevator
  * to allow various state methods to access private methods within Elevator.
- * Alternative would be making some Elevator methods public, but I'm sure this will cause
- * the world to implode. So best not.
+ * Alternative would be making some Elevator methods public and packaging up the states.
+ * But I'm sure this will cause the world to implode. So best not.
  */
 public class Elevator extends Context implements Runnable, Subsystem {
     /** Single floor travel time */
