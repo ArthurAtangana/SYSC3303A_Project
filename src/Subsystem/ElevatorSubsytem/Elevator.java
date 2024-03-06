@@ -226,8 +226,11 @@ public class Elevator extends Context implements Runnable, Subsystem {
         }
 
         @Override
-        public void doActivity() {
+        public void entry() {
             ((Elevator) context).unload();
+        }
+        @Override
+        public void doActivity() {
             ((Elevator) context).load(((MovePassengersCommand) event));
 
             // Once done, instantly transition back to receiving state
