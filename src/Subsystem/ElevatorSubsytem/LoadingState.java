@@ -21,7 +21,7 @@ public class LoadingState extends ElevatorState {
     }
     @Override
     public void doActivity() {
-        ((Elevator) context).load(((MovePassengersCommand) context.event));
+        ((Elevator) context).load(((MovePassengersCommand) context.getEvent()));
 
         // Once done, transition back to receiving state
         context.changeState(new ReceivingState(context));

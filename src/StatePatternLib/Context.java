@@ -19,7 +19,7 @@ public abstract class Context {
     //
     // Alternative solution would be to pass event to every method but
     // this seems egregious.
-    public SystemMessage event; // TODO: tmp public access modifier
+    protected SystemMessage event;
 
     /**
      * Default constructor for state machine.
@@ -48,4 +48,13 @@ public abstract class Context {
         state.entry();
         state.doActivity();
     }
+
+    /**
+     * Retrieves the event that has most recently acted on this state machine.
+     *
+     * @return Event that has most recently acted on this state machine.
+     *
+     * @author Braeden Kloke
+     */
+    public SystemMessage getEvent() {return event;}
 }
