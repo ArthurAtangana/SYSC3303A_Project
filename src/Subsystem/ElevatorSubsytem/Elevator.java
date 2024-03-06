@@ -142,13 +142,17 @@ public class Elevator extends Context implements Runnable, Subsystem {
             // Handle the event occurring in this state machine
             if (event instanceof MoveElevatorCommand) {
                 ((ElevatorState) state).handleMoveElevatorCommand();
+            } else if (event instanceof MovePassengersCommand) {
+                ((ElevatorState) state).handleMovePassengersCommand();
             } else {
+                /*
                 try {
                     processMessage(event);
                 } catch (InvalidTypeException e) {
                     throw new RuntimeException(e);
                 }
                 sendStateUpdate();
+                 */
             }
         }
     }
@@ -172,6 +176,14 @@ public class Elevator extends Context implements Runnable, Subsystem {
          * @version March 4, 2024
          */
         public void handleMoveElevatorCommand() {}
+
+        /**
+         * Handles state machine behaviour when event MovePassengersCommand occurs.
+         *
+         * @author Braeden Kloke
+         * @version March 5, 2024
+         */
+        public void handleMovePassengersCommand() {}
     }
 
     /**
@@ -199,6 +211,11 @@ public class Elevator extends Context implements Runnable, Subsystem {
         public void handleMoveElevatorCommand() {
             setState(new MovingState(context));
         }
+
+        @Override
+        public void handleMovePassengersCommand() {
+            setState(new LoadingState(context));
+        }
     }
 
     /**
@@ -216,6 +233,28 @@ public class Elevator extends Context implements Runnable, Subsystem {
         public void doActivity() {
             Elevator elevator = (Elevator) context;
             elevator.move(((MoveElevatorCommand) event).direction());
+            setState(new ReceivingState(context));
+        }
+    }
+
+    /**
+     * Class representing the state for an elevator loading / unloading passengers.
+     *
+     * @author Braeden Kloke
+     * @version March 5, 2024
+     */
+    public class LoadingState extends ElevatorState {
+
+        public LoadingState(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void doActivity() {
+            ((Elevator) context).unload();
+            ((Elevator) context).load(((MovePassengersCommand) event));
+
+            // Once done, instantly transition back to receiving state
             setState(new ReceivingState(context));
         }
     }
