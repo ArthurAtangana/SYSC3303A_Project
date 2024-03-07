@@ -8,11 +8,11 @@ import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import Messaging.Messages.Events.ReceiverBindingEvent;
-import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
 import Subsystem.Subsystem;
 import com.sun.jdi.InvalidTypeException;
+import StatePatternLib.*;
 
 import java.util.HashMap;
 
@@ -20,8 +20,12 @@ import java.util.HashMap;
  * Elevator class which models an elevator in the simulation.
  *
  * @version Iteration-2
+ *
+ * @author Braeden Kloke
+ * @version March 6, 2024
+ * Implemented state pattern.
  */
-public class Elevator implements Runnable, Subsystem {
+public class Elevator extends Context implements Runnable, Subsystem {
     /** Single floor travel time */
     private final int elevNum;
     private int currentFloor;
@@ -55,7 +59,7 @@ public class Elevator implements Runnable, Subsystem {
      *
      * @param direction the direction to travel towards.
      */
-    private void move(Direction direction) {
+    void move(Direction direction) {
         System.out.printf("Elevator %s: Going %s from floor %s.%n",this.elevNum,direction,this.currentFloor);
         try {
             Thread.sleep(this.travelTime);
@@ -67,7 +71,7 @@ public class Elevator implements Runnable, Subsystem {
 
         System.out.printf("Elevator %s: Elevator reached floor #%s%n", this.elevNum, this.currentFloor);
     }
-    private void unload(){
+    void unload(){
         Direction direction = ElevatorUtilities.getPassengersDirection(passengerCountMap.keySet());
         if (direction == null){
             return;
@@ -85,7 +89,7 @@ public class Elevator implements Runnable, Subsystem {
     /**
      * Loads passengers in and/or out of the elevator
      */
-    private void load(MovePassengersCommand command){
+    void load(MovePassengersCommand command){
         System.out.println("Loading passengers: " + command.newPassengers());
         // load passengers into the elevator, taking LOAD_TIME per passengers waiting on the floor.
         try {
@@ -103,36 +107,33 @@ public class Elevator implements Runnable, Subsystem {
     /**
      * Update scheduler with this elevator's state.
      */
-    private void sendStateUpdate(){
+    void sendStateUpdate(){
         ElevatorStateEvent stateEvent = new ElevatorStateEvent(elevNum, currentFloor, passengerCountMap);
         transmitterToScheduler.send(stateEvent);
     }
 
-    /**
-     * Process the given event, identify type and select an action or activity based on it.
-     *
-     * @param event The event to process
-     * @throws InvalidTypeException If it receives an event type this class cannot handle
-     */
-    private void processMessage(SystemMessage event) throws InvalidTypeException {
-        // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.
-        if (event instanceof MoveElevatorCommand)
-            move(((MoveElevatorCommand) event).direction());
-        else if (event instanceof MovePassengersCommand) {
-            unload();
-            load((MovePassengersCommand) event);
-        }
-        else // Default, should never happen
-            throw new InvalidTypeException("Event type received cannot be handled by this subsystem.");
-    }
-
     @Override
     public void run() {
+        // Set initial state.
+        //
+        // Decision to set initial state in method run because the elevator
+        // has no state until method run is invoked.
+        //
+        // Alternative would be setting initial state in constructor but this
+        // causes funny business with transmitters and receivers.
+        changeState(new ReceivingState(this));
+
         while (true){
-            sendStateUpdate();
-            try {
-                processMessage(receiver.dequeueMessage());
-            } catch (InvalidTypeException e) {
+            // Wait until an event occurs in this state machine
+            event = receiver.dequeueMessage();
+
+            // Handle the event occurring in this state machine
+            if (event instanceof MoveElevatorCommand) {
+                ((ElevatorState) state).handleMoveElevatorCommand();
+            } else if (event instanceof MovePassengersCommand) {
+                ((ElevatorState) state).handleMovePassengersCommand();
+            } else {
+                InvalidTypeException e = new InvalidTypeException("Event type received cannot be handled by this subsystem.");
                 throw new RuntimeException(e);
             }
         }
