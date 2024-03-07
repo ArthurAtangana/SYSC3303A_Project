@@ -2,14 +2,11 @@ package Messaging.Transceivers.Transmitters;
 
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.ReceiverUDP;
+import Messaging.Transceivers.TransceiverUtility;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
+import java.io.*;
+import java.net.*;
+import java.util.ArrayList;
 
 /**
  * TransmitterUDP class, provides a way to send messages to UDP_Receivers.
@@ -17,7 +14,8 @@ import java.net.SocketException;
  * @version Iteration-3
  */
 public class TransmitterUDP extends Transmitter<ReceiverUDP> {
-    private final DatagramSocket sendSocket;
+    private final DatagramSocket sendSocket, replyReceiverSocket;
+    private final ArrayList<Integer> receiverKeys;
 
     /**
      * Initializes a UDP DatagramSocket that will send SystemMessages to its receivers.
@@ -25,11 +23,19 @@ public class TransmitterUDP extends Transmitter<ReceiverUDP> {
     // TODO: Late bind, instead of bind on port (make use of super class)
     public TransmitterUDP() {
         super();
+        this.receiverKeys = new ArrayList<>();
         // Initialize socket to send messages on
         try {
             this.sendSocket = new DatagramSocket();
         } catch (SocketException e) {
             throw new RuntimeException(e);
+        }
+        // Initialize socket to receive reply messages on
+        try {
+            this.replyReceiverSocket = new DatagramSocket(TransceiverUtility.REPLY_PORT);
+            replyReceiverSocket.setSoTimeout(1000);
+        } catch (SocketException se) {
+            throw new RuntimeException(se);
         }
     }
 
@@ -41,7 +47,7 @@ public class TransmitterUDP extends Transmitter<ReceiverUDP> {
     @Override
     public void send(SystemMessage message) {
         // Try to send this message to each receiver bound to this transmitter
-        byte[] msg = serializeSystemMessage(message);
+        byte[] msg = TransceiverUtility.serializeSystemMessage(message);
 
         for (ReceiverUDP rx : receivers) {
             try {
@@ -52,31 +58,55 @@ public class TransmitterUDP extends Transmitter<ReceiverUDP> {
                 throw new RuntimeException(e);
             }
         }
+        receiveReplies();
     }
 
     /**
-     * Serializes a SystemMessage into a byte array.
+     * Stores the destReceiver key into the receiverKeys array.
      *
-     * @param message SystemMessage to be serialized into a byte array.
-     * @return byte array of serialized message.
+     * @param destReceiver The receiver to bind to this transmitter.
      */
-    private byte[] serializeSystemMessage(SystemMessage message) {
-        ByteArrayOutputStream packet = new ByteArrayOutputStream();
-        byte[] serializedData = new byte[0];
-        try {
-            ObjectOutputStream object = new ObjectOutputStream(packet);
-            object.writeObject(message);
-            object.close();
-            serializedData = packet.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return serializedData;
+    @Override
+    public void addReceiver(ReceiverUDP destReceiver) {
+        super.addReceiver(destReceiver);
+        receiverKeys.add(destReceiver.getKey());
     }
 
-    public SystemMessage receiveReply(){
-        // #TODO
-        // return replyReceiver.receive();
-        return null;
+    private void receiveReplies() {
+        ArrayList<Integer> receiverFlags = receiverKeys;
+        System.out.println("receiverFlags: "  + receiverFlags);
+
+        for (int i = 0; i< receivers.size(); i++) {
+            byte[] data = new byte[4];
+            DatagramPacket receivePacket = new DatagramPacket(data, data.length);
+            try {
+                replyReceiverSocket.receive(receivePacket);
+                System.out.println("PACKET RECEIVED!");
+            } catch (SocketTimeoutException e) {
+                System.out.println("No activity after 2 second...");
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+            byte[] replyMessage = receivePacket.getData();
+            for (int a = 0; a < replyMessage.length; a++) {
+                System.out.print(data[a] + " ");
+            }
+            System.out.println();
+
+            int receiverKey = replyMessage[i];
+            if (receiverFlags.contains(receiverKey)) {
+                int index = receiverFlags.indexOf(receiverKey);
+                receiverFlags.set(index, -1);
+            }
+        }
+
+        for (int i = 0; i < receiverFlags.size(); i++) {
+            if (receiverFlags.get(i) != -1) {
+                System.out.println("Did not receive a reply message from " + receiverFlags.get(i));
+            }
+        }
+
+        // #TODO resend to the receivers that haven't replied
     }
 }

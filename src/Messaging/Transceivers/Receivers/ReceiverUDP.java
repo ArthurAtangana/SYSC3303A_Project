@@ -1,10 +1,9 @@
 package Messaging.Transceivers.Receivers;
 
 import Messaging.Messages.SystemMessage;
+import Messaging.Transceivers.TransceiverUtility;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -17,6 +16,7 @@ import java.net.SocketException;
 public class ReceiverUDP extends Receiver implements Runnable {
     public final int MAX_MSG_SIZE = 255;
     private final DatagramSocket receiveSocket;
+    private byte[] responseMessage;
 
     /**
      * Initializes a UDP DatagramSocket that listens on the specified port.
@@ -30,6 +30,7 @@ public class ReceiverUDP extends Receiver implements Runnable {
         } catch (SocketException e) {
             throw new RuntimeException(e);
         }
+        responseMessage = new byte[]{(byte) key, 2, 3, 4};
     }
 
     /**
@@ -53,29 +54,35 @@ public class ReceiverUDP extends Receiver implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        SystemMessage deserializedMessage = deserializeSystemMessage(packet.getData());
-
+        SystemMessage deserializedMessage = TransceiverUtility.deserializeSystemMessage(packet.getData());
         enqueueMessage(deserializedMessage);
+
+        sendReply(packet);
     }
 
     /**
-     * Deserializes a SystemMessage from a DatagramPacket's data.
+     * Creates a temporary DatagramSocket and sends a response packet to the transmitter.
      *
-     * @param message DatagramPacket byte array.
-     * @return SystemMessage object.
+     * @param packet Packet that was received from the receiveSocket.
      */
-    private SystemMessage deserializeSystemMessage(byte[] message) {
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(message);
-        SystemMessage deserializedMessage = null;
+    private void sendReply(DatagramPacket packet) {
+        DatagramPacket sendPacket = new DatagramPacket(responseMessage, responseMessage.length,
+                packet.getAddress(), TransceiverUtility.REPLY_PORT);
+
+        DatagramSocket tempSocket = null;
         try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-            deserializedMessage = (SystemMessage) objectInputStream.readObject();
+            tempSocket = new DatagramSocket();
+        } catch (SocketException se) {
+            se.printStackTrace();
+            System.exit(1);
+        }
+        try {
+            tempSocket.send(sendPacket);
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            System.exit(1);
         }
-        return deserializedMessage;
+        tempSocket.close();
     }
 
     /**
