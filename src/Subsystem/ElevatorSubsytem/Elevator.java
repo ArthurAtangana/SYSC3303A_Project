@@ -24,7 +24,7 @@ import java.util.HashMap;
  * @version March 6, 2024
  * Implemented state pattern.
  */
-public class Elevator extends Context implements Runnable, Subsystem {
+public class Elevator extends Context implements Subsystem {
     /** Single floor travel time */
     private final int elevNum;
     private int currentFloor;
@@ -118,10 +118,4 @@ public class Elevator extends Context implements Runnable, Subsystem {
         return event;
     }
 
-    @Override
-    public void run() {
-        while (currentState != null){
-            currentState.runState();
-        }
-    }
 }
