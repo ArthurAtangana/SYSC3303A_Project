@@ -31,10 +31,8 @@ public class ReceivingState extends State {
     @Override
     public void doActivity() {
         if (event instanceof MoveElevatorCommand){
-            System.out.println("receiving state to moving");
             context.setNextState(new MovingState(context, ((MoveElevatorCommand) event).direction()));
         } else if (event instanceof MovePassengersCommand) {
-            System.out.println("receiving state to loading");
             context.setNextState(new LoadingState(context, (MovePassengersCommand) event));
         } else {
             InvalidTypeException e = new InvalidTypeException("Event type received cannot be handled by this subsystem.");
