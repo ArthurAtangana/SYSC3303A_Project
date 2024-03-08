@@ -4,6 +4,7 @@ import Messaging.Messages.Commands.MoveElevatorCommand;
 import Messaging.Messages.Commands.MovePassengersCommand;
 import Messaging.Messages.SystemMessage;
 import StatePatternLib.Context;
+import StatePatternLib.State;
 import com.sun.jdi.InvalidTypeException;
 
 /**
@@ -12,7 +13,7 @@ import com.sun.jdi.InvalidTypeException;
  * @author Braeden Kloke
  * @version March 6, 2024
  */
-public class ReceivingState extends ElevatorState {
+public class ReceivingState extends State {
     SystemMessage event;
 
     public ReceivingState(Context context) {
@@ -34,21 +35,10 @@ public class ReceivingState extends ElevatorState {
             context.setNextState(new MovingState(context, ((MoveElevatorCommand) event).direction()));
         } else if (event instanceof MovePassengersCommand) {
             System.out.println("receiving state to loading");
-            context.setNextState(new LoadingState(context));
+            context.setNextState(new LoadingState(context, (MovePassengersCommand) event));
         } else {
             InvalidTypeException e = new InvalidTypeException("Event type received cannot be handled by this subsystem.");
             throw new RuntimeException(e);
         }
     }
-/*
-    @Override
-    public void handleMoveElevatorCommand() {
-        context.changeState(new MovingState(context));
-    }
-
-    @Override
-    public void handleMovePassengersCommand() {
-        context.changeState(new LoadingState(context));
-    }
- */
 }

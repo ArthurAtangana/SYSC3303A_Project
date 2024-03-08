@@ -123,31 +123,5 @@ public class Elevator extends Context implements Runnable, Subsystem {
         while (currentState != null){
             currentState.runState();
         }
-        // Set initial state.
-        //
-        // Decision to set initial state in method run because the elevator
-        // has no state until method run is invoked.
-        //
-        // Alternative would be setting initial state in constructor but this
-        // causes funny business with transmitters and receivers.
-        /*
-        changeState(new ReceivingState(this));
-
-        while (true){
-            // Wait until an event occurs in this state machine
-            event = receiver.dequeueMessage();
-
-            // Handle the event occurring in this state machine
-            if (event instanceof MoveElevatorCommand) {
-                ((ElevatorState) currentState).handleMoveElevatorCommand();
-            } else if (event instanceof MovePassengersCommand) {
-                ((ElevatorState) currentState).handleMovePassengersCommand();
-            } else {
-                InvalidTypeException e = new InvalidTypeException("Event type received cannot be handled by this subsystem.");
-                throw new RuntimeException(e);
-            }
-        }
-
-         */
     }
 }
