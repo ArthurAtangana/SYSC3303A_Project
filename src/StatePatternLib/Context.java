@@ -12,15 +12,20 @@ import Messaging.Transceivers.Receivers.Receiver;
 public abstract class Context implements Runnable{
 
     protected State currentState; // Current state of state machine
+    protected Receiver receiver;
     /**
      * Default constructor for state machine.
      *
      * @author Braeden Kloke
      */
-    public Context() {
+    public Context(Receiver receiver) {
+        this.receiver = receiver;
     }
     public void setNextState(State nextState){
         currentState = nextState;
+    }
+    public SystemMessage receive(){
+        return receiver.dequeueMessage();
     }
     @Override
     public void run() {

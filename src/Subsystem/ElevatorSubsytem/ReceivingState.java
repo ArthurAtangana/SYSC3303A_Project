@@ -24,7 +24,7 @@ public class ReceivingState extends State {
     public void entry() {
         System.out.println("RECEIVING STATE");
         ((Elevator) context).sendStateUpdate();
-        event = ((Elevator) context).receive();
+        event = context.receive();
         System.out.println("received event: "+ event);
     }
 

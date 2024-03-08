@@ -7,7 +7,6 @@ import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import Messaging.Messages.Events.ReceiverBindingEvent;
-import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
 import Subsystem.Subsystem;
@@ -32,9 +31,9 @@ public class Elevator extends Context implements Subsystem {
     private final long loadTime;
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
     private final Transmitter<Receiver> transmitterToScheduler;
-    private final Receiver receiver;
 
     public Elevator(int elevNum, Receiver receiver, Transmitter transmitter) {
+        super(receiver);
 
         // Configure Elevator from JSON
         String jsonFilename = "res/system-config-00.json";
@@ -47,7 +46,6 @@ public class Elevator extends Context implements Subsystem {
         this.elevNum = elevNum;
         this.passengerCountMap = new HashMap<>();
         this.transmitterToScheduler = transmitter;
-        this.receiver = receiver;
 
         // Notify scheduler of new subsystem creation -> could fit in subsystem super class
         this.transmitterToScheduler.send(new ReceiverBindingEvent(receiver, this.getClass()));
@@ -111,11 +109,4 @@ public class Elevator extends Context implements Subsystem {
         ElevatorStateEvent stateEvent = new ElevatorStateEvent(elevNum, currentFloor, passengerCountMap);
         transmitterToScheduler.send(stateEvent);
     }
-    SystemMessage receive() {
-        System.out.println("receive in elevator");
-        SystemMessage event = receiver.dequeueMessage();
-        System.out.println(event);
-        return event;
-    }
-
 }
