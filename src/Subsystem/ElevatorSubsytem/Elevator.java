@@ -2,16 +2,15 @@ package Subsystem.ElevatorSubsytem;
 
 import Configuration.Config;
 import Configuration.Configurator;
-import Messaging.Messages.Commands.MoveElevatorCommand;
 import Messaging.Messages.Commands.MovePassengersCommand;
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import Messaging.Messages.Events.ReceiverBindingEvent;
+import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
 import Subsystem.Subsystem;
-import com.sun.jdi.InvalidTypeException;
 import StatePatternLib.*;
 
 import java.util.HashMap;
@@ -52,6 +51,7 @@ public class Elevator extends Context implements Runnable, Subsystem {
 
         // Notify scheduler of new subsystem creation -> could fit in subsystem super class
         this.transmitterToScheduler.send(new ReceiverBindingEvent(receiver, this.getClass()));
+        setNextState(new ReceivingState(this));
     }
 
     /**
@@ -111,9 +111,18 @@ public class Elevator extends Context implements Runnable, Subsystem {
         ElevatorStateEvent stateEvent = new ElevatorStateEvent(elevNum, currentFloor, passengerCountMap);
         transmitterToScheduler.send(stateEvent);
     }
+    SystemMessage receive() {
+        System.out.println("receive in elevator");
+        SystemMessage event = receiver.dequeueMessage();
+        System.out.println(event);
+        return event;
+    }
 
     @Override
     public void run() {
+        while (currentState != null){
+            currentState.runState();
+        }
         // Set initial state.
         //
         // Decision to set initial state in method run because the elevator
@@ -121,6 +130,7 @@ public class Elevator extends Context implements Runnable, Subsystem {
         //
         // Alternative would be setting initial state in constructor but this
         // causes funny business with transmitters and receivers.
+        /*
         changeState(new ReceivingState(this));
 
         while (true){
@@ -129,13 +139,15 @@ public class Elevator extends Context implements Runnable, Subsystem {
 
             // Handle the event occurring in this state machine
             if (event instanceof MoveElevatorCommand) {
-                ((ElevatorState) state).handleMoveElevatorCommand();
+                ((ElevatorState) currentState).handleMoveElevatorCommand();
             } else if (event instanceof MovePassengersCommand) {
-                ((ElevatorState) state).handleMovePassengersCommand();
+                ((ElevatorState) currentState).handleMovePassengersCommand();
             } else {
                 InvalidTypeException e = new InvalidTypeException("Event type received cannot be handled by this subsystem.");
                 throw new RuntimeException(e);
             }
         }
+
+         */
     }
 }

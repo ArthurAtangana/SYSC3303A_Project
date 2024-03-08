@@ -18,6 +18,11 @@ public abstract class State {
      * @author Braeden Kloke
      */
     public State(Context context) { this.context = context; }
+    public void runState(){
+        entry();
+        doActivity();
+        exit();
+    }
 
 
     /**
