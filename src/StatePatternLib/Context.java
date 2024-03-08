@@ -1,6 +1,7 @@
 package StatePatternLib;
 
 import Messaging.Messages.SystemMessage;
+import Messaging.Transceivers.Receivers.Receiver;
 
 /**
  * Abstract class representing the context of a state machine.
@@ -10,7 +11,7 @@ import Messaging.Messages.SystemMessage;
  */
 public abstract class Context {
 
-    protected State state; // Current state of state machine
+    protected State currentState; // Current state of state machine
 
     // Event acting on state machine
     //
@@ -25,6 +26,7 @@ public abstract class Context {
     // Alternative solution would be to pass event to every method but
     // this seems egregious.
     protected SystemMessage event;
+    //public Receiver receiver;
 
     /**
      * Default constructor for state machine.
@@ -35,9 +37,22 @@ public abstract class Context {
      * @author Braeden Kloke
      */
     public Context() {
-        state = null;
+        currentState = null;
         event = null;
     }
+    public void setNextState(State nextState){
+        currentState = nextState;
+    }
+    /*
+    public void setReceiver(Receiver receiver){
+        this.receiver = receiver;
+        System.out.println("receiver set in context");
+    }
+    public SystemMessage receive(){
+        return receiver.dequeueMessage();
+    }
+
+     */
 
     /**
      * Transitions this state machine from its current state to the
@@ -48,10 +63,11 @@ public abstract class Context {
      * @author Braeden Kloke
      */
     public void changeState(State nextState) {
-        if (state != null) {state.exit();}
-        state = nextState;
-        state.entry();
-        state.doActivity();
+        if (currentState != null) {
+            currentState.exit();}
+        currentState = nextState;
+        currentState.entry();
+        currentState.doActivity();
     }
 
     /**

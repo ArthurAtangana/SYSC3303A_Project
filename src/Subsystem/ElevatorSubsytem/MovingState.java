@@ -15,7 +15,13 @@ public class MovingState extends ElevatorState {
     }
 
     @Override
+    public void entry() {
+        System.out.println("MOVING STATE");
+    }
+
+    @Override
     public void doActivity() {
+
         ((Elevator) context).move(((MoveElevatorCommand) context.getEvent()).direction());
 
         // Once done, transition back to receiving state
