@@ -31,7 +31,7 @@ public class ReceivingState extends ElevatorState {
     public void doActivity() {
         if (event instanceof MoveElevatorCommand){
             System.out.println("receiving state to moving");
-            context.setNextState(new MovingState(context));
+            context.setNextState(new MovingState(context, ((MoveElevatorCommand) event).direction()));
         } else if (event instanceof MovePassengersCommand) {
             System.out.println("receiving state to loading");
             context.setNextState(new LoadingState(context));
@@ -40,7 +40,7 @@ public class ReceivingState extends ElevatorState {
             throw new RuntimeException(e);
         }
     }
-
+/*
     @Override
     public void handleMoveElevatorCommand() {
         context.changeState(new MovingState(context));
@@ -50,4 +50,5 @@ public class ReceivingState extends ElevatorState {
     public void handleMovePassengersCommand() {
         context.changeState(new LoadingState(context));
     }
+ */
 }

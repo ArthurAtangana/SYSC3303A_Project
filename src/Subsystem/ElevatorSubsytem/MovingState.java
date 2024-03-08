@@ -1,6 +1,7 @@
 package Subsystem.ElevatorSubsytem;
 
 import Messaging.Messages.Commands.MoveElevatorCommand;
+import Messaging.Messages.Direction;
 import StatePatternLib.Context;
 
 /**
@@ -10,8 +11,10 @@ import StatePatternLib.Context;
  * @version March 6, 2024
  */
 public class MovingState extends ElevatorState {
-    public MovingState(Context context) {
+    Direction direction;
+    public MovingState(Context context, Direction direction) {
         super(context);
+        this.direction = direction;
     }
 
     @Override
@@ -22,9 +25,10 @@ public class MovingState extends ElevatorState {
     @Override
     public void doActivity() {
 
-        ((Elevator) context).move(((MoveElevatorCommand) context.getEvent()).direction());
 
+        ((Elevator) context).move(direction);
+        context.setNextState(new ReceivingState(context));
         // Once done, transition back to receiving state
-        context.changeState(new ReceivingState(context));
+        //context.changeState(new ReceivingState(context));
     }
 }
