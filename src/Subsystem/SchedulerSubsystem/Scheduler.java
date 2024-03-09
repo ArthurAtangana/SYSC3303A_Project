@@ -3,6 +3,7 @@ package Subsystem.SchedulerSubsystem;
 import Messaging.Messages.Commands.MoveElevatorCommand;
 import Messaging.Messages.Commands.MovePassengersCommand;
 import Messaging.Messages.Commands.SendPassengersCommand;
+import Messaging.Messages.Commands.SystemCommand;
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.*;
 import Messaging.Messages.SystemMessage;
@@ -24,8 +25,8 @@ import java.util.*;
  */
 public class Scheduler extends Context implements Runnable, Subsystem {
     // TODO: Make fields private again, make access methods for subclasses instead
-    protected final Transmitter<? extends Receiver> transmitterToFloor;
-    protected final Transmitter<? extends Receiver> transmitterToElevator;
+    private final Transmitter<? extends Receiver> transmitterToFloor;
+    private final Transmitter<? extends Receiver> transmitterToElevator;
     private final Receiver receiver;
     protected final Map<DestinationEvent, Long> floorRequestsToTime;
     private final ArrayList<ElevatorStateEvent> idleElevators;
@@ -58,6 +59,42 @@ public class Scheduler extends Context implements Runnable, Subsystem {
 //        if (!idleElevators.isEmpty()){
 //            processElevatorEvent(idleElevators.remove(0));
 //        }
+    }
+
+    /**
+     * Bind Receiver to this Scheduler's Transmitter to Elevator.
+     *
+     * @param receiver The Receiver to bind.
+     */
+    void bindElevatorReceiver(Receiver receiver) {
+        transmitterToElevator.addReceiver(receiver);
+    }
+
+    /**
+     * Bind Receiver to this Scheduler's Transmitter to Floor.
+     *
+     * @param receiver The Receiver to bind.
+     */
+    void bindFloorReceiver(Receiver receiver) {
+        transmitterToFloor.addReceiver(receiver);
+    }
+
+    /**
+     * Transmit a SystemCommand to an Floor using this Scheduler's Transmitter.
+     *
+     * @param command The SystemCommand to send to the Floor.
+     */
+    void transmitToFloor(SystemCommand command) {
+        transmitterToFloor.send(command);
+    }
+
+    /**
+     * Transmit a SystemCommand to an Elevator using this Scheduler's Transmitter.
+     *
+     * @param command The SystemCommand to send to the Elevator.
+     */
+    void transmitToElevator(SystemCommand command) {
+        transmitterToElevator.send(command);
     }
 
     /**
