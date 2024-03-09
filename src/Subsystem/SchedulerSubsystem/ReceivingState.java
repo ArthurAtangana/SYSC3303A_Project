@@ -9,6 +9,17 @@ import StatePatternLib.Context;
 import StatePatternLib.State;
 import com.sun.jdi.InvalidTypeException;
 
+/**
+ * Scheduler FSM State: Receiving State.
+ *
+ * Class which models the Receiving State of the Scheduler FSM.
+ *
+ * Responsibilities:
+ * - 
+ *
+ * @author AA/MD
+ * @version Iteration-3
+ */
 public class ReceivingState extends State {
 
     /* Instance Variables */
@@ -20,7 +31,6 @@ public class ReceivingState extends State {
      * Parametric constructor.
      *
      * @param context Context of state machine that this is a state of.
-     * @author AA/MD
      */
     public ReceivingState(Context context) {
         super(context);
@@ -98,10 +108,6 @@ public class ReceivingState extends State {
     @Override
     public void exit() {
         System.out.println("[INFO::FSM] Scheduler:ReceivingState:Exit");
-        // Only do this here if exit activities affect next state selection.
-        //context.setNextState(new ReceivingState(context));
     }
 
 }
-
-

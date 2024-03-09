@@ -14,6 +14,17 @@ import Subsystem.FloorSubsystem.Floor;
 import Subsystem.Subsystem;
 import com.sun.jdi.InvalidTypeException;
 
+/**
+ * Scheduler FSM State: Binding Receiver State.
+ *
+ * Class which models the Binding Receiver State of the Scheduler FSM.
+ *
+ * Responsibilities:
+ * - Bind a Receiver to Elevator or Floor Subsystem.
+ *
+ * @author MD
+ * @version Iteration-3
+ */
 public class BindingReceiverState extends State {
 
     /* Instance Variables */
@@ -25,7 +36,6 @@ public class BindingReceiverState extends State {
      * Parametric constructor.
      *
      * @param context Context of state machine that this is a state of.
-     * @author MD
      */
     public BindingReceiverState(Context context, ReceiverBindingEvent event) {
         super(context);
@@ -84,8 +94,6 @@ public class BindingReceiverState extends State {
     @Override
     public void exit() {
         System.out.println("[INFO::FSM] Scheduler:BindingReceiverState:Exit");
-        // Only do this here if exit activities affect next state selection.
-        //context.setNextState(new BindingReceiverState(context));
     }
 
 }
