@@ -40,19 +40,19 @@ public class BindingReceiverState extends State {
      */
     @Override
     public void entry() {
-        System.out.println("*** Scheduler:BindingReceiverState:Entry");
+        System.out.println("[INFO::FSM] Scheduler:BindingReceiverState:Entry");
 
             Class<? extends Subsystem> subsystemType = event.subsystemType();
 
             // Case: Subsystem is Elevator
             if (subsystemType.equals(Elevator.class)) {
                 ((Scheduler)context).transmitterToElevator.addReceiver(event.receiver());
-                System.out.println("--Bound Elevator to Receiver");
+                System.out.println("Scheduler: Bound Elevator to Receiver");
             } 
             // Case: Subsystem is Floor
             else if (subsystemType.equals(Floor.class)) {
                 ((Scheduler)context).transmitterToFloor.addReceiver(event.receiver());
-                System.out.println("--Bound Floor to Receiver");
+                System.out.println("Scheduler: Bound Floor to Receiver");
             } 
             // Case: Subsystem is BAD
             else {
@@ -70,10 +70,10 @@ public class BindingReceiverState extends State {
      */
     @Override
     public void doActivity() {
-        System.out.println("*** Scheduler:BindingReceiverState:Do");
+        System.out.println("[INFO::FSM] Scheduler:BindingReceiverState:Do");
 
         // Next State: BindingReceiverState
-        // Required Constructor Arguments: NA
+        // Required Constructor Arguments: context
         context.setNextState(new ReceivingState(context));
 
     }
@@ -83,11 +83,9 @@ public class BindingReceiverState extends State {
      */
     @Override
     public void exit() {
-        System.out.println("*** Scheduler:BindingReceiverState:Exit");
+        System.out.println("[INFO::FSM] Scheduler:BindingReceiverState:Exit");
         // Only do this here if exit activities affect next state selection.
         //context.setNextState(new BindingReceiverState(context));
     }
 
 }
-
-

@@ -31,7 +31,7 @@ public class ReceivingState extends State {
      */
     @Override
     public void entry() {
-        System.out.println("*** Scheduler:ReceivingState:Entry");
+        System.out.println("[INFO::FSM] Scheduler:ReceivingState:Entry");
         // Get the SystemMessage (pop from Receiver buffer)
         event = ((Scheduler) context).receive();
     }
@@ -45,22 +45,22 @@ public class ReceivingState extends State {
      */
     @Override
     public void doActivity() {
-        System.out.println("*** Scheduler:ReceivingState:Do");
+        System.out.println("[INFO::FSM] Scheduler:ReceivingState:Do");
 
         // Case: Event is ElevatorStateEvent
         // Description: Notification from Elevator conveying its state
         if (event instanceof ElevatorStateEvent esEvent) {
-            System.out.println("*** Scheduler:ReceivingState:Entry: Received ElevatorStateEvent.");
+            System.out.println("[INFO::FSM] Scheduler:ReceivingState:Entry: Received ElevatorStateEvent.");
             // Next State: ProcessingElevatorEventState
-            // Required Constructor Arguments: NA
+            // Required Constructor Arguments: context
             context.setNextState(new ProcessingElevatorEventState(context, esEvent)); 
         }
         // Case: Event is FloorRequestEvent
         // Description: Request from Floor asking for service
         else if (event instanceof FloorRequestEvent frEvent) {
-            System.out.println("*** Scheduler:ReceivingState:Entry: Received FloorRequestEvent.");
+            System.out.println("[INFO::FSM] Scheduler:ReceivingState:Entry: Received FloorRequestEvent.");
             // Next State: StoringFloorRequestState
-            // Required Constructor Arguments: NA
+            // Required Constructor Arguments: context
             context.setNextState(new StoringFloorRequestState(context, frEvent)); 
             // CHEAT CODE: Back to ReceivingState for now
             //context.setNextState(new ReceivingState(context)); 
@@ -68,7 +68,7 @@ public class ReceivingState extends State {
         // Case: Event is PassengerLoadEvent
         // Description: Notification from Floor of Passengers requiring load
         else if (event instanceof PassengerLoadEvent plEvent) {
-            System.out.println("*** Scheduler:ReceivingState:Entry: Received PassengerLoadEvent.");
+            System.out.println("[INFO::FSM] Scheduler:ReceivingState:Entry: Received PassengerLoadEvent.");
             // Next State: LoadingPassengerState
             // Required Constructor Arguments: PassengerLoadEvent
             context.setNextState(new LoadingPassengerState(context, plEvent));
@@ -78,7 +78,7 @@ public class ReceivingState extends State {
         // Case: Event is ReceiverBindingEvent
         // Description: Request to bind a Receiver to this Scheduler Subsystem
         else if (event instanceof ReceiverBindingEvent rbEvent) {
-            System.out.println("*** Scheduler:ReceivingState:Entry: Received ReceiverBindingEvent.");
+            System.out.println("[INFO::FSM] Scheduler:ReceivingState:Entry: Received ReceiverBindingEvent.");
             // Next State: BindingReceiverState
             // Required Constructor Arguments: ReceiverBindingEvent
             context.setNextState(new BindingReceiverState(context, rbEvent));
@@ -97,7 +97,7 @@ public class ReceivingState extends State {
      */
     @Override
     public void exit() {
-        System.out.println("*** Scheduler:ReceivingState:Exit\n");
+        System.out.println("[INFO::FSM] Scheduler:ReceivingState:Exit");
         // Only do this here if exit activities affect next state selection.
         //context.setNextState(new ReceivingState(context));
     }
