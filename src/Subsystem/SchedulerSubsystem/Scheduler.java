@@ -28,7 +28,7 @@ public class Scheduler extends Context implements Runnable, Subsystem {
     protected final Transmitter<? extends Receiver> transmitterToElevator;
     private final Receiver receiver;
     protected final Map<DestinationEvent, Long> floorRequestsToTime;
-    protected final ArrayList<ElevatorStateEvent> idleElevators;
+    private final ArrayList<ElevatorStateEvent> idleElevators;
 
     public Scheduler(Receiver receiver,
                      Transmitter<? extends Receiver> transmitterToFloor,
@@ -54,10 +54,39 @@ public class Scheduler extends Context implements Runnable, Subsystem {
         if (!floorRequestsToTime.containsKey(event.destinationEvent()))
             // Only store request if it does not already exist
             floorRequestsToTime.put(event.destinationEvent(), event.time());
-        if (!idleElevators.isEmpty()){
-            processElevatorEvent(idleElevators.remove(0));
-        }
+          // Relegate to StoringFloorRequestState
+//        if (!idleElevators.isEmpty()){
+//            processElevatorEvent(idleElevators.remove(0));
+//        }
     }
+
+    /**
+     * Query if there are idle elevators.
+     *
+     * @return true if there are idle Elevators; false otherwise.
+     */
+    boolean areIdleElevators() {
+        return !idleElevators.isEmpty();
+    }
+
+    /**
+     * Get first idle elevator.
+     *
+     * @return ElevatorStateEvent corresponding to first idle Elevator.
+     */
+    ElevatorStateEvent getFirstIdleElevator() {
+        return idleElevators.remove(0);
+    }
+
+    /**
+     * Register an Elevator as idle by passing its ElevatorStateEvent.
+     *
+     * @param event The idle ElevatorStateEvent to store.
+     */
+    void addIdleElevator(ElevatorStateEvent event) {
+       idleElevators.add(event);
+    }
+
     /**
      * Returns true if elevator should stop, false otherwise.
      *
