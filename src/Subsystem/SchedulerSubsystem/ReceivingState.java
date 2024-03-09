@@ -61,9 +61,9 @@ public class ReceivingState extends State {
             System.out.println("*** Scheduler:ReceivingState:Entry: Received FloorRequestEvent.");
             // Next State: StoringFloorRequestState
             // Required Constructor Arguments: NA
-            //context.setNextState(new StoringFloorRequestState(context)); 
+            context.setNextState(new StoringFloorRequestState(context, frEvent)); 
             // CHEAT CODE: Back to ReceivingState for now
-            context.setNextState(new ReceivingState(context)); 
+            //context.setNextState(new ReceivingState(context)); 
         }
         // Case: Event is PassengerLoadEvent
         // Description: Notification from Floor of Passengers requiring load
