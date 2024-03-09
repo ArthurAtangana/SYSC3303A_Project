@@ -56,13 +56,11 @@ public class BindingReceiverState extends State {
 
             // Case: Subsystem is Elevator
             if (subsystemType.equals(Elevator.class)) {
-                ((Scheduler)context).transmitterToElevator.addReceiver(event.receiver());
-                System.out.println("Scheduler: Bound Elevator to Receiver");
+                ((Scheduler)context).bindElevatorReceiver(event.receiver());
             } 
             // Case: Subsystem is Floor
             else if (subsystemType.equals(Floor.class)) {
-                ((Scheduler)context).transmitterToFloor.addReceiver(event.receiver());
-                System.out.println("Scheduler: Bound Floor to Receiver");
+                ((Scheduler)context).bindFloorReceiver(event.receiver());
             } 
             // Case: Subsystem is BAD
             else {

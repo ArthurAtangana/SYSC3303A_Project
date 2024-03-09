@@ -63,7 +63,6 @@ public class StoringFloorRequestState extends State {
 
         // Case: There are idle Elevators.
         // Description: An Elevator is immediately available for work.
-        // TODO: Replace with Scheduler method call, when implemented
         if (((Scheduler)context).areIdleElevators()) {
             // Next State: ProcessingElevatorEventState
             // Required Constructor Arguments: ElevatorStateEvent
