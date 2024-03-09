@@ -1,0 +1,107 @@
+package Subsystem.SchedulerSubsystem;
+
+import Messaging.Messages.Events.ElevatorStateEvent;
+import Messaging.Messages.SystemMessage;
+import StatePatternLib.Context;
+import StatePatternLib.State;
+import com.sun.jdi.InvalidTypeException;
+
+public class ReceivingState extends State {
+
+    /* Instance Variables */
+    
+    // The event to receive.
+    private SystemMessage event;
+
+    /**
+     * Parametric constructor.
+     *
+     * @param context Context of state machine that this is a state of.
+     * @author AA/MD
+     */
+    public ReceivingState(Context context) {
+        super(context);
+    }
+
+    /**
+     * Entry activities for this state.
+     */
+    @Override
+    public void entry() {
+        // DEBUG
+        System.out.println("\nElevator State: Entering RECEIVING State\n");
+        // Get the SystemMessage (pop from Receiver buffer)
+        event = ((Scheduler) context).receive();
+    }
+
+    /**
+     * Do activities for this state.
+     *
+     * In this state, we simply switch on the received SystemMessage event, and point 
+     * to the next state.
+     */
+    @Override
+    public void doActivity() {
+
+        // Case: Event is ElevatorStateEvent
+        // Description: Notification from Elevator conveying its state
+        if (event instanceof ElevatorStateEvent esEvent) {
+            // Next State: ProcessingElevatorEventState
+            // Required Constructor Arguments: NA
+            context.setNextState(new ProcessingElevatorEventState(context)); 
+        }
+        // Case: Event is FloorRequestEvent
+        // Description: Request from Floor asking for service
+        else if (event instanceof FloorRequestEvent frEvent) {
+            // Next State: StoringFloorRequestState
+            // Required Constructor Arguments: NA
+            context.setNextState(new StoringFloorRequestState(context)); 
+        }
+        // Case: Event is PassengerLoadEvent
+        // Description: Notification from Floor of Passengers requiring load
+        else if (event instanceof PassengerLoadEvent plEvent) {
+            // Next State: LoadingPassengerState
+            // Required Constructor Arguments: NA
+            context.setNextState(new LoadingPassengerState(context));
+
+            /* STATE LOGIC - MOVE TO STATE */ 
+            //transmitterToElevator.send(new MovePassengersCommand(plEvent.elevNumber(), plEvent.passengers())); // put inside state
+            // context.movePassenger
+            // setNextState
+        } 
+        // Case: Event is ReceiverBindingEvent
+        // Description: Request to bind a Receiver to this Scheduler Subsystem
+        else if (event instanceof ReceiverBindingEvent rbEvent) {
+            // Next State: BindingReceiverState
+            // Required Constructor Arguments: NA
+            context.setNextState(new BindingReceiverState(context));
+            /* STATE LOGIC - MOVE TO STATE */ 
+            //System.out.println("Bound with: " + rbEvent);
+            //Class<? extends Subsystem> subsystemType = rbEvent.subsystemType();
+            //if (subsystemType.equals(Elevator.class)) {
+            //    transmitterToElevator.addReceiver(rbEvent.receiver());
+            //} else if (subsystemType.equals(Floor.class)) {
+            //    transmitterToFloor.addReceiver(rbEvent.receiver());
+            //} else
+            //    throw new InvalidTypeException("Unknown subsystem (" + subsystemType +
+            //            ") attempted to bind to scheduler.");
+        }
+        else {
+            InvalidTypeException e = new InvalidTypeException("Event type received cannot be handled by this subsystem.");
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    /**
+     * Exit activities for this state.
+     */
+    @Override
+    public void exit() {
+        // Only do this here if exit activities affect next state selection.
+        //context.setNextState(new ReceivingState(context));
+    }
+
+}
+
+
