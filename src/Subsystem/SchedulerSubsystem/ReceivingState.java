@@ -72,8 +72,6 @@ public class ReceivingState extends State {
             // Next State: StoringFloorRequestState
             // Required Constructor Arguments: context
             context.setNextState(new StoringFloorRequestState(context, frEvent)); 
-            // CHEAT CODE: Back to ReceivingState for now
-            //context.setNextState(new ReceivingState(context)); 
         }
         // Case: Event is PassengerLoadEvent
         // Description: Notification from Floor of Passengers requiring load
@@ -82,8 +80,6 @@ public class ReceivingState extends State {
             // Next State: LoadingPassengerState
             // Required Constructor Arguments: PassengerLoadEvent
             context.setNextState(new LoadingPassengerState(context, plEvent));
-            // CHEAT CODE: Back to ReceivingState for now
-            //context.setNextState(new ReceivingState(context)); 
         } 
         // Case: Event is ReceiverBindingEvent
         // Description: Request to bind a Receiver to this Scheduler Subsystem
@@ -92,8 +88,6 @@ public class ReceivingState extends State {
             // Next State: BindingReceiverState
             // Required Constructor Arguments: ReceiverBindingEvent
             context.setNextState(new BindingReceiverState(context, rbEvent));
-            // CHEAT CODE: Back to ReceivingState for now
-            //context.setNextState(new ReceivingState(context)); 
         }
         else {
             InvalidTypeException e = new InvalidTypeException("Event type received cannot be handled by this subsystem.");
