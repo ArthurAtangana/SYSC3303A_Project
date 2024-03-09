@@ -62,7 +62,7 @@ public class ReceivingState extends State {
             // Next State: StoringFloorRequestState
             // Required Constructor Arguments: NA
             //context.setNextState(new StoringFloorRequestState(context)); 
-            // CHEAT CODE: Back to RecevingState for now
+            // CHEAT CODE: Back to ReceivingState for now
             context.setNextState(new ReceivingState(context)); 
         }
         // Case: Event is PassengerLoadEvent
@@ -72,7 +72,7 @@ public class ReceivingState extends State {
             // Next State: LoadingPassengerState
             // Required Constructor Arguments: NA
             //context.setNextState(new LoadingPassengerState(context));
-            // CHEAT CODE: Back to RecevingState for now
+            // CHEAT CODE: Back to ReceivingState for now
             context.setNextState(new ReceivingState(context)); 
 
             /* STATE LOGIC - MOVE TO STATE */ 
@@ -87,7 +87,7 @@ public class ReceivingState extends State {
             // Next State: BindingReceiverState
             // Required Constructor Arguments: NA
             //context.setNextState(new BindingReceiverState(context));
-            // CHEAT CODE: Back to RecevingState for now
+            // CHEAT CODE: Back to ReceivingState for now
             context.setNextState(new ReceivingState(context)); 
             /* STATE LOGIC - MOVE TO STATE */ 
             //System.out.println("Bound with: " + rbEvent);
