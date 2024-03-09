@@ -22,12 +22,12 @@ import java.util.*;
  *
  * @version Iteration-2
  */
-public class Scheduler extends Context implements Subsystem {
+public class Scheduler extends Context implements Runnable, Subsystem {
     private final Transmitter<? extends Receiver> transmitterToFloor;
     private final Transmitter<? extends Receiver> transmitterToElevator;
     private final Receiver receiver;
-    private final Map<DestinationEvent, Long> floorRequestsToTime;
-    private final ArrayList<ElevatorStateEvent> idleElevators;
+    protected final Map<DestinationEvent, Long> floorRequestsToTime;
+    protected final ArrayList<ElevatorStateEvent> idleElevators;
 
     public Scheduler(Receiver receiver,
                      Transmitter<? extends Receiver> transmitterToFloor,
@@ -47,7 +47,7 @@ public class Scheduler extends Context implements Subsystem {
      *
      * @param event Event to process.
      */
-    private void storeFloorRequest(FloorRequestEvent event) {
+    void storeFloorRequest(FloorRequestEvent event) {
         System.out.println("Floor " + event.destinationEvent().destinationFloor() + ": request made: " + event.destinationEvent().direction() + ".");
         // Store event locally to use in scheduling
         if (!floorRequestsToTime.containsKey(event.destinationEvent()))
@@ -63,7 +63,7 @@ public class Scheduler extends Context implements Subsystem {
      * @param e Elevator state to check.
      * @return True if elevator should stop, false otherwise.
      */
-    private boolean isElevatorStopping(ElevatorStateEvent e) {
+    boolean isElevatorStopping(ElevatorStateEvent e) {
         // Elevator should stop if tuple (elevator.currentFloor, elevator.Direction)
         // belongs to the union of scheduler.destinationEvents and elevator.destinationEvents.
         //
@@ -85,10 +85,10 @@ public class Scheduler extends Context implements Subsystem {
      * Returns false if the elevator is empty and is moving opposite to the future direction.
      * @return
      */
-    private boolean isMovingOppositeToFutureDirection(ElevatorStateEvent event){
+    boolean isMovingOppositeToFutureDirection(ElevatorStateEvent event){
         return (event.passengerCountMap().isEmpty() && getElevatorDirection(event) != getOldestFloorRequest().direction());
     }
-    private DestinationEvent getOldestFloorRequest() {
+    DestinationEvent getOldestFloorRequest() {
         if (floorRequestsToTime.isEmpty()) return null;
         Long waitTime = Long.MAX_VALUE;
         DestinationEvent oldestFloor = null;
@@ -106,7 +106,7 @@ public class Scheduler extends Context implements Subsystem {
      * @param currentFloor The floor number the elevator is currently on.
      * @return Direction of oldest floor request relative to currentFloor, null if there are no floor requests.
      */
-    private Direction getDirectionToOldestFloor(int currentFloor) {
+    Direction getDirectionToOldestFloor(int currentFloor) {
         int sourceFloor = getOldestFloorRequest().destinationFloor();
         return (sourceFloor > currentFloor) ? Direction.UP : Direction.DOWN;
     }
@@ -118,7 +118,7 @@ public class Scheduler extends Context implements Subsystem {
      * @param event Elevator state to get direction from.
      * @return Direction elevator is travelling.
      */
-    private Direction getElevatorDirection(ElevatorStateEvent event) {
+    Direction getElevatorDirection(ElevatorStateEvent event) {
         // Find direction in elevator if elevator has passengers.
         Direction direction = ElevatorUtilities.getPassengersDirection(event.passengerCountMap().keySet());
         if (direction != null){
@@ -141,7 +141,7 @@ public class Scheduler extends Context implements Subsystem {
      *  and sends it to the floor.
      * @param event an elevator state event
      */
-    private void processElevatorEvent(ElevatorStateEvent event) {
+    void processElevatorEvent(ElevatorStateEvent event) {
         if (floorRequestsToTime.isEmpty() && event.passengerCountMap().isEmpty()) {
             System.out.printf("Elevator %s idle%n", event.elevatorNum());
             idleElevators.add(event);
