@@ -3,6 +3,7 @@ package Subsystem.SchedulerSubsystem;
 import Messaging.Messages.Commands.MoveElevatorCommand;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
+import Messaging.Messages.Events.PassengerLoadEvent;
 import Messaging.Messages.SystemMessage;
 import Messaging.Messages.Commands.SendPassengersCommand;
 import StatePatternLib.Context;
@@ -68,19 +69,18 @@ public class ProcessingElevatorEventState extends State {
             System.out.printf("Elevator %s stopped.%n", event.elevatorNum());
 
             // Notify Floor for service
-            ((Scheduler)context).transmitterToFloor.send(new SendPassengersCommand(event.currentFloor(),
-                    event.elevatorNum(),
-                    ((Scheduler)context).getElevatorDirection(event)));
+            ((Scheduler)context).transmitterToFloor.send(new SendPassengersCommand(event.currentFloor(), event.elevatorNum(), ((Scheduler)context).getElevatorDirection(event)));
 
             // Remove the serviced Floor request
-            // NB: Delegate to next state?
             ((Scheduler)context).floorRequestsToTime.remove(new DestinationEvent(event.currentFloor(),((Scheduler)context).getElevatorDirection(event)));
 
-            // Next State: LoadingPassengerState
+
+            // Next State: ReceivingState
             // Required Constructor Arguments: NA
-            //context.setNextState(new LoadingPassengerState(context)); 
-            // CHEAT CODE: Back to RecevingState for now
             context.setNextState(new ReceivingState(context)); 
+
+            // NB: Tried this instead, it did bad things.
+            //context.setNextState(new LoadingPassengerState(context, passengerLoadEvent)); 
         }
         // Case: Elevator indicates it is Moving.
         // Description: Keep calm, carry on. It'll be okay. You'll get there buddy.
