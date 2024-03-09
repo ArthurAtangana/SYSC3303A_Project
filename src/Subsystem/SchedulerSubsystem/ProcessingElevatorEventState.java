@@ -81,7 +81,7 @@ public class ProcessingElevatorEventState extends State {
             System.out.printf("Elevator %s stopped.%n", event.elevatorNum());
 
             // Notify Floor for service
-            ((Scheduler)context).transmitterToFloor.send(new SendPassengersCommand(event.currentFloor(), event.elevatorNum(), ((Scheduler)context).getElevatorDirection(event)));
+            ((Scheduler)context).transmitToFloor(new SendPassengersCommand(event.currentFloor(), event.elevatorNum(), ((Scheduler)context).getElevatorDirection(event)));
 
             // Remove the serviced Floor request
             ((Scheduler)context).floorRequestsToTime.remove(new DestinationEvent(event.currentFloor(),((Scheduler)context).getElevatorDirection(event)));
@@ -96,7 +96,7 @@ public class ProcessingElevatorEventState extends State {
         else {
 
             // Request Elevator to keep moving
-            ((Scheduler)context).transmitterToElevator.send(new MoveElevatorCommand(event.elevatorNum(), ((Scheduler)context).getElevatorDirection(event)));
+            ((Scheduler)context).transmitToElevator(new MoveElevatorCommand(event.elevatorNum(), ((Scheduler)context).getElevatorDirection(event)));
 
             // Next State: ReceivingState
             // Required Constructor Arguments: context

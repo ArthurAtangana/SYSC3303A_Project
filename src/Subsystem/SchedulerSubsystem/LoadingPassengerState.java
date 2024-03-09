@@ -62,8 +62,7 @@ public class LoadingPassengerState extends State {
 
         // Load Passengers, notify Elevator
         MovePassengersCommand movePassengersCommand = new MovePassengersCommand(event.elevNumber(), event.passengers());
-        // TODO: Replace with method call when implemented
-        ((Scheduler)context).transmitterToElevator.send(movePassengersCommand);
+        ((Scheduler)context).transmitToElevator(movePassengersCommand);
 
         // Next State: ReceivingState
         // Required Constructor Arguments: context
