@@ -63,12 +63,11 @@ public class ProcessingElevatorEventState extends State {
         // Case: Elevator indicates it is Idle.
         // Description: Elevator has neither Floors nor Passengers to service, and is
         //              not in motion. It's just chillin'.
-        if (((Scheduler)context).floorRequestsToTime.isEmpty() && event.passengerCountMap().isEmpty()) {
+        if (!((Scheduler)context).hasPendingDestinationEvents() && event.passengerCountMap().isEmpty()) {
 
-            System.out.printf("Schduler: Elevator %s idle%n", event.elevatorNum());
+            System.out.printf("Scheduler: Elevator %s idle%n", event.elevatorNum());
 
             // Register this Elevator as Idle
-            //((Scheduler)context).idleElevators.add(event);
             ((Scheduler)context).addIdleElevator(event);
 
             // Next State: ReceivingState
@@ -83,8 +82,8 @@ public class ProcessingElevatorEventState extends State {
             // Notify Floor for service
             ((Scheduler)context).transmitToFloor(new SendPassengersCommand(event.currentFloor(), event.elevatorNum(), ((Scheduler)context).getElevatorDirection(event)));
 
-            // Remove the serviced Floor request
-            ((Scheduler)context).floorRequestsToTime.remove(new DestinationEvent(event.currentFloor(),((Scheduler)context).getElevatorDirection(event)));
+            // Remove the serviced DestinationRequest request
+            ((Scheduler)context).removeDestinationEvent(new DestinationEvent(event.currentFloor(),((Scheduler)context).getElevatorDirection(event)));
 
             // Next State: ReceivingState
             // Required Constructor Arguments: context
