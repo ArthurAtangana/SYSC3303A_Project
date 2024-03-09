@@ -19,7 +19,7 @@ import java.util.*;
  *
  * @version Iteration-3
  */
-public class Scheduler extends Context implements Runnable, Subsystem {
+public class Scheduler extends Context implements Subsystem {
     private final Transmitter<? extends Receiver> transmitterToFloor;
     private final Transmitter<? extends Receiver> transmitterToElevator;
     private final Receiver receiver;
