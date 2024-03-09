@@ -1,0 +1,84 @@
+package Subsystem.SchedulerSubsystem;
+
+import Messaging.Messages.Commands.MoveElevatorCommand;
+import Messaging.Messages.Events.DestinationEvent;
+import Messaging.Messages.Events.ElevatorStateEvent;
+import Messaging.Messages.Events.FloorRequestEvent;
+import Messaging.Messages.SystemMessage;
+import Messaging.Messages.Commands.SendPassengersCommand;
+import StatePatternLib.Context;
+import StatePatternLib.State;
+import com.sun.jdi.InvalidTypeException;
+
+public class StoringFloorRequestState extends State {
+
+    /* Instance Variables */
+    
+    // The FloorRequestEvent to process
+    private FloorRequestEvent event;
+
+    /**
+     * Parametric constructor.
+     *
+     * @param context Context of state machine that this is a state of.
+     * @author MD
+     */
+    public StoringFloorRequestState(Context context, FloorRequestEvent event) {
+        super(context);
+        // Initialize the ElevatorStateEvent that needs processing in this state.
+        this.event = event;
+    }
+
+    /**
+     * Entry activities for this state.
+     */
+    @Override
+    public void entry() {
+        System.out.println("*** Scheduler:StoringFloorRequestState:Entry");
+    }
+
+    /**
+     * Do activities for this state.
+     *
+     * In this state, we just store the FloorRequestEvent, and select next state
+     * based on if we have any idle Elevators.
+     */
+    @Override
+    public void doActivity() {
+        System.out.println("*** Scheduler:StoringFloorRequestState:Do");
+
+        // Store the FloorRequestEvent
+        ((Scheduler)context).storeFloorRequest(event);
+
+        // Case: There are idle Elevators.
+        // Description: An Elevator is immediately available for work.
+        // TODO: Replace with Scheduler method call, when implemented
+        if (((Scheduler)context).areIdleElevators()) {
+            // Next State: ProcessingElevatorEventState
+            // Required Constructor Arguments: ElevatorStateEvent
+            ElevatorStateEvent elevatorStateEvent = ((Scheduler)context).getFirstIdleElevator();
+            context.setNextState(new ProcessingElevatorEventState(context, elevatorStateEvent)); 
+        }
+        // Case: There are NO idle Elevators.
+        // Description: No Elevator is immediately available for work.
+        else {
+            // Next State: ReceivingState
+            // Required Constructor Arguments: NA
+            context.setNextState(new ReceivingState(context)); 
+        }
+
+    }
+
+    /**
+     * Exit activities for this state.
+     */
+    @Override
+    public void exit() {
+        System.out.println("*** Scheduler:StoringFloorRequestState:Exit");
+        // Only do this here if exit activities affect next state selection.
+        //context.setNextState(new StoringFloorRequestState(context));
+    }
+
+}
+
+
