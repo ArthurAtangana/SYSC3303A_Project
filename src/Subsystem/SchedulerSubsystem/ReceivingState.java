@@ -80,20 +80,10 @@ public class ReceivingState extends State {
         else if (event instanceof ReceiverBindingEvent rbEvent) {
             System.out.println("*** Scheduler:ReceivingState:Entry: Received ReceiverBindingEvent.");
             // Next State: BindingReceiverState
-            // Required Constructor Arguments: NA
-            //context.setNextState(new BindingReceiverState(context));
+            // Required Constructor Arguments: ReceiverBindingEvent
+            context.setNextState(new BindingReceiverState(context, rbEvent));
             // CHEAT CODE: Back to ReceivingState for now
-            context.setNextState(new ReceivingState(context)); 
-            /* STATE LOGIC - MOVE TO STATE */ 
-            //System.out.println("Bound with: " + rbEvent);
-            //Class<? extends Subsystem> subsystemType = rbEvent.subsystemType();
-            //if (subsystemType.equals(Elevator.class)) {
-            //    transmitterToElevator.addReceiver(rbEvent.receiver());
-            //} else if (subsystemType.equals(Floor.class)) {
-            //    transmitterToFloor.addReceiver(rbEvent.receiver());
-            //} else
-            //    throw new InvalidTypeException("Unknown subsystem (" + subsystemType +
-            //            ") attempted to bind to scheduler.");
+            //context.setNextState(new ReceivingState(context)); 
         }
         else {
             InvalidTypeException e = new InvalidTypeException("Event type received cannot be handled by this subsystem.");
