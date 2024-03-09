@@ -55,7 +55,8 @@ public class ProcessingElevatorEventState extends State {
             System.out.printf("Elevator %s idle%n", event.elevatorNum());
 
             // Register this Elevator as Idle
-            ((Scheduler)context).idleElevators.add(event);
+            //((Scheduler)context).idleElevators.add(event);
+            ((Scheduler)context).addIdleElevator(event);
 
             // Next State: ReceivingState
             // Required Constructor Arguments: NA
