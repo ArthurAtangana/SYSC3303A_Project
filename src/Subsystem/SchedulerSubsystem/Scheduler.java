@@ -23,8 +23,9 @@ import java.util.*;
  * @version Iteration-2
  */
 public class Scheduler extends Context implements Runnable, Subsystem {
-    private final Transmitter<? extends Receiver> transmitterToFloor;
-    private final Transmitter<? extends Receiver> transmitterToElevator;
+    // TODO: Make fields private again, make access methods for subclasses instead
+    protected final Transmitter<? extends Receiver> transmitterToFloor;
+    protected final Transmitter<? extends Receiver> transmitterToElevator;
     private final Receiver receiver;
     protected final Map<DestinationEvent, Long> floorRequestsToTime;
     protected final ArrayList<ElevatorStateEvent> idleElevators;
