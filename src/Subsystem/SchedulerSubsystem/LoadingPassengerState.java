@@ -36,7 +36,7 @@ public class LoadingPassengerState extends State {
      */
     @Override
     public void entry() {
-        System.out.println("*** Scheduler:LoadingPassengerState:Entry");
+        System.out.println("[INFO::FSM] Scheduler:LoadingPassengerState:Entry");
     }
 
     /**
@@ -47,7 +47,7 @@ public class LoadingPassengerState extends State {
      */
     @Override
     public void doActivity() {
-        System.out.println("*** Scheduler:LoadingPassengerState:Do");
+        System.out.println("[INFO::FSM] Scheduler:LoadingPassengerState:Do");
 
         // Load Passengers, notify Elevator
         MovePassengersCommand movePassengersCommand = new MovePassengersCommand(event.elevNumber(), event.passengers());
@@ -55,7 +55,7 @@ public class LoadingPassengerState extends State {
         ((Scheduler)context).transmitterToElevator.send(movePassengersCommand);
 
         // Next State: ReceivingState
-        // Required Constructor Arguments: NA
+        // Required Constructor Arguments: context
         context.setNextState(new ReceivingState(context));
     }
 
@@ -64,11 +64,9 @@ public class LoadingPassengerState extends State {
      */
     @Override
     public void exit() {
-        System.out.println("*** Scheduler:LoadingPassengerState:Exit");
+        System.out.println("[INFO::FSM] Scheduler:LoadingPassengerState:Exit");
         // Only do this here if exit activities affect next state selection.
         //context.setNextState(new LoadingPassengerState(context));
     }
 
 }
-
-

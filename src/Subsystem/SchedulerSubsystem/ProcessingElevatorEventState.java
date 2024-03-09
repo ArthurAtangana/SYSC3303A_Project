@@ -34,7 +34,7 @@ public class ProcessingElevatorEventState extends State {
      */
     @Override
     public void entry() {
-        System.out.println("*** Scheduler:ProcessingElevatorEventState:Entry");
+        System.out.println("[INFO::FSM] Scheduler:ProcessingElevatorEventState:Entry");
     }
 
     /**
@@ -46,21 +46,21 @@ public class ProcessingElevatorEventState extends State {
      */
     @Override
     public void doActivity() {
-        System.out.println("*** Scheduler:ProcessingElevatorEventState:Do");
+        System.out.println("[INFO::FSM] Scheduler:ProcessingElevatorEventState:Do");
 
         // Case: Elevator indicates it is Idle.
         // Description: Elevator has neither Floors nor Passengers to service, and is
         //              not in motion. It's just chillin'.
         if (((Scheduler)context).floorRequestsToTime.isEmpty() && event.passengerCountMap().isEmpty()) {
 
-            System.out.printf("Elevator %s idle%n", event.elevatorNum());
+            System.out.printf("Schduler: Elevator %s idle%n", event.elevatorNum());
 
             // Register this Elevator as Idle
             //((Scheduler)context).idleElevators.add(event);
             ((Scheduler)context).addIdleElevator(event);
 
             // Next State: ReceivingState
-            // Required Constructor Arguments: NA
+            // Required Constructor Arguments: context
             context.setNextState(new ReceivingState(context)); 
         } 
         // Case: Elevator indicates it is Stopping.
@@ -76,7 +76,7 @@ public class ProcessingElevatorEventState extends State {
 
 
             // Next State: ReceivingState
-            // Required Constructor Arguments: NA
+            // Required Constructor Arguments: context
             context.setNextState(new ReceivingState(context)); 
 
             // NB: Tried this instead, it did bad things.
@@ -90,7 +90,7 @@ public class ProcessingElevatorEventState extends State {
             ((Scheduler)context).transmitterToElevator.send(new MoveElevatorCommand(event.elevatorNum(), ((Scheduler)context).getElevatorDirection(event)));
 
             // Next State: ReceivingState
-            // Required Constructor Arguments: NA
+            // Required Constructor Arguments: context
             context.setNextState(new ReceivingState(context)); 
         }
 
@@ -101,7 +101,7 @@ public class ProcessingElevatorEventState extends State {
      */
     @Override
     public void exit() {
-        System.out.println("*** Scheduler:ProcessingElevatorEventState:Exit");
+        System.out.println("[INFO::FSM] Scheduler:ProcessingElevatorEventState:Exit");
         // Only do this here if exit activities affect next state selection.
         //context.setNextState(new ProcessingElevatorEventState(context));
     }

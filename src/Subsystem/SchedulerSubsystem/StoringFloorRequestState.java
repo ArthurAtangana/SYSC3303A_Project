@@ -34,7 +34,7 @@ public class StoringFloorRequestState extends State {
      */
     @Override
     public void entry() {
-        System.out.println("*** Scheduler:StoringFloorRequestState:Entry");
+        System.out.println("[INFO::FSM] Scheduler:StoringFloorRequestState:Entry");
     }
 
     /**
@@ -45,7 +45,7 @@ public class StoringFloorRequestState extends State {
      */
     @Override
     public void doActivity() {
-        System.out.println("*** Scheduler:StoringFloorRequestState:Do");
+        System.out.println("[INFO::FSM] Scheduler:StoringFloorRequestState:Do");
 
         // Store the FloorRequestEvent
         ((Scheduler)context).storeFloorRequest(event);
@@ -63,7 +63,7 @@ public class StoringFloorRequestState extends State {
         // Description: No Elevator is immediately available for work.
         else {
             // Next State: ReceivingState
-            // Required Constructor Arguments: NA
+            // Required Constructor Arguments: context
             context.setNextState(new ReceivingState(context)); 
         }
 
@@ -74,7 +74,7 @@ public class StoringFloorRequestState extends State {
      */
     @Override
     public void exit() {
-        System.out.println("*** Scheduler:StoringFloorRequestState:Exit");
+        System.out.println("[INFO::FSM] Scheduler:StoringFloorRequestState:Exit");
         // Only do this here if exit activities affect next state selection.
         //context.setNextState(new StoringFloorRequestState(context));
     }
