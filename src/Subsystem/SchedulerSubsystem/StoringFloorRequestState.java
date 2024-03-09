@@ -10,6 +10,18 @@ import StatePatternLib.Context;
 import StatePatternLib.State;
 import com.sun.jdi.InvalidTypeException;
 
+/**
+ * Scheduler FSM State: Storing Floor Request State.
+ *
+ * Class which models the Storing Floor Request State of the Scheduler FSM.
+ *
+ * Responsibilities:
+ * - Store a a request for floor service
+ * - If there are idle elevators, make them available for immediate service
+ *
+ * @author MD
+ * @version Iteration-3
+ */
 public class StoringFloorRequestState extends State {
 
     /* Instance Variables */
@@ -21,7 +33,6 @@ public class StoringFloorRequestState extends State {
      * Parametric constructor.
      *
      * @param context Context of state machine that this is a state of.
-     * @author MD
      */
     public StoringFloorRequestState(Context context, FloorRequestEvent event) {
         super(context);
@@ -75,10 +86,6 @@ public class StoringFloorRequestState extends State {
     @Override
     public void exit() {
         System.out.println("[INFO::FSM] Scheduler:StoringFloorRequestState:Exit");
-        // Only do this here if exit activities affect next state selection.
-        //context.setNextState(new StoringFloorRequestState(context));
     }
 
 }
-
-

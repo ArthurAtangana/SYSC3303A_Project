@@ -10,6 +10,19 @@ import StatePatternLib.Context;
 import StatePatternLib.State;
 import com.sun.jdi.InvalidTypeException;
 
+/**
+ * Scheduler FSM State: Processing Elevator Event State.
+ *
+ * Class which models the Processing Elevator Event State of the Scheduler FSM.
+ *
+ * Responsibilities:
+ * - Determine if Elevator is in service or is idle
+ * - Initiate service if Elevator is stopping at a Floor
+ * - Keep the Elevator moving if does not need to stop at a Floor
+ *
+ * @author MD
+ * @version Iteration-3
+ */
 public class ProcessingElevatorEventState extends State {
 
     /* Instance Variables */
@@ -21,7 +34,6 @@ public class ProcessingElevatorEventState extends State {
      * Parametric constructor.
      *
      * @param context Context of state machine that this is a state of.
-     * @author MD
      */
     public ProcessingElevatorEventState(Context context, ElevatorStateEvent event) {
         super(context);
@@ -74,13 +86,10 @@ public class ProcessingElevatorEventState extends State {
             // Remove the serviced Floor request
             ((Scheduler)context).floorRequestsToTime.remove(new DestinationEvent(event.currentFloor(),((Scheduler)context).getElevatorDirection(event)));
 
-
             // Next State: ReceivingState
             // Required Constructor Arguments: context
             context.setNextState(new ReceivingState(context)); 
 
-            // NB: Tried this instead, it did bad things.
-            //context.setNextState(new LoadingPassengerState(context, passengerLoadEvent)); 
         }
         // Case: Elevator indicates it is Moving.
         // Description: Keep calm, carry on. It'll be okay. You'll get there buddy.
@@ -102,10 +111,6 @@ public class ProcessingElevatorEventState extends State {
     @Override
     public void exit() {
         System.out.println("[INFO::FSM] Scheduler:ProcessingElevatorEventState:Exit");
-        // Only do this here if exit activities affect next state selection.
-        //context.setNextState(new ProcessingElevatorEventState(context));
     }
 
 }
-
-

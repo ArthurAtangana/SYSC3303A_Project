@@ -12,6 +12,17 @@ import StatePatternLib.Context;
 import StatePatternLib.State;
 import com.sun.jdi.InvalidTypeException;
 
+/**
+ * Scheduler FSM State: Loading Passenger State.
+ *
+ * Class which models the Loading Passenger State of the Scheduler FSM.
+ *
+ * Responsibilities:
+ * - Command an Elevator to load Passengers.
+ *
+ * @author MD
+ * @version Iteration-3
+ */
 public class LoadingPassengerState extends State {
 
     /* Instance Variables */
@@ -43,7 +54,7 @@ public class LoadingPassengerState extends State {
      * Do activities for this state.
      *
      * In this state, we just transmit a MovePassengersCommand to an Elevator,
-     * and then return to Receiving state (for now, at least).
+     * and then return to Receiving state.
      */
     @Override
     public void doActivity() {
@@ -65,8 +76,6 @@ public class LoadingPassengerState extends State {
     @Override
     public void exit() {
         System.out.println("[INFO::FSM] Scheduler:LoadingPassengerState:Exit");
-        // Only do this here if exit activities affect next state selection.
-        //context.setNextState(new LoadingPassengerState(context));
     }
 
 }
