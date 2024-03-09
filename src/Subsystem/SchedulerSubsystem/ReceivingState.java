@@ -70,15 +70,10 @@ public class ReceivingState extends State {
         else if (event instanceof PassengerLoadEvent plEvent) {
             System.out.println("*** Scheduler:ReceivingState:Entry: Received PassengerLoadEvent.");
             // Next State: LoadingPassengerState
-            // Required Constructor Arguments: NA
-            //context.setNextState(new LoadingPassengerState(context));
+            // Required Constructor Arguments: PassengerLoadEvent
+            context.setNextState(new LoadingPassengerState(context, plEvent));
             // CHEAT CODE: Back to ReceivingState for now
-            context.setNextState(new ReceivingState(context)); 
-
-            /* STATE LOGIC - MOVE TO STATE */ 
-            //transmitterToElevator.send(new MovePassengersCommand(plEvent.elevNumber(), plEvent.passengers())); // put inside state
-            // context.movePassenger
-            // setNextState
+            //context.setNextState(new ReceivingState(context)); 
         } 
         // Case: Event is ReceiverBindingEvent
         // Description: Request to bind a Receiver to this Scheduler Subsystem
