@@ -8,6 +8,7 @@ import Messaging.Messages.Events.*;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
+import StatePatternLib.Context;
 import Subsystem.ElevatorSubsytem.Elevator;
 import Subsystem.ElevatorSubsytem.ElevatorUtilities;
 import Subsystem.FloorSubsystem.Floor;
@@ -21,7 +22,7 @@ import java.util.*;
  *
  * @version Iteration-2
  */
-public class Scheduler implements Runnable, Subsystem {
+public class Scheduler extends Context implements Subsystem {
     private final Transmitter<? extends Receiver> transmitterToFloor;
     private final Transmitter<? extends Receiver> transmitterToElevator;
     private final Receiver receiver;
@@ -36,6 +37,9 @@ public class Scheduler implements Runnable, Subsystem {
         this.transmitterToFloor = transmitterToFloor;
         floorRequestsToTime = new HashMap<>();
         idleElevators = new ArrayList<>();
+
+        // Initialize first state for this Subsystem's State Machine
+        setNextState(new ReceivingState(this));
     }
 
     /**
@@ -157,7 +161,7 @@ public class Scheduler implements Runnable, Subsystem {
      * @param event The event to process
      * @throws InvalidTypeException If it receives an event type this class cannot handle
      */
-    private void processMessage(SystemMessage event) throws InvalidTypeException {
+    void processMessage(SystemMessage event) throws InvalidTypeException {
         // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.
         // TODO: Refactor with state pattern to clean up this nested mess
         if (event instanceof ElevatorStateEvent esEvent)
@@ -182,14 +186,21 @@ public class Scheduler implements Runnable, Subsystem {
                     ") received cannot be handled by this subsystem.");
     }
 
+    /** 
+     * Pop a message from this Subsystem's Receiver buffer.
+     */
+    SystemMessage receive() {
+        return receiver.dequeueMessage();
+    }
+
+    /** 
+     * Start the State Machine, with initial state of ReceivingState
+     */
     @Override
     public void run() {
-        while (true){
-            try {
-                processMessage(receiver.dequeueMessage());
-            } catch (InvalidTypeException e) {
-                throw new RuntimeException(e);
-            }
+        while (currentState != null){
+            currentState.runState();
         }
     }
+
 }
