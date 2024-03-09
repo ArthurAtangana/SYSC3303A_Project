@@ -24,11 +24,10 @@ import java.util.*;
  * @version Iteration-2
  */
 public class Scheduler extends Context implements Runnable, Subsystem {
-    // TODO: Make fields private again, make access methods for subclasses instead
     private final Transmitter<? extends Receiver> transmitterToFloor;
     private final Transmitter<? extends Receiver> transmitterToElevator;
     private final Receiver receiver;
-    protected final Map<DestinationEvent, Long> floorRequestsToTime;
+    private final Map<DestinationEvent, Long> floorRequestsToTime;
     private final ArrayList<ElevatorStateEvent> idleElevators;
 
     public Scheduler(Receiver receiver,
@@ -42,6 +41,24 @@ public class Scheduler extends Context implements Runnable, Subsystem {
 
         // Initialize first state for this Subsystem's State Machine
         setNextState(new ReceivingState(this));
+    }
+
+    /**
+     * Remove a DestinationEvent from this Scheduler after service.
+     *
+     * @param event The DestinationEvent to remove.
+     */
+    void removeDestinationEvent(DestinationEvent event) {
+        floorRequestsToTime.remove(event);
+    }
+
+    /**
+     * Check if the Scheduler has any pending DestinationEvents.
+     *
+     * @ return true if there are pending DestinationEvents; false otherwise.
+     */
+    boolean hasPendingDestinationEvents() {
+        return !floorRequestsToTime.isEmpty();
     }
 
     /**
