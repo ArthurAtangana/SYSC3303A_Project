@@ -1,27 +1,23 @@
 package Subsystem.SchedulerSubsystem;
 
-import Messaging.Messages.Commands.MoveElevatorCommand;
-import Messaging.Messages.Commands.MovePassengersCommand;
-import Messaging.Messages.Commands.SendPassengersCommand;
 import Messaging.Messages.Commands.SystemCommand;
 import Messaging.Messages.Direction;
-import Messaging.Messages.Events.*;
+import Messaging.Messages.Events.DestinationEvent;
+import Messaging.Messages.Events.ElevatorStateEvent;
+import Messaging.Messages.Events.FloorRequestEvent;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
 import StatePatternLib.Context;
-import Subsystem.ElevatorSubsytem.Elevator;
 import Subsystem.ElevatorSubsytem.ElevatorUtilities;
-import Subsystem.FloorSubsystem.Floor;
 import Subsystem.Subsystem;
-import com.sun.jdi.InvalidTypeException;
 
 import java.util.*;
 
 /**
  * Scheduler class which models a scheduler in the simulation.
  *
- * @version Iteration-2
+ * @version Iteration-3
  */
 public class Scheduler extends Context implements Runnable, Subsystem {
     private final Transmitter<? extends Receiver> transmitterToFloor;
@@ -54,7 +50,6 @@ public class Scheduler extends Context implements Runnable, Subsystem {
 
     /**
      * Check if the Scheduler has any pending DestinationEvents.
-     *
      * @ return true if there are pending DestinationEvents; false otherwise.
      */
     boolean hasPendingDestinationEvents() {
@@ -72,10 +67,7 @@ public class Scheduler extends Context implements Runnable, Subsystem {
         if (!floorRequestsToTime.containsKey(event.destinationEvent()))
             // Only store request if it does not already exist
             floorRequestsToTime.put(event.destinationEvent(), event.time());
-          // Relegate to StoringFloorRequestState
-//        if (!idleElevators.isEmpty()){
-//            processElevatorEvent(idleElevators.remove(0));
-//        }
+            // NB: StoringFloorRequestState will now handle idle Elevator removal
     }
 
     /**
@@ -97,7 +89,7 @@ public class Scheduler extends Context implements Runnable, Subsystem {
     }
 
     /**
-     * Transmit a SystemCommand to an Floor using this Scheduler's Transmitter.
+     * Transmit a SystemCommand to a Floor using this Scheduler's Transmitter.
      *
      * @param command The SystemCommand to send to the Floor.
      */
@@ -167,7 +159,8 @@ public class Scheduler extends Context implements Runnable, Subsystem {
 
     /**
      * Returns false if the elevator is empty and is moving opposite to the future direction.
-     * @return
+     * @return false if elevator is empty and moving opposite to future direction;
+     * true otherwise.
      */
     boolean isMovingOppositeToFutureDirection(ElevatorStateEvent event){
         return (event.passengerCountMap().isEmpty() && getElevatorDirection(event) != getOldestFloorRequest().direction());
@@ -219,57 +212,6 @@ public class Scheduler extends Context implements Runnable, Subsystem {
         return getDirectionToOldestFloor(event.currentFloor());
     }
 
-
-    /**
-     *  process elevator event with elevator state (current floor, direction, passengerList)
-     *  and sends it to the floor.
-     * @param event an elevator state event
-     */
-    void processElevatorEvent(ElevatorStateEvent event) {
-        if (floorRequestsToTime.isEmpty() && event.passengerCountMap().isEmpty()) {
-            System.out.printf("Elevator %s idle%n", event.elevatorNum());
-            idleElevators.add(event);
-        } else if (isElevatorStopping(event)) { // Stop elevator for a load
-            System.out.printf("Elevator %s stopped.%n", event.elevatorNum());
-            transmitterToFloor.send(new SendPassengersCommand(event.currentFloor(),
-                    event.elevatorNum(),
-                    getElevatorDirection(event)));
-            floorRequestsToTime.remove(new DestinationEvent(event.currentFloor(),getElevatorDirection(event)));
-        } else// Keep moving
-            transmitterToElevator.send(new MoveElevatorCommand(event.elevatorNum(), getElevatorDirection(event)));
-    }
-
-    /**
-     * Process the given event, identify type and select an action or activity based on it.
-     *
-     * @param event The event to process
-     * @throws InvalidTypeException If it receives an event type this class cannot handle
-     */
-    void processMessage(SystemMessage event) throws InvalidTypeException {
-        // Note: Cannot switch on type, if we want to refactor selection, look into visitor pattern.
-        // TODO: Refactor with state pattern to clean up this nested mess
-        if (event instanceof ElevatorStateEvent esEvent)
-            processElevatorEvent(esEvent);
-        else if (event instanceof FloorRequestEvent frEvent)
-            storeFloorRequest(frEvent);
-        else if (event instanceof PassengerLoadEvent plEvent) {
-            transmitterToElevator.send(new MovePassengersCommand(plEvent.elevNumber(), plEvent.passengers()));
-        } else if (event instanceof ReceiverBindingEvent rbEvent) {
-            System.out.println("Bound with: " + rbEvent);
-            Class<? extends Subsystem> subsystemType = rbEvent.subsystemType();
-            if (subsystemType.equals(Elevator.class)) {
-                transmitterToElevator.addReceiver(rbEvent.receiver());
-            } else if (subsystemType.equals(Floor.class)) {
-                transmitterToFloor.addReceiver(rbEvent.receiver());
-            } else
-                throw new InvalidTypeException("Unknown subsystem (" + subsystemType +
-                        ") attempted to bind to scheduler.");
-        }
-        else // Default, should never happen
-            throw new InvalidTypeException("Event type (" + event.getClass() +
-                    ") received cannot be handled by this subsystem.");
-    }
-
     /**
      * Pop a message from this Subsystem's Receiver buffer.
      */
@@ -277,8 +219,9 @@ public class Scheduler extends Context implements Runnable, Subsystem {
         return receiver.dequeueMessage();
     }
 
-    /**
-     * Start the State Machine, with initial state of ReceivingState
+    /** 
+     * Start the State Machine, with initial state of ReceivingState.
+     * Initial state is set in Constructor.
      */
     @Override
     public void run() {
