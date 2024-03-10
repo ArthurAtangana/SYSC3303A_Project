@@ -15,7 +15,8 @@ import com.sun.jdi.InvalidTypeException;
  * Class which models the Receiving State of the Scheduler FSM.
  *
  * Responsibilities:
- * - 
+ * - Receive a SystemMessage event from the Scheduler's Receiver
+ * - Point to the appropriate next state and pass it the received event
  *
  * @author AA/MD
  * @version Iteration-3
