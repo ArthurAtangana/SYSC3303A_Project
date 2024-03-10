@@ -79,11 +79,6 @@ public class BindingReceiverState extends State {
     @Override
     public void doActivity() {
         System.out.println("[INFO::FSM] Scheduler:BindingReceiverState:Do");
-
-        // Next State: BindingReceiverState
-        // Required Constructor Arguments: context
-        context.setNextState(new ReceivingState(context));
-
     }
 
     /**
@@ -92,6 +87,9 @@ public class BindingReceiverState extends State {
     @Override
     public void exit() {
         System.out.println("[INFO::FSM] Scheduler:BindingReceiverState:Exit");
+        // Next State: BindingReceiverState
+        // Required Constructor Arguments: context
+        context.setNextState(new ReceivingState(context));
     }
 
 }

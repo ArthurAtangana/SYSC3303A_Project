@@ -63,10 +63,6 @@ public class LoadingPassengerState extends State {
         // Load Passengers, notify Elevator
         MovePassengersCommand movePassengersCommand = new MovePassengersCommand(event.elevNumber(), event.passengers());
         ((Scheduler)context).transmitToElevator(movePassengersCommand);
-
-        // Next State: ReceivingState
-        // Required Constructor Arguments: context
-        context.setNextState(new ReceivingState(context));
     }
 
     /**
@@ -75,6 +71,9 @@ public class LoadingPassengerState extends State {
     @Override
     public void exit() {
         System.out.println("[INFO::FSM] Scheduler:LoadingPassengerState:Exit");
+        // Next State: ReceivingState
+        // Required Constructor Arguments: context
+        context.setNextState(new ReceivingState(context));
     }
 
 }
