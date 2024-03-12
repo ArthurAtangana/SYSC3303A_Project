@@ -1,7 +1,6 @@
 import Configuration.Config;
 import Configuration.Configurator;
 import Messaging.Messages.Events.FloorInputEvent;
-import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.TransceiverDMAFactory;
 import Messaging.Transceivers.TransceiverFactory;
 import Subsystem.ElevatorSubsytem.Elevator;
@@ -19,15 +18,14 @@ import java.util.ArrayList;
  */
 public class MainDMA {
     /**
-     * Iter2 Creation procedure
+     * All subsystems combined start procedure (using DMA):
      * 1. Load numFloors, numElevators from config
-     * 2. Create receivers (TODO: in the future, this will be part of subsystem creation)
-     * 3. Create subsystems (TODO: in the future, will be part of step 2)
-     * 4. Put subsystems in threads, and start them, in this order: Scheduler, Elevator, Floor
-     * 5. Read inputs -> Start Dispatcher (as this will be part of floor later, floor should be the last subsystem)
+     * 2. Create transceiver factory
+     * 3. Create and start subsystems, (start Scheduler first).
+     * 4. Parse input
+     * 5. Put input into dispatcher and start it
      */
     public static void main(String[] args) {
-
         // 1. Configure system from JSON
         System.out.println("\n****** Configuring System ******\n");
         Config config = (new Configurator().getConfig());
@@ -35,48 +33,37 @@ public class MainDMA {
         int numFloors = config.getNumFloors();
         int numElevators = config.getNumElevators();
 
-        // 2. Create receivers
-        TransceiverFactory transceiverFactory = new TransceiverDMAFactory();
+        // 2. Create factory
+        TransceiverFactory dmaFactory = new TransceiverDMAFactory();
 
-        Receiver schedulerReceiver = transceiverFactory.createServerReceiver();
-        ArrayList<Receiver> elevatorReceivers = new ArrayList<>();
-        for(int i=0; i < numElevators; i++){
-            elevatorReceivers.add(transceiverFactory.createClientReceiver(i));
-        }
-        ArrayList<Receiver> floorReceivers = new ArrayList<>();
-        for(int i=0; i < numFloors; i++){
-            floorReceivers.add(transceiverFactory.createClientReceiver(i));
-        }
-
-        // 2. Start Scheduler threads
-        Scheduler scheduler = new Scheduler(schedulerReceiver,
-                transceiverFactory.createServerTransmitter(),
-                transceiverFactory.createServerTransmitter());
+        // 3. Create and start Subsystem threads
+        Scheduler scheduler = new Scheduler(dmaFactory.createServerReceiver(),
+                dmaFactory.createServerTransmitter(),
+                dmaFactory.createServerTransmitter());
         Thread schedulerThread = new Thread(scheduler);
         schedulerThread.start();
 
-        // 3 + 4. Create then immediately start floors, and elevators
+        // Floor and elevator thread creation
         for (int i = 0; i < numFloors; ++i) {
-            new Thread(new Floor(i, floorReceivers.get(i),
-                    transceiverFactory.createClientTransmitter())).start();
+            new Thread(new Floor(i, dmaFactory.createClientReceiver(i),
+                    dmaFactory.createClientTransmitter())).start();
         }
         for (int i = 0; i < numElevators; ++i) {
-            new Thread(new Elevator(i, elevatorReceivers.get(i),
-                    transceiverFactory.createClientTransmitter())).start();
+            new Thread(new Elevator(i, dmaFactory.createClientReceiver(i),
+                    dmaFactory.createClientTransmitter())).start();
         }
 
-        // 5. Instantiate Parser and parse input file to FloorInputEvents
+        // 4. Instantiate Parser and parse input file to FloorInputEvents
         System.out.println("\n****** Generating System Input Events ******\n");
         Parser parser = new Parser();
-        //String inputFilename = "res/input-file.txt";
         String inputFilename = "test/resources/test-input-file.txt";
         ArrayList<FloorInputEvent> inputEvents = parser.parse(inputFilename);
 
-        // Start dispatcher (want all systems to be ready before sending events)
+        // 5. Start dispatcher (want all systems to be ready before sending events)
         System.out.println("\n****** Begin Real-Time System Operation ******\n");
 
         new Thread(new DestinationDispatcher(inputEvents,
-                transceiverFactory.createClientTransmitter(),
+                dmaFactory.createClientTransmitter(),
                 Floor.getFloorsTransmitter())).start();
     }
 }

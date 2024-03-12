@@ -132,12 +132,12 @@ public class Floor implements Runnable, Subsystem {
     }
 
     /**
-     * Iter2 Creation procedure
+     * Floor subsystem start procedure:
      * 1. Configure floor subsystem from JSON
      * 2. Create transceiver factory
-     * 3. Create subsystems (TODO: in the future, will be part of step 2)
-     * 4. Put subsystems in threads, and start them, in this order: Scheduler, Elevator, Floor
-     * 5. Read inputs -> Start Dispatcher (as this will be part of floor later, floor should be the last subsystem)
+     * 3. Create and start floor node instances
+     * 4. Parse input
+     * 5. Put input into dispatcher and start it
      */
     public static void main(String[] args) {
         // 1. Configure floor subsystem from JSON
