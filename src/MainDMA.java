@@ -30,9 +30,7 @@ public class MainDMA {
 
         // 1. Configure system from JSON
         System.out.println("\n****** Configuring System ******\n");
-        String jsonFilename = "res/system-config-00.json";
-        System.out.println("Reading system configuration from \"" + jsonFilename +"\"...");
-        Config config = (new Configurator(jsonFilename).getConfig());
+        Config config = (new Configurator().getConfig());
         config.printConfig();
         int numFloors = config.getNumFloors();
         int numElevators = config.getNumElevators();

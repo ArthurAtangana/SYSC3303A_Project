@@ -1,5 +1,7 @@
 package Configuration;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -11,11 +13,12 @@ import java.io.IOException;
  * @version Iteration 2
  */
 public class Configurator {
+    private static final String DEFAULT_CONFIG_PATH = "res/system-config-00.json";
 
     /* Instance Variables */
 
     // Container for ingested JSON configuration data
-    private Config config;
+    private final Config config;
 
     /**
      * Parametric constructor for Configurator class.
@@ -24,6 +27,7 @@ public class Configurator {
      *                     from the top-level project directory.
      */
     public Configurator (String jsonFilename) {
+        System.out.println("Reading system configuration from \"" + jsonFilename + "\"...");
 
         // Get the system config JSON file
         File jsonFile = new File(jsonFilename);
@@ -37,8 +41,13 @@ public class Configurator {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
-        return;
+    /**
+     * Default constructor for Configurator class, uses hardcoded default config file.
+     */
+    public Configurator() {
+        this(DEFAULT_CONFIG_PATH);
     }
 
     /* Methods */
@@ -59,7 +68,6 @@ public class Configurator {
         Config config = configurator.getConfig();
         config.printConfig();
 
-        return;
     }
 
 }
