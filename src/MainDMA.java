@@ -30,8 +30,6 @@ public class MainDMA {
         System.out.println("\n****** Configuring System ******\n");
         Config config = (new Configurator().getConfig());
         config.printConfig();
-        int numFloors = config.getNumFloors();
-        int numElevators = config.getNumElevators();
 
         // 2. Create factory
         TransceiverFactory dmaFactory = new TransceiverDMAFactory();
@@ -44,11 +42,11 @@ public class MainDMA {
         schedulerThread.start();
 
         // Floor and elevator thread creation
-        for (int i = 0; i < numFloors; ++i) {
+        for (int i = 0; i < config.getNumFloors(); ++i) {
             new Thread(new Floor(i, dmaFactory.createClientReceiver(i),
                     dmaFactory.createClientTransmitter())).start();
         }
-        for (int i = 0; i < numElevators; ++i) {
+        for (int i = 0; i < config.getNumElevators(); ++i) {
             new Thread(new Elevator(i, dmaFactory.createClientReceiver(i),
                     dmaFactory.createClientTransmitter())).start();
         }
