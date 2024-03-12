@@ -13,11 +13,11 @@ import Subsystem.SchedulerSubsystem.Scheduler;
 import java.util.ArrayList;
 
 /**
- * Main initializes and maintains track of threads.
+ * MainDMA initializes and maintains track of threads.
  *
  * @version Iteration-2
  */
-public class Main {
+public class MainDMA {
     /**
      * Iter2 Creation procedure
      * 1. Load numFloors, numElevators from config
