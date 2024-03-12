@@ -144,13 +144,12 @@ public class Floor implements Runnable, Subsystem {
         System.out.println("\n****** Configuring Floors ******\n");
         Config config = (new Configurator().getConfig());
         config.printConfig();
-        int numFloors = config.getNumFloors();
 
         // 2. Create transceiver factory
         TransceiverFactory udpFactory = new TransceiverUDPFactory();
 
         // 3. Create and start floors
-        for (int i = 0; i < numFloors; ++i) {
+        for (int i = 0; i < config.getNumFloors(); ++i) {
             Floor floor = new Floor(i, udpFactory.createClientReceiver(i), udpFactory.createClientTransmitter());
             new Thread(floor).start();
         }
