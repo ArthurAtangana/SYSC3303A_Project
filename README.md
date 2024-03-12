@@ -32,12 +32,13 @@ Note: Compiled using JDK - 21 Oracle OpenJDK version 21.0.1
      - `git clone git@github.com:ArthurAtangana/SYSC3303A_Project.git`
    - Clone using GitHub CLI:
      - `gh repo clone ArthurAtangana/SYSC3303A_Project`
+   - For TA's milestone grading: use the submission zip file (it's a snapshot of the repo at submission time).
 2. Add lib folder as a library
    1. Right click lib folder in root directory
    2. Select add as library
    3. Leave settings as default, select ok
-3. Open Mains.MainCombinedDMA.java TODO: Replace with UDP run instructions
-4. Run the main function
+3. Run the files in the "Mains" package in this order:
+   MainSchedulerUDP, MainElevatorUDP, MainFloorUDP
 
 For test execution, see [test section](#test).
 

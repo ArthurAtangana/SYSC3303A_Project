@@ -2,8 +2,8 @@ package Mains;
 
 import Configuration.Config;
 import Configuration.Configurator;
-import Messaging.Transceivers.TransceiverDMAFactory;
 import Messaging.Transceivers.TransceiverFactory;
+import Messaging.Transceivers.TransceiverUDPFactory;
 import Subsystem.ElevatorSubsytem.Elevator;
 
 public class MainElevatorUDP {
@@ -20,12 +20,12 @@ public class MainElevatorUDP {
         config.printConfig();
 
         // 2. Create factory
-        TransceiverFactory dmaFactory = new TransceiverDMAFactory();
+        TransceiverFactory udpFactory = new TransceiverUDPFactory();
 
         // 3. Create and start elevator threads
         for (int i = 0; i < config.getNumElevators(); ++i) {
-            new Thread(new Elevator(i, dmaFactory.createClientReceiver(i),
-                    dmaFactory.createClientTransmitter())).start();
+            new Thread(new Elevator(i, udpFactory.createClientReceiver(i),
+                    udpFactory.createClientTransmitter())).start();
         }
     }
 }
