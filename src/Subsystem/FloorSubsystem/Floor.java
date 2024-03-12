@@ -1,17 +1,16 @@
 package Subsystem.FloorSubsystem;
 
-import Configuration.Config;
-import Configuration.Configurator;
 import Messaging.Messages.Commands.PassengerArrivedCommand;
 import Messaging.Messages.Commands.SendPassengersCommand;
 import Messaging.Messages.Direction;
-import Messaging.Messages.Events.*;
+import Messaging.Messages.Events.DestinationEvent;
+import Messaging.Messages.Events.ElevatorStateEvent;
+import Messaging.Messages.Events.PassengerLoadEvent;
+import Messaging.Messages.Events.ReceiverBindingEvent;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Receivers.ReceiverComposite;
 import Messaging.Transceivers.Receivers.ReceiverDMA;
-import Messaging.Transceivers.TransceiverFactory;
-import Messaging.Transceivers.TransceiverUDPFactory;
 import Messaging.Transceivers.Transmitters.Transmitter;
 import Messaging.Transceivers.Transmitters.TransmitterDMA;
 import Subsystem.Subsystem;
@@ -129,42 +128,5 @@ public class Floor implements Runnable, Subsystem {
                 throw new RuntimeException(e);
             }
         }
-    }
-
-    /**
-     * Floor subsystem start procedure:
-     * 1. Configure floor subsystem from JSON
-     * 2. Create transceiver factory
-     * 3. Create and start floor node instances
-     * 4. Parse input
-     * 5. Put input into dispatcher and start it
-     */
-    public static void main(String[] args) {
-        // 1. Configure floor subsystem from JSON
-        System.out.println("\n****** Configuring Floors ******\n");
-        Config config = (new Configurator().getConfig());
-        config.printConfig();
-
-        // 2. Create transceiver factory
-        TransceiverFactory udpFactory = new TransceiverUDPFactory();
-
-        // 3. Create and start floors
-        for (int i = 0; i < config.getNumFloors(); ++i) {
-            Floor floor = new Floor(i, udpFactory.createClientReceiver(i), udpFactory.createClientTransmitter());
-            new Thread(floor).start();
-        }
-
-        // 4. Instantiate Parser and parse input file to FloorInputEvents
-        System.out.println("\n****** Generating System Input Events ******\n");
-        Parser parser = new Parser();
-        String inputFilename = "test/resources/test-input-file.txt";
-        ArrayList<FloorInputEvent> inputEvents = parser.parse(inputFilename);
-
-        // 5. Start dispatcher
-        System.out.println("\n****** Begin Real-Time System Operation ******\n");
-
-        new Thread(new DestinationDispatcher(inputEvents,
-                udpFactory.createClientTransmitter(),
-                Floor.getFloorsTransmitter())).start();
     }
 }
