@@ -2,6 +2,7 @@ package Configuration;
 
 /**
  *  Config class which contains system configuration data.
+ *  Data class object created by configurator which can be used by subsystems to access config information.
  *
  * @author M. Desantis
  * @version Iteration-2
