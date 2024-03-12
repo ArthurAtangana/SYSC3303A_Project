@@ -83,7 +83,7 @@ public class Scheduler implements Runnable, Subsystem {
     /**
      * Returns false if the elevator is empty and is moving opposite to the future direction.
      *
-     * @return
+     * @return false if the elevator is empty and is moving opposite to the future direction. True otherwise.
      */
     private boolean isMovingOppositeToFutureDirection(ElevatorStateEvent event) {
         return (event.passengerCountMap().isEmpty() && getElevatorDirection(event) != getOldestFloorRequest().direction());
