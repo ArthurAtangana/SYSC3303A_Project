@@ -49,10 +49,11 @@ public class Scheduler implements Runnable, Subsystem {
         if (!floorRequestsToTime.containsKey(event.destinationEvent()))
             // Only store request if it does not already exist
             floorRequestsToTime.put(event.destinationEvent(), event.time());
-        if (!idleElevators.isEmpty()){
+        if (!idleElevators.isEmpty()) {
             processElevatorEvent(idleElevators.remove(0));
         }
     }
+
     /**
      * Returns true if elevator should stop, false otherwise.
      *
@@ -79,11 +80,13 @@ public class Scheduler implements Runnable, Subsystem {
 
     /**
      * Returns false if the elevator is empty and is moving opposite to the future direction.
+     *
      * @return
      */
-    private boolean isMovingOppositeToFutureDirection(ElevatorStateEvent event){
+    private boolean isMovingOppositeToFutureDirection(ElevatorStateEvent event) {
         return (event.passengerCountMap().isEmpty() && getElevatorDirection(event) != getOldestFloorRequest().direction());
     }
+
     private DestinationEvent getOldestFloorRequest() {
         if (floorRequestsToTime.isEmpty()) return null;
         Long waitTime = Long.MAX_VALUE;
@@ -96,6 +99,7 @@ public class Scheduler implements Runnable, Subsystem {
         }
         return oldestFloor;
     }
+
     /**
      * Returns the direction of the oldest floor request based on the elevator's current floor.
      *
@@ -117,14 +121,14 @@ public class Scheduler implements Runnable, Subsystem {
     private Direction getElevatorDirection(ElevatorStateEvent event) {
         // Find direction in elevator if elevator has passengers.
         Direction direction = ElevatorUtilities.getPassengersDirection(event.passengerCountMap().keySet());
-        if (direction != null){
+        if (direction != null) {
             return direction;
         }
-        if (floorRequestsToTime.isEmpty()){
+        if (floorRequestsToTime.isEmpty()) {
             throw new RuntimeException("No passenger on elevator and no floor requests");
         }
         // If on the same floor as the oldest floor request, return direction of the floor request.
-        if (event.currentFloor() == getOldestFloorRequest().destinationFloor()){
+        if (event.currentFloor() == getOldestFloorRequest().destinationFloor()) {
             return getOldestFloorRequest().direction();
         }
         // Find direction to oldest floor request.
@@ -133,8 +137,9 @@ public class Scheduler implements Runnable, Subsystem {
 
 
     /**
-     *  process elevator event with elevator state (current floor, direction, passengerList)
-     *  and sends it to the floor.
+     * process elevator event with elevator state (current floor, direction, passengerList)
+     * and sends it to the floor.
+     *
      * @param event an elevator state event
      */
     private void processElevatorEvent(ElevatorStateEvent event) {
@@ -146,7 +151,7 @@ public class Scheduler implements Runnable, Subsystem {
             transmitterToFloor.send(new SendPassengersCommand(event.currentFloor(),
                     event.elevatorNum(),
                     getElevatorDirection(event)));
-            floorRequestsToTime.remove(new DestinationEvent(event.currentFloor(),getElevatorDirection(event)));
+            floorRequestsToTime.remove(new DestinationEvent(event.currentFloor(), getElevatorDirection(event)));
         } else// Keep moving
             transmitterToElevator.send(new MoveElevatorCommand(event.elevatorNum(), getElevatorDirection(event)));
     }
@@ -176,15 +181,14 @@ public class Scheduler implements Runnable, Subsystem {
             } else
                 throw new InvalidTypeException("Unknown subsystem (" + subsystemType +
                         ") attempted to bind to scheduler.");
-        }
-        else // Default, should never happen
+        } else // Default, should never happen
             throw new InvalidTypeException("Event type (" + event.getClass() +
                     ") received cannot be handled by this subsystem.");
     }
 
     @Override
     public void run() {
-        while (true){
+        while (true) {
             try {
                 processMessage(receiver.dequeueMessage());
             } catch (InvalidTypeException e) {
@@ -193,3 +197,4 @@ public class Scheduler implements Runnable, Subsystem {
         }
     }
 }
+
