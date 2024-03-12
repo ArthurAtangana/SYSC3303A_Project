@@ -7,8 +7,6 @@ import Messaging.Messages.Direction;
 import Messaging.Messages.Events.*;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
-import Messaging.Transceivers.TransceiverFactory;
-import Messaging.Transceivers.TransceiverUDPFactory;
 import Messaging.Transceivers.Transmitters.Transmitter;
 import Subsystem.ElevatorSubsytem.Elevator;
 import Subsystem.ElevatorSubsytem.ElevatorUtilities;
@@ -197,22 +195,5 @@ public class Scheduler implements Runnable, Subsystem {
                 throw new RuntimeException(e);
             }
         }
-    }
-
-
-    /**
-     * UDP Scheduler start procedure:
-     * 1. Create transceiver factory
-     * 2. Create and start scheduler
-     */
-    public static void main(String[] args) {
-        // 1. Create transceiver factory
-        TransceiverFactory transceiverFactory = new TransceiverUDPFactory();
-
-        // 2. Create and start scheduler
-        Scheduler scheduler = new Scheduler(transceiverFactory.createServerReceiver(),
-                transceiverFactory.createServerTransmitter(),
-                transceiverFactory.createServerTransmitter());
-        new Thread(scheduler).start();
     }
 }

@@ -36,7 +36,7 @@ Note: Compiled using JDK - 21 Oracle OpenJDK version 21.0.1
    1. Right click lib folder in root directory
    2. Select add as library
    3. Leave settings as default, select ok
-3. Open MainDMA.java
+3. Open Mains.MainCombinedDMA.java TODO: Replace with UDP run instructions
 4. Run the main function
 
 For test execution, see [test section](#test).
@@ -85,7 +85,7 @@ See test README for test file structure.
 | SystemMessage           | Messaging              | Interface definition for all messages passed in the system to inherit.                        |
 | Loader                  | SchedulerSubsystem     | Loads appropriate passengers into an elevator.                                                |
 | Scheduler               | SchedulerSubsystem     | Models a scheduler in the simulation.                                                         |
-| MainDMA                 |                        | Models a scheduler in the simulation.                                                         |
+| Mains.MainCombinedDMA   |                        | Models a scheduler in the simulation.                                                         |
 
 ## Design Considerations
 
