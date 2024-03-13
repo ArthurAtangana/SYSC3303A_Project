@@ -1,0 +1,6 @@
+{
+  "numFloors": 8,
+  "numElevators": 3,
+  "travelTime": 8500,
+  "loadTime": 1000
+}
