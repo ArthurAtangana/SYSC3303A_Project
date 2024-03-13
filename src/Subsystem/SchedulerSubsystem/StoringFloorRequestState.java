@@ -45,7 +45,7 @@ public class StoringFloorRequestState extends State {
      */
     @Override
     public void entry() {
-        System.out.println("[INFO::FSM] Scheduler:StoringFloorRequestState:Entry");
+        //System.out.println("[INFO::FSM] Scheduler:StoringFloorRequestState:Entry");
     }
 
     /**
@@ -56,17 +56,19 @@ public class StoringFloorRequestState extends State {
      */
     @Override
     public void doActivity() {
-        System.out.println("[INFO::FSM] Scheduler:StoringFloorRequestState:Do");
+        //System.out.println("[INFO::FSM] Scheduler:StoringFloorRequestState:Do");
 
         // Store the FloorRequestEvent
         ((Scheduler)context).storeFloorRequest(event);
 
         // Case: There are idle Elevators.
-        // Description: An Elevator is immediately available for work.
+        // Description: An Elevator is immediately available for work. Find the
+        // closest Elevator to the FloorRequest source floor before transitioning.
         if (((Scheduler)context).areIdleElevators()) {
+            // Find the closest idle Elevator to the requesting Floor
+            ElevatorStateEvent elevatorStateEvent = ((Scheduler)context).getClosestIdleElevator(event);
             // Next State: ProcessingElevatorEventState
-            // Required Constructor Arguments: ElevatorStateEvent
-            ElevatorStateEvent elevatorStateEvent = ((Scheduler)context).getFirstIdleElevator();
+            // Required Constructor Arguments: Context, ElevatorStateEvent
             context.setNextState(new ProcessingElevatorEventState(context, elevatorStateEvent)); 
         }
         // Case: There are NO idle Elevators.
@@ -84,7 +86,7 @@ public class StoringFloorRequestState extends State {
      */
     @Override
     public void exit() {
-        System.out.println("[INFO::FSM] Scheduler:StoringFloorRequestState:Exit");
+        //System.out.println("[INFO::FSM] Scheduler:StoringFloorRequestState:Exit");
     }
 
 }
