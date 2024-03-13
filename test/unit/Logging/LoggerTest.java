@@ -1,8 +1,11 @@
 /**
  * Test class for Logger class.
  *
+ * Since this class only tests system prints, requires visual inspection of
+ * output.
+ *
  * @author Michael De Santis
- * @version 20240202
+ * @version Iteration-3
  */
 package unit.Logging;
 
@@ -73,7 +76,7 @@ class LoggerTest {
         message = "verbosity==2: testing INFO message";
         debugLogger.log(level, logId, message);
 
-        System.out.println("\n****** END: testParse() ******");
+        System.out.println("\n****** END: testLog() ******");
     }
 
 }
