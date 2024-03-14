@@ -7,7 +7,9 @@ System tests to verify overall system functionality.
 ## Contents
 
 ## System Test Method
-The current method for testing the overall functionality of the system involves running the `main()` method of the Main class, and verifying its runtime output against expected results. 
+
+The current method for testing the overall functionality of the system involves running the `main()` method of the
+Mains.MainCombinedDMA class, and verifying its runtime output against expected results.
 A sample of the program's expected output during a single execution is contained in this directory.
 
 ### Expected output

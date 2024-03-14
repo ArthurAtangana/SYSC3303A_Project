@@ -10,8 +10,8 @@ import Messaging.Messages.Events.ReceiverBindingEvent;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
+import StatePatternLib.Context;
 import Subsystem.Subsystem;
-import StatePatternLib.*;
 
 import java.util.HashMap;
 
@@ -31,10 +31,10 @@ public class Elevator extends Context implements Subsystem {
     private final long travelTime;
     private final long loadTime;
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
-    private final Transmitter<Receiver> transmitterToScheduler;
+    private final Transmitter<?> transmitterToScheduler;
     private final Receiver receiver;
 
-    public Elevator(int elevNum, Receiver receiver, Transmitter transmitter) {
+    public Elevator(int elevNum, Receiver receiver, Transmitter<?> transmitter) {
 
         // Configure Elevator from JSON
         String jsonFilename = "res/system-config-00.json";
@@ -117,5 +117,4 @@ public class Elevator extends Context implements Subsystem {
         System.out.println(event);
         return event;
     }
-
 }
