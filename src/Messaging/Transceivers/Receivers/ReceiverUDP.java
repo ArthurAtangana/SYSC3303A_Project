@@ -14,7 +14,7 @@ import java.net.SocketException;
  * @version Iteration-3
  */
 public class ReceiverUDP extends Receiver implements Runnable {
-    public final int MAX_MSG_SIZE = 255;
+    public final int MAX_MSG_SIZE = 10000;
     private final DatagramSocket receiveSocket;
     private byte[] responseMessage;
 
