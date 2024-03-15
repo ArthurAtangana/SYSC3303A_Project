@@ -17,6 +17,11 @@ import java.util.ArrayList;
  * @version Iteration-2
  */
 public record MovePassengersCommand(int elevNum, ArrayList<DestinationEvent> newPassengers) implements SystemCommand, Serializable {
+    public MovePassengersCommand(int elevNum, ArrayList<DestinationEvent> newPassengers){
+        this.elevNum = elevNum;
+        this.newPassengers = new ArrayList<>(newPassengers);
+    }
+
     /**
      * Match elevator number with the given key.
      * @param key The elevator number of the elevator trying to process this event.

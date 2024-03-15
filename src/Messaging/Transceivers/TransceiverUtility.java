@@ -29,7 +29,7 @@ public class TransceiverUtility {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
-        }
+        } // catch (EOFException) TODO: may need this
         return deserializedMessage;
     }
 

@@ -1,5 +1,7 @@
 package Messaging.Messages.Events;
 
+import Subsystem.ElevatorSubsytem.ElevatorState;
+
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -17,4 +19,11 @@ import java.util.HashMap;
  */
 public record ElevatorStateEvent
         (int elevatorNum, int currentFloor, HashMap<DestinationEvent, Integer> passengerCountMap)
-        implements SystemEvent, Serializable {}
+        implements SystemEvent, Serializable {
+    public ElevatorStateEvent(int elevatorNum, int currentFloor, HashMap<DestinationEvent, Integer> passengerCountMap){
+        this.elevatorNum = elevatorNum;
+        this.currentFloor = currentFloor;
+        this.passengerCountMap = new HashMap<>(passengerCountMap);
+    }
+
+}

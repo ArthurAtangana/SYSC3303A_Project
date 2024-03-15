@@ -1,6 +1,7 @@
 package Messaging.Transceivers.Transmitters;
 
 import Messaging.Messages.SystemMessage;
+import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Receivers.ReceiverUDP;
 import Messaging.Transceivers.TransceiverUtility;
 
@@ -58,7 +59,7 @@ public class TransmitterUDP extends Transmitter<ReceiverUDP> {
             try {
                 System.out.println(rx.getPort());
                 DatagramPacket packet = new DatagramPacket(msg, msg.length, InetAddress.getLocalHost(), rx.getPort());
-                sendSocket.send(packet);
+                sendSocket.send(packet); // TODO: analyze if this corrupts our data
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -72,7 +73,7 @@ public class TransmitterUDP extends Transmitter<ReceiverUDP> {
      * @param destReceiver The receiver to bind to this transmitter.
      */
     @Override
-    public void addReceiver(ReceiverUDP destReceiver) {
+    public void addReceiver(Receiver destReceiver) {
         super.addReceiver(destReceiver);
         receiverKeys.add(destReceiver.getKey());
     }
