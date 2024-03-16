@@ -2,12 +2,13 @@ package Messaging.Transceivers;
 
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Receivers.ReceiverUDP;
-import Messaging.Transceivers.Transmitters.Transmitter;
+import Messaging.Transceivers.Receivers.ReceiverUDPProxy;
+import Messaging.Transceivers.Receivers.ReceiverUDPStub;
 import Messaging.Transceivers.Transmitters.TransmitterUDP;
 
 public class TransceiverUDPFactory implements TransceiverFactory {
-    // Define server_receiver as a singleton
-    private static final ReceiverUDP serverReceiver = new ReceiverUDP(0, 8008);
+    // Singleton proxy for server
+    private static final ReceiverUDPProxy SERVER_PROXY = new ReceiverUDPStub(8008);
 
     /**
      * Receiver for the server, receives the client events.
@@ -16,7 +17,7 @@ public class TransceiverUDPFactory implements TransceiverFactory {
      */
     @Override
     public Receiver createServerReceiver() {
-        return serverReceiver;
+        return new ReceiverUDP(0, SERVER_PROXY.getPort());
     }
 
     /**
@@ -39,7 +40,7 @@ public class TransceiverUDPFactory implements TransceiverFactory {
      * @return A server transmitter instance.
      */
     @Override
-    public Transmitter<ReceiverUDP> createServerTransmitter() {
+    public TransmitterUDP createServerTransmitter() {
         return new TransmitterUDP();
     }
 
@@ -50,10 +51,10 @@ public class TransceiverUDPFactory implements TransceiverFactory {
      * @return A client transmitter instance.
      */
     @Override
-    public Transmitter<ReceiverUDP> createClientTransmitter() {
+    public TransmitterUDP createClientTransmitter() {
         TransmitterUDP clientTransmitter = new TransmitterUDP();
         // Bind client to server
-        clientTransmitter.addReceiver(serverReceiver);
+        clientTransmitter.addReceiver(SERVER_PROXY);
         return clientTransmitter;
     }
 }
