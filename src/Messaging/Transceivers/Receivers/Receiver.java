@@ -72,4 +72,14 @@ public abstract class Receiver {
      * @return The serializable equivalent to this receiver instance.
      */
     public abstract SerializableReceiver getSerializableReceiver();
+
+    /**
+     * Returns the unique key identifier of this Receiver.
+     *
+     * @return int key of receiver.
+     */
+    public int getKey() {
+        // make a getter function for key
+        return key;
+    }
 }
