@@ -2,8 +2,6 @@ package Messaging.Messages.Events;
 
 import Messaging.Messages.Direction;
 
-import java.io.Serializable;
-
 /**
  * FloorInputEvent record, models an input event to the system. These events
  * are be supplied to the system via an input file, which is then parsed to

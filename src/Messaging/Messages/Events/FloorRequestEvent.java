@@ -1,7 +1,5 @@
 package Messaging.Messages.Events;
 
-import java.io.Serializable;
-
 /**
  * FloorRequestEvent record, holds a destination event referring to the source floor
  * and the time the floor received the request.
