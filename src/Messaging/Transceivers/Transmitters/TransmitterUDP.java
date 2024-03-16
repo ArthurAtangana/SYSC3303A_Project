@@ -46,7 +46,7 @@ public class TransmitterUDP extends Transmitter<ReceiverUDPProxy> {
 
         for (ReceiverUDPProxy rx : receivers) {
             try {
-                System.out.println(rx.getPort());
+//                System.out.println("DEBUG: sending on localhost, port"+ rx.getPort());
                 DatagramPacket packet = new DatagramPacket(msg, msg.length, InetAddress.getLocalHost(), rx.getPort());
                 sendSocket.send(packet);
             } catch (IOException e) {
