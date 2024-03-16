@@ -66,7 +66,7 @@ public class StoringFloorRequestState extends State {
         if (((Scheduler)context).areIdleElevators()) {
             // Next State: ProcessingElevatorEventState
             // Required Constructor Arguments: ElevatorStateEvent
-            ElevatorStateEvent elevatorStateEvent = ((Scheduler)context).getFirstIdleElevator();
+            ElevatorStateEvent elevatorStateEvent = ((Scheduler)context).getClosestIdleElevator(event);
             context.setNextState(new ProcessingElevatorEventState(context, elevatorStateEvent)); 
         }
         // Case: There are NO idle Elevators.
