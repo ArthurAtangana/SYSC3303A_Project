@@ -24,6 +24,12 @@ public abstract class Receiver implements Serializable {
     }
 
     /**
+     * Returns serializable version of this receiver.
+     * @return The serializable equivalent to this receiver instance.
+     */
+    public abstract SerializableReceiver getSerializableReceiver();
+
+    /**
      * Returns first event in message queue.
      * Blocks if no event has arrived yet.
      *
@@ -40,6 +46,16 @@ public abstract class Receiver implements Serializable {
             }
             return msgBuf.removeFirst();
         }
+    }
+
+    /**
+     * Returns the unique key identifier of this Receiver.
+     *
+     * @return int key of receiver.
+     */
+    public int getKey() {
+        // make a getter function for key
+        return key;
     }
 
     /**
@@ -67,21 +83,5 @@ public abstract class Receiver implements Serializable {
      */
     private boolean isMessageForThis(SystemMessage msg){
         return !(msg instanceof SystemCommand && !((SystemCommand) msg).matchKey(key));
-    }
-
-    /**
-     * Returns serializable version of this receiver.
-     * @return The serializable equivalent to this receiver instance.
-     */
-    public abstract SerializableReceiver getSerializableReceiver();
-
-    /**
-     * Returns the unique key identifier of this Receiver.
-     *
-     * @return int key of receiver.
-     */
-    public int getKey() {
-        // make a getter function for key
-        return key;
     }
 }
