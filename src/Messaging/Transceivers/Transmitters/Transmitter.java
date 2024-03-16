@@ -2,6 +2,7 @@ package Messaging.Transceivers.Transmitters;
 
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
+import Messaging.Transceivers.Receivers.SerializableReceiver;
 
 import java.util.ArrayList;
 
@@ -35,7 +36,7 @@ public abstract class Transmitter<R extends Receiver> {
      *
      * @param receiver The receiver to bind to this transmitter.
      */
-    public void addReceiver(Receiver receiver) {
+    public void addReceiver(SerializableReceiver receiver) {
         // Add IFF the receiver matches the expected type
         if (receiverType != null && receiverType.isInstance(receiver)) {
             // Cast to the specific subclass.

@@ -11,12 +11,22 @@ import Messaging.Messages.SystemMessage;
  * @author Alexandre Marques
  * @version Iteration-1
  */
-public class ReceiverDMA extends Receiver{
+public class ReceiverDMA extends Receiver implements SerializableReceiver{
     /**
      * DMA_Receiver with key to check commands against.
      */
     public ReceiverDMA(int key) {
         super(key);
+    }
+
+    /**
+     * Returns serializable version of this receiver.
+     * For DMA, returns itself (already serializable).
+     * @return The serializable equivalent to this receiver instance.
+     */
+    @Override
+    public SerializableReceiver getSerializableReceiver() {
+        return this;
     }
 
     /**
