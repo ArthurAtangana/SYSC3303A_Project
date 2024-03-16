@@ -15,5 +15,5 @@ import java.io.Serializable;
  */
 public record FloorRequestEvent
         (DestinationEvent destinationEvent, long time)
-        implements SystemEvent, Serializable {
+        implements SystemEvent {
 }

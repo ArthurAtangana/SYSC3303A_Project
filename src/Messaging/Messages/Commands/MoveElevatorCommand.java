@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @author Alexandre Marques
  * @version Iteration-2
  */
-public record MoveElevatorCommand(int elevNum, Direction direction) implements SystemCommand, Serializable {
+public record MoveElevatorCommand(int elevNum, Direction direction) implements SystemCommand {
     /**
      * Match elevator number with the given key.
      * @param key The elevator number of the elevator trying to process this event.
