@@ -1,5 +1,6 @@
 package Messaging.Transceivers.Receivers;
 
+import Messaging.Messages.AcknowledgementMessage;
 import Messaging.Messages.SequencedMessage;
 import Messaging.Messages.SerializationHelper;
 
@@ -16,6 +17,7 @@ import java.net.SocketException;
 public class ReceiverUDP extends ReceiverUDPProxy implements Runnable {
     public final int MAX_MSG_SIZE = 9001; // Reduce to save on memory (may cause crash), Increase if EOFException is raised.
     private final DatagramSocket receiveSocket;
+    private int lastSequenceReceived;
 
     /**
      * Initializes a UDP DatagramSocket that listens on the specified port (important for servers with known addresses).
@@ -24,6 +26,7 @@ public class ReceiverUDP extends ReceiverUDPProxy implements Runnable {
      */
     public ReceiverUDP(int key, int receivePort) {
         super(key);
+        lastSequenceReceived = -1;
         try {
             this.receiveSocket = new DatagramSocket(receivePort);
         } catch (SocketException e) {
@@ -36,6 +39,7 @@ public class ReceiverUDP extends ReceiverUDPProxy implements Runnable {
      */
     public ReceiverUDP(int key) {
         super(key);
+        lastSequenceReceived = -1;
         try {
             this.receiveSocket = new DatagramSocket();
         } catch (SocketException e) {
@@ -68,16 +72,39 @@ public class ReceiverUDP extends ReceiverUDPProxy implements Runnable {
      */
     private void receiveUDP() {
         byte[] dataBuf = new byte[MAX_MSG_SIZE];
-        DatagramPacket packet = new DatagramPacket(dataBuf, dataBuf.length);
+        DatagramPacket rcvPacket = new DatagramPacket(dataBuf, dataBuf.length);
 
         try {
-            receiveSocket.receive(packet);
+            receiveSocket.receive(rcvPacket);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        SequencedMessage deserializedMessage = (SequencedMessage) SerializationHelper.deserializeSystemMessage(packet.getData());
-        // TODO: reply here with AcknowledgementMessage
-        enqueueMessage(deserializedMessage.message());
+        SequencedMessage deserializedMessage = (SequencedMessage) SerializationHelper.deserializeSystemMessage(rcvPacket.getData());
+
+        // Acknowledge message
+        acknowledgeMessage(deserializedMessage.sequenceKey(), rcvPacket);
+
+        // Process message
+        processMessage(deserializedMessage);
+    }
+
+    private void processMessage(SequencedMessage sequencedMessage) {
+        int messageSequence = sequencedMessage.sequenceKey();
+        if (messageSequence > lastSequenceReceived){
+            lastSequenceReceived = messageSequence;
+            enqueueMessage(sequencedMessage.message());
+        }
+    }
+
+    private void acknowledgeMessage(int messageSequence, DatagramPacket rcvPacket) {
+        AcknowledgementMessage ackMsg = new AcknowledgementMessage(messageSequence, getKey());
+        byte[] ackBytes = SerializationHelper.serializeSystemMessage(ackMsg);
+        DatagramPacket ackPacket = new DatagramPacket(ackBytes, ackBytes.length, rcvPacket.getAddress(), rcvPacket.getPort());
+        try {
+            receiveSocket.send(ackPacket);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
