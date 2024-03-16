@@ -15,7 +15,7 @@ import java.net.SocketException;
  * @version Iteration-3
  */
 public class ReceiverUDP extends ReceiverUDPProxy implements Runnable {
-    public final int MAX_MSG_SIZE = 9001; // Reduce to save on memory (may cause crash), Increase if EOFException is raised.
+    public static final int MAX_MSG_SIZE = 9001; // Reduce to save on memory (may cause crash), Increase if EOFException is raised.
     private final DatagramSocket receiveSocket;
     private int lastSequenceReceived;
 
