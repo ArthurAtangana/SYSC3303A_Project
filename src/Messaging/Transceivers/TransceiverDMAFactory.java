@@ -2,7 +2,6 @@ package Messaging.Transceivers;
 
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Receivers.ReceiverDMA;
-import Messaging.Transceivers.Transmitters.Transmitter;
 import Messaging.Transceivers.Transmitters.TransmitterDMA;
 
 public class TransceiverDMAFactory implements TransceiverFactory {
@@ -36,7 +35,7 @@ public class TransceiverDMAFactory implements TransceiverFactory {
      * @return A server transmitter instance.
      */
     @Override
-    public Transmitter<ReceiverDMA> createServerTransmitter() {
+    public TransmitterDMA createServerTransmitter() {
         return new TransmitterDMA();
     }
 
@@ -47,7 +46,7 @@ public class TransceiverDMAFactory implements TransceiverFactory {
      * @return A client transmitter instance.
      */
     @Override
-    public Transmitter<ReceiverDMA> createClientTransmitter() {
+    public TransmitterDMA createClientTransmitter() {
         TransmitterDMA clientTransmitter = new TransmitterDMA();
         // Bind client to server
         clientTransmitter.addReceiver(serverReceiver);

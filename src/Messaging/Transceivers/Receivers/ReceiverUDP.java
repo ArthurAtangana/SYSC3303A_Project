@@ -14,12 +14,12 @@ import java.net.SocketException;
  *
  * @version Iteration-3
  */
-public class ReceiverUDP extends Receiver implements Runnable {
+public class ReceiverUDP extends ReceiverUDPProxy implements Runnable {
     public final int MAX_MSG_SIZE = 255;
     private final DatagramSocket receiveSocket;
 
     /**
-     * Initializes a UDP DatagramSocket that listens on the specified port.
+     * Initializes a UDP DatagramSocket that listens on the specified port (important for servers with known addresses).
      *
      * @param receivePort Port number to listen on.
      */
@@ -49,6 +49,7 @@ public class ReceiverUDP extends Receiver implements Runnable {
      *
      * @return The port this receiver is receiving on.
      */
+    @Override
     public int getPort() {
         return receiveSocket.getLocalPort();
     }
@@ -76,6 +77,7 @@ public class ReceiverUDP extends Receiver implements Runnable {
      * @param message DatagramPacket byte array.
      * @return SystemMessage object.
      */
+    // TODO: may be put into a helper class
     private SystemMessage deserializeSystemMessage(byte[] message) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(message);
         SystemMessage deserializedMessage = null;
