@@ -172,7 +172,7 @@ public class Scheduler implements Runnable, Subsystem {
         else if (event instanceof PassengerLoadEvent plEvent) {
             transmitterToElevator.send(new MovePassengersCommand(plEvent.elevNumber(), plEvent.passengers()));
         } else if (event instanceof ReceiverBindingEvent rbEvent) {
-            System.out.println("Bound with: " + rbEvent);
+//            System.out.println("DEBUG: Bound with: " + rbEvent);
             Class<? extends Subsystem> subsystemType = rbEvent.subsystemType();
             if (subsystemType.equals(Elevator.class)) {
                 transmitterToElevator.addReceiver(rbEvent.receiver());

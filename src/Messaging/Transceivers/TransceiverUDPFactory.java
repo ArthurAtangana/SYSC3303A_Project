@@ -17,7 +17,10 @@ public class TransceiverUDPFactory implements TransceiverFactory {
      */
     @Override
     public Receiver createServerReceiver() {
-        return new ReceiverUDP(0, SERVER_PROXY.getPort());
+        // Will raise bind exception when trying to instantiate more than one server at a time
+        ReceiverUDP serverReceiver = new ReceiverUDP(0, SERVER_PROXY.getPort());
+        new Thread(serverReceiver).start(); // Activate receiver
+        return serverReceiver;
     }
 
     /**
