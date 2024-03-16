@@ -17,4 +17,4 @@ import java.util.HashMap;
  */
 public record ElevatorStateEvent
         (int elevatorNum, int currentFloor, HashMap<DestinationEvent, Integer> passengerCountMap)
-        implements SystemEvent, Serializable {}
+        implements SystemEvent {}

@@ -1,7 +1,7 @@
 package Messaging.Transceivers.Transmitters;
 
 import Messaging.Messages.SystemMessage;
-import Messaging.Transceivers.Receivers.ReceiverUDP;
+import Messaging.Transceivers.Receivers.ReceiverUDPProxy;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.net.SocketException;
  *
  * @version Iteration-3
  */
-public class TransmitterUDP extends Transmitter<ReceiverUDP> {
+public class TransmitterUDP extends Transmitter<ReceiverUDPProxy> {
     private final DatagramSocket sendSocket;
 
     /**
@@ -25,7 +25,7 @@ public class TransmitterUDP extends Transmitter<ReceiverUDP> {
     // TODO: Late bind, instead of bind on port (make use of super class)
     public TransmitterUDP() {
         // IMPORTANT: The class written here has to be the same as the concrete generic in the class definition "<>"
-        super(ReceiverUDP.class);
+        super(ReceiverUDPProxy.class);
         // Initialize socket to send messages on
         try {
             this.sendSocket = new DatagramSocket();
@@ -44,9 +44,9 @@ public class TransmitterUDP extends Transmitter<ReceiverUDP> {
         // Try to send this message to each receiver bound to this transmitter
         byte[] msg = serializeSystemMessage(message);
 
-        for (ReceiverUDP rx : receivers) {
+        for (ReceiverUDPProxy rx : receivers) {
             try {
-                System.out.println(rx.getPort());
+//                System.out.println("DEBUG: sending on localhost, port"+ rx.getPort());
                 DatagramPacket packet = new DatagramPacket(msg, msg.length, InetAddress.getLocalHost(), rx.getPort());
                 sendSocket.send(packet);
             } catch (IOException e) {

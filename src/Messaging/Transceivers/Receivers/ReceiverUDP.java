@@ -14,12 +14,12 @@ import java.net.SocketException;
  *
  * @version Iteration-3
  */
-public class ReceiverUDP extends Receiver implements Runnable {
-    public final int MAX_MSG_SIZE = 255;
+public class ReceiverUDP extends ReceiverUDPProxy implements Runnable {
+    public final int MAX_MSG_SIZE = 9001; // Reduce to save on memory (may cause crash), Increase if EOFException is raised.
     private final DatagramSocket receiveSocket;
 
     /**
-     * Initializes a UDP DatagramSocket that listens on the specified port.
+     * Initializes a UDP DatagramSocket that listens on the specified port (important for servers with known addresses).
      *
      * @param receivePort Port number to listen on.
      */
@@ -45,10 +45,21 @@ public class ReceiverUDP extends Receiver implements Runnable {
     }
 
     /**
+     * Returns serializable version of this receiver.
+     * For UDP, returns its stub proxy equivalent.
+     * @return The serializable equivalent to this receiver instance.
+     */
+    @Override
+    public SerializableReceiver getSerializableReceiver() {
+        return new ReceiverUDPStub(getPort());
+    }
+
+    /**
      * Get the port this receiver's socket is receiving on.
      *
      * @return The port this receiver is receiving on.
      */
+    @Override
     public int getPort() {
         return receiveSocket.getLocalPort();
     }
@@ -76,6 +87,7 @@ public class ReceiverUDP extends Receiver implements Runnable {
      * @param message DatagramPacket byte array.
      * @return SystemMessage object.
      */
+    // TODO: may be put into a helper class
     private SystemMessage deserializeSystemMessage(byte[] message) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(message);
         SystemMessage deserializedMessage = null;
