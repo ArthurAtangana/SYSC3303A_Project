@@ -1,2 +1,0 @@
-- Each subsystem have its own sequence, transmitters communicate to one subsystem at a time.
-    - Transmitters have a static sequence they increment to identify new messages
