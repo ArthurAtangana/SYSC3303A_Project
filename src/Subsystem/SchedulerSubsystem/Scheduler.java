@@ -7,6 +7,7 @@ import Messaging.Messages.Events.ElevatorStateEvent;
 import Messaging.Messages.Events.FloorRequestEvent;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
+import Messaging.Transceivers.Receivers.SerializableReceiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
 import StatePatternLib.Context;
 import Subsystem.ElevatorSubsytem.ElevatorUtilities;
@@ -75,7 +76,7 @@ public class Scheduler extends Context implements Subsystem {
      *
      * @param receiver The Receiver to bind.
      */
-    void bindElevatorReceiver(Receiver receiver) {
+    void bindElevatorReceiver(SerializableReceiver receiver) {
         transmitterToElevator.addReceiver(receiver);
     }
 
@@ -84,7 +85,7 @@ public class Scheduler extends Context implements Subsystem {
      *
      * @param receiver The Receiver to bind.
      */
-    void bindFloorReceiver(Receiver receiver) {
+    void bindFloorReceiver(SerializableReceiver receiver) {
         transmitterToFloor.addReceiver(receiver);
     }
 
