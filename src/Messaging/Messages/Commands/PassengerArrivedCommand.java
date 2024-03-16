@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @author Alexandre Marques
  * @version Iteration-2
  */
-public record PassengerArrivedCommand(int floorNum, DestinationEvent passenger) implements SystemCommand, Serializable {
+public record PassengerArrivedCommand(int floorNum, DestinationEvent passenger) implements SystemCommand {
     /**
      * Match floor number with the given key.
      *

@@ -19,4 +19,4 @@ import java.io.Serializable;
  */
 public record FloorInputEvent
         (long time, int sourceFloor, Direction direction, int destinationFloor)
-        implements SystemEvent, Serializable {}
+        implements SystemEvent {}

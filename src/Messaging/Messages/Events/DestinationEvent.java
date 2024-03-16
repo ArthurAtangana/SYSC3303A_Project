@@ -16,4 +16,4 @@ import java.io.Serializable;
  */
 public record DestinationEvent
         (int destinationFloor, Direction direction)
-        implements SystemEvent, Serializable {}
+        implements SystemEvent {}
