@@ -1,7 +1,7 @@
 package Messaging.Transceivers.Receivers;
 
+import Messaging.Messages.SequencedMessage;
 import Messaging.Messages.SerializationHelper;
-import Messaging.Messages.SystemMessage;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -75,9 +75,9 @@ public class ReceiverUDP extends ReceiverUDPProxy implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        SystemMessage deserializedMessage = SerializationHelper.deserializeSystemMessage(packet.getData());
-
-        enqueueMessage(deserializedMessage);
+        SequencedMessage deserializedMessage = (SequencedMessage) SerializationHelper.deserializeSystemMessage(packet.getData());
+        // TODO: reply here with AcknowledgementMessage
+        enqueueMessage(deserializedMessage.message());
     }
 
     /**

@@ -8,4 +8,4 @@ package Messaging.Messages;
  * @author Alex
  * @version iteration-3
  */
-public record AcknowledgementMessage(int sequenceKey, int receiverKey) { }
+public record AcknowledgementMessage(int sequenceKey, int receiverKey) implements SystemMessage { }

@@ -8,4 +8,4 @@ package Messaging.Messages;
  * @author Alex
  * @version iteration-3
  */
-public record SequencedMessage(int sequenceKey, SystemMessage message) { }
+public record SequencedMessage(int sequenceKey, SystemMessage message) implements SystemMessage{ }

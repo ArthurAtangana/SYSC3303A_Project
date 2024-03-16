@@ -1,5 +1,6 @@
 package Messaging.Transceivers.Transmitters;
 
+import Messaging.Messages.SequencedMessage;
 import Messaging.Messages.SerializationHelper;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.ReceiverUDPProxy;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
  * @version Iteration-3
  */
 public class TransmitterUDP extends Transmitter<ReceiverUDPProxy> {
+    private static int messageSequenceNum = 0; // Increments after each message sent
     private final DatagramSocket sendSocket;
     private final ArrayList<Integer> receiverKeys; // Identify "servers"
 
@@ -55,8 +57,8 @@ public class TransmitterUDP extends Transmitter<ReceiverUDPProxy> {
      */
     @Override
     public void send(SystemMessage message) {
-        // Try to send this message to each receiver bound to this transmitter
-        byte[] msg = SerializationHelper.serializeSystemMessage(message);
+        // Send the message to each receiver bound to this transmitter, wrapped with the message sequence number
+        byte[] msg = SerializationHelper.serializeSystemMessage(new SequencedMessage(messageSequenceNum++, message));
 
         for (ReceiverUDPProxy rx : receivers) {
             try {
@@ -67,6 +69,7 @@ public class TransmitterUDP extends Transmitter<ReceiverUDPProxy> {
                 throw new RuntimeException(e);
             }
         }
+        // TODO: receive here
     }
 
     public SystemMessage receiveReply(){
