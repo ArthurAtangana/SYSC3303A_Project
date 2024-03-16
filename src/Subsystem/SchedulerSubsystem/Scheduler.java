@@ -15,6 +15,8 @@ import Subsystem.Subsystem;
 
 import java.util.*;
 
+import static java.lang.Math.abs;
+
 /**
  * Scheduler class which models a scheduler in the simulation.
  *
@@ -117,14 +119,39 @@ public class Scheduler extends Context implements Subsystem {
     }
 
     /**
-     * Get first idle elevator.
+     * Get the closest idle Elevator to an incoming FloorRequestEvent.
      *
-     * @return ElevatorStateEvent corresponding to first idle Elevator.
+     * @param floorRequestEvent The FloorRequestEvent used to determine the
+     * closest idle elevator to send.
+     *
+     * @return ElevatorStateEvent corresponding to closest idle Elevator.
      */
-    ElevatorStateEvent getFirstIdleElevator() {
-        return idleElevators.remove(0);
-    }
+    ElevatorStateEvent getClosestIdleElevator(FloorRequestEvent floorRequestEvent) {
 
+        // Convenience variable to extract and hold target floor
+        int targetFloor = floorRequestEvent.destinationEvent().destinationFloor();
+        // Distance tracker (in number of floors)
+        int distance = 0;
+        // Initialize variables for our sort algorithm using the first idle elevator
+        int closestIdleElevatorIndex = 0;
+        int closestDistance = abs(idleElevators.get(0).currentFloor()- targetFloor);
+
+        // Determine closest idle Elevator in idleElevators
+        // Start at 1 to save a loop, since we initialized using 0
+        for (int i = 1; i < idleElevators.size(); i++) {
+            distance = (abs(idleElevators.get(i).currentFloor() - targetFloor));
+            // Case: This Elevator is the new closest Elevator
+            if (distance < closestDistance) {
+                // Update closest distance to track new minimum
+                closestDistance = distance;
+                // Catch the idle Elevator index for later reference
+                closestIdleElevatorIndex = i;
+            }
+        }
+
+        // Return the closest idle Elevator
+        return idleElevators.remove(closestIdleElevatorIndex);
+    }
     /**
      * Register an Elevator as idle by passing its ElevatorStateEvent.
      *
