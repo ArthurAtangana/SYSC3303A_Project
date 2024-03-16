@@ -1,17 +1,13 @@
 package Messaging.Transceivers.Transmitters;
 
+import Messaging.Messages.AcknowledgementMessage;
 import Messaging.Messages.SequencedMessage;
 import Messaging.Messages.SerializationHelper;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.ReceiverUDPProxy;
-import Messaging.Transceivers.Receivers.SerializableReceiver;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.util.ArrayList;
+import java.net.*;
 
 /**
  * TransmitterUDP class, provides a way to send messages to UDP_Receivers.
@@ -20,8 +16,11 @@ import java.util.ArrayList;
  */
 public class TransmitterUDP extends Transmitter<ReceiverUDPProxy> {
     private static int messageSequenceNum = 0; // Increments after each message sent
+    private static final int TIMEOUT = 100;
+    private static final int MAX_TIMEOUTS = 3;
+
+
     private final DatagramSocket sendSocket;
-    private final ArrayList<Integer> receiverKeys; // Identify "servers"
 
     /**
      * Initializes a UDP DatagramSocket that will send SystemMessages to its receivers.
@@ -29,25 +28,13 @@ public class TransmitterUDP extends Transmitter<ReceiverUDPProxy> {
     public TransmitterUDP() {
         // IMPORTANT: The class written here has to be the same as the concrete generic in the class definition "<>"
         super(ReceiverUDPProxy.class);
-        this.receiverKeys = new ArrayList<>();
         // Initialize socket to send messages on
         try {
             this.sendSocket = new DatagramSocket();
+            sendSocket.setSoTimeout(TIMEOUT);
         } catch (SocketException e) {
             throw new RuntimeException(e);
         }
-    }
-
-
-    /**
-     * When adding a receiver, also stores their key
-     *
-     * @param receiver The receiver to bind to this transmitter.
-     */
-    @Override
-    public void addReceiver(SerializableReceiver receiver) {
-        super.addReceiver(receiver);
-        receiverKeys.add(receiver.getKey());
     }
 
     /**
@@ -61,20 +48,51 @@ public class TransmitterUDP extends Transmitter<ReceiverUDPProxy> {
         byte[] msg = SerializationHelper.serializeSystemMessage(new SequencedMessage(messageSequenceNum++, message));
 
         for (ReceiverUDPProxy rx : receivers) {
-            try {
-//                System.out.println("DEBUG: sending on localhost, port"+ rx.getPort());
-                DatagramPacket packet = new DatagramPacket(msg, msg.length, InetAddress.getLocalHost(), rx.getPort());
-                sendSocket.send(packet);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            udpSingleSendReceive(rx, msg);
         }
-        // TODO: receive here
     }
 
-    public SystemMessage receiveReply(){
-        // #TODO
-        // return replyReceiver.receive();
-        return null;
+    /**
+     * Sends (and waits for acknowledgement) to a single given receiver.
+     * @param rx The receiver to send to.
+     * @param msg The message to send (as a byte array).
+     */
+    private void udpSingleSendReceive(ReceiverUDPProxy rx, byte[] msg)  {
+        boolean isAcknowledged = false;
+        int consecutiveTimeouts = 0;
+        while(!isAcknowledged && consecutiveTimeouts < MAX_TIMEOUTS){
+            udpSingleSend(rx, msg);
+            isAcknowledged = udpSingleReceive();
+            consecutiveTimeouts++;
+        }
+        if (consecutiveTimeouts == MAX_TIMEOUTS){
+            throw new RuntimeException("MAX_TIMEOUTS reached!");
+        }
+        System.out.println("DEBUG: Message acknowledgement received in transmitter");
+    }
+
+    private void udpSingleSend(ReceiverUDPProxy rx, byte[] msg){
+        try {
+//                System.out.println("DEBUG: sending on localhost, port"+ rx.getPort());
+            DatagramPacket packet = new DatagramPacket(msg, msg.length, InetAddress.getLocalHost(), rx.getPort());
+            sendSocket.send(packet);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean udpSingleReceive(){
+        byte[] rcvBuf = new byte[AcknowledgementMessage.ACK_LEN];
+        try {
+            sendSocket.receive(new DatagramPacket(rcvBuf, rcvBuf.length));
+            // Because request/reply is fully synced (at the moment), receiving the message alone should acknowledge it.
+            return true; // If this line is reached, message was acknowledged.
+        } catch (SocketTimeoutException e){
+            System.out.println("DEBUG: Timed out, retrying.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        // Message not received
+        return false;
     }
 }

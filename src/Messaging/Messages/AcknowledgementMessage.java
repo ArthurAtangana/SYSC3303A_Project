@@ -8,4 +8,6 @@ package Messaging.Messages;
  * @author Alex
  * @version iteration-3
  */
-public record AcknowledgementMessage(int sequenceKey, int receiverKey) implements SystemMessage { }
+public record AcknowledgementMessage(int sequenceKey, int receiverKey) implements SystemMessage {
+    public static final int ACK_LEN = 16; // 2 ints = 8 bytes, record..? putting another 8 bytes.
+}
