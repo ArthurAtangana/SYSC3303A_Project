@@ -1,10 +1,9 @@
 package Messaging.Transceivers.Receivers;
 
+import Messaging.Messages.SerializationHelper;
 import Messaging.Messages.SystemMessage;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -76,30 +75,9 @@ public class ReceiverUDP extends ReceiverUDPProxy implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        SystemMessage deserializedMessage = deserializeSystemMessage(packet.getData());
+        SystemMessage deserializedMessage = SerializationHelper.deserializeSystemMessage(packet.getData());
 
         enqueueMessage(deserializedMessage);
-    }
-
-    /**
-     * Deserializes a SystemMessage from a DatagramPacket's data.
-     *
-     * @param message DatagramPacket byte array.
-     * @return SystemMessage object.
-     */
-    // TODO: may be put into a helper class
-    private SystemMessage deserializeSystemMessage(byte[] message) {
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(message);
-        SystemMessage deserializedMessage = null;
-        try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-            deserializedMessage = (SystemMessage) objectInputStream.readObject();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        return deserializedMessage;
     }
 
     /**

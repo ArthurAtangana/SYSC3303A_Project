@@ -1,11 +1,10 @@
 package Messaging.Transceivers.Transmitters;
 
+import Messaging.Messages.SerializationHelper;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.ReceiverUDPProxy;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -42,7 +41,7 @@ public class TransmitterUDP extends Transmitter<ReceiverUDPProxy> {
     @Override
     public void send(SystemMessage message) {
         // Try to send this message to each receiver bound to this transmitter
-        byte[] msg = serializeSystemMessage(message);
+        byte[] msg = SerializationHelper.serializeSystemMessage(message);
 
         for (ReceiverUDPProxy rx : receivers) {
             try {
@@ -53,26 +52,6 @@ public class TransmitterUDP extends Transmitter<ReceiverUDPProxy> {
                 throw new RuntimeException(e);
             }
         }
-    }
-
-    /**
-     * Serializes a SystemMessage into a byte array.
-     *
-     * @param message SystemMessage to be serialized into a byte array.
-     * @return byte array of serialized message.
-     */
-    private byte[] serializeSystemMessage(SystemMessage message) {
-        ByteArrayOutputStream packet = new ByteArrayOutputStream();
-        byte[] serializedData = new byte[0];
-        try {
-            ObjectOutputStream object = new ObjectOutputStream(packet);
-            object.writeObject(message);
-            object.close();
-            serializedData = packet.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return serializedData;
     }
 
     public SystemMessage receiveReply(){
