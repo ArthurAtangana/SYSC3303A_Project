@@ -5,7 +5,7 @@ package Messaging.Transceivers.Receivers;
  *
  * @author Alex
  */
-public class ReceiverUDPStub extends ReceiverUDPProxy {
+public class ReceiverUDPStub extends ReceiverUDPProxy implements SerializableReceiver {
     final int port;
 
     /**
@@ -15,6 +15,16 @@ public class ReceiverUDPStub extends ReceiverUDPProxy {
     public ReceiverUDPStub(int port){
         super(0); // Key does not matter since the stub does not actually enqueue messages
         this.port = port;
+    }
+
+    /**
+     * Returns serializable version of this receiver.
+     * For UDP stub, returns itself.
+     * @return The serializable equivalent to this receiver instance.
+     */
+    @Override
+    public SerializableReceiver getSerializableReceiver() {
+        return this;
     }
 
     /**

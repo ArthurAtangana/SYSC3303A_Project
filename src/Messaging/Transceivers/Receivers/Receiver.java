@@ -3,6 +3,7 @@ package Messaging.Transceivers.Receivers;
 import Messaging.Messages.Commands.SystemCommand;
 import Messaging.Messages.SystemMessage;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
@@ -11,7 +12,7 @@ import java.util.LinkedList;
  * TODO: Explain in docs why its abstract: Has no way to receive as is.
  *  - Strategy pattern could make sense? Not worth imo
  */
-public abstract class Receiver {
+public abstract class Receiver implements Serializable {
     // Message buffer TODO: replace w/ priority queue class (prioritizes based on message class)
     private final LinkedList<SystemMessage> msgBuf;
     private final int key;
@@ -66,4 +67,10 @@ public abstract class Receiver {
     private boolean isMessageForThis(SystemMessage msg){
         return !(msg instanceof SystemCommand && !((SystemCommand) msg).matchKey(key));
     }
+
+    /**
+     * Returns serializable version of this receiver.
+     * @return The serializable equivalent to this receiver instance.
+     */
+    public abstract SerializableReceiver getSerializableReceiver();
 }

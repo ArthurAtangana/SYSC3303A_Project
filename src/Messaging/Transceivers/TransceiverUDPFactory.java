@@ -54,7 +54,7 @@ public class TransceiverUDPFactory implements TransceiverFactory {
     public TransmitterUDP createClientTransmitter() {
         TransmitterUDP clientTransmitter = new TransmitterUDP();
         // Bind client to server
-        clientTransmitter.addReceiver(SERVER_PROXY);
+        clientTransmitter.addReceiver(SERVER_PROXY.getSerializableReceiver());
         return clientTransmitter;
     }
 }

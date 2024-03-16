@@ -45,6 +45,16 @@ public class ReceiverUDP extends ReceiverUDPProxy implements Runnable {
     }
 
     /**
+     * Returns serializable version of this receiver.
+     * For UDP, returns its stub proxy equivalent.
+     * @return The serializable equivalent to this receiver instance.
+     */
+    @Override
+    public SerializableReceiver getSerializableReceiver() {
+        return new ReceiverUDPStub(getPort());
+    }
+
+    /**
      * Get the port this receiver's socket is receiving on.
      *
      * @return The port this receiver is receiving on.

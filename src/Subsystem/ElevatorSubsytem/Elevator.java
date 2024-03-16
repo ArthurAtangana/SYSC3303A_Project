@@ -37,6 +37,7 @@ public class Elevator extends Context implements Subsystem {
     public Elevator(int elevNum, Receiver receiver, Transmitter<?> transmitter) {
 
         // Configure Elevator from JSON
+        // FIXME: get this config init out of the subsystems.
         String jsonFilename = "res/system-config-00.json";
         System.out.println("Configuring Elevator " + elevNum + "...");
         Config config = (new Configurator(jsonFilename).getConfig());
