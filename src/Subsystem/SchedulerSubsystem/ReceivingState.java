@@ -42,7 +42,8 @@ public class ReceivingState extends State {
      */
     @Override
     public void entry() {
-        System.out.println("[INFO::FSM] Scheduler:ReceivingState:Entry");
+        String msg = "ReceivingState:Entry";
+        ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
         // Get the SystemMessage (pop from Receiver buffer)
         event = ((Scheduler) context).receive();
     }
@@ -56,12 +57,14 @@ public class ReceivingState extends State {
      */
     @Override
     public void doActivity() {
-        System.out.println("[INFO::FSM] Scheduler:ReceivingState:Do");
+
+        String msg = "";
 
         // Case: Event is ElevatorStateEvent
         // Description: Notification from Elevator conveying its state
         if (event instanceof ElevatorStateEvent esEvent) {
-            System.out.println("[INFO::FSM] Scheduler:ReceivingState:Entry: Received ElevatorStateEvent.");
+            msg = "Received ElevatorStateEvent.";
+            ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
             // Next State: ProcessingElevatorEventState
             // Required Constructor Arguments: context
             context.setNextState(new ProcessingElevatorEventState(context, esEvent)); 
@@ -69,7 +72,8 @@ public class ReceivingState extends State {
         // Case: Event is FloorRequestEvent
         // Description: Request from Floor asking for service
         else if (event instanceof FloorRequestEvent frEvent) {
-            System.out.println("[INFO::FSM] Scheduler:ReceivingState:Entry: Received FloorRequestEvent.");
+            msg = "Received FloorRequestEvent.";
+            ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
             // Next State: StoringFloorRequestState
             // Required Constructor Arguments: context
             context.setNextState(new StoringFloorRequestState(context, frEvent)); 
@@ -77,7 +81,8 @@ public class ReceivingState extends State {
         // Case: Event is PassengerLoadEvent
         // Description: Notification from Floor of Passengers requiring load
         else if (event instanceof PassengerLoadEvent plEvent) {
-            System.out.println("[INFO::FSM] Scheduler:ReceivingState:Entry: Received PassengerLoadEvent.");
+            msg = "Received PassengerLoadEvent.";
+            ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
             // Next State: LoadingPassengerState
             // Required Constructor Arguments: PassengerLoadEvent
             context.setNextState(new LoadingPassengerState(context, plEvent));
@@ -85,7 +90,8 @@ public class ReceivingState extends State {
         // Case: Event is ReceiverBindingEvent
         // Description: Request to bind a Receiver to this Scheduler Subsystem
         else if (event instanceof ReceiverBindingEvent rbEvent) {
-            System.out.println("[INFO::FSM] Scheduler:ReceivingState:Entry: Received ReceiverBindingEvent.");
+            msg = "Received ReceiverBindingEvent.";
+            ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
             // Next State: BindingReceiverState
             // Required Constructor Arguments: ReceiverBindingEvent
             context.setNextState(new BindingReceiverState(context, rbEvent));
@@ -102,7 +108,6 @@ public class ReceivingState extends State {
      */
     @Override
     public void exit() {
-        System.out.println("[INFO::FSM] Scheduler:ReceivingState:Exit");
     }
 
 }

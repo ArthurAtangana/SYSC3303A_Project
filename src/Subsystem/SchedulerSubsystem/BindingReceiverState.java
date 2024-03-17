@@ -50,26 +50,27 @@ public class BindingReceiverState extends State {
      */
     @Override
     public void entry() {
-        System.out.println("[INFO::FSM] Scheduler:BindingReceiverState:Entry");
+        String msg = "BindingReceiverState:Entry";
+        ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
 
-            Class<? extends Subsystem> subsystemType = event.subsystemType();
+        Class<? extends Subsystem> subsystemType = event.subsystemType();
 
-            // Case: Subsystem is Elevator
-            if (subsystemType.equals(Elevator.class)) {
-                ((Scheduler)context).bindElevatorReceiver(event.receiver());
-            } 
-            // Case: Subsystem is Floor
-            else if (subsystemType.equals(Floor.class)) {
-                ((Scheduler)context).bindFloorReceiver(event.receiver());
-            } 
-            // Case: Subsystem is BAD
-            else {
-                try {
-                    throw new InvalidTypeException("Unknown subsystem (" + subsystemType + ") attempted to bind to scheduler.");
-                } catch (InvalidTypeException e) {
-                    throw new RuntimeException(e);
-                }
+        // Case: Subsystem is Elevator
+        if (subsystemType.equals(Elevator.class)) {
+            ((Scheduler)context).bindElevatorReceiver(event.receiver());
+        } 
+        // Case: Subsystem is Floor
+        else if (subsystemType.equals(Floor.class)) {
+            ((Scheduler)context).bindFloorReceiver(event.receiver());
+        } 
+        // Case: Subsystem is BAD
+        else {
+            try {
+                throw new InvalidTypeException("Unknown subsystem (" + subsystemType + ") attempted to bind to scheduler.");
+            } catch (InvalidTypeException e) {
+                throw new RuntimeException(e);
             }
+        }
     }
 
     /**
@@ -78,7 +79,6 @@ public class BindingReceiverState extends State {
      */
     @Override
     public void doActivity() {
-        System.out.println("[INFO::FSM] Scheduler:BindingReceiverState:Do");
     }
 
     /**
@@ -86,7 +86,6 @@ public class BindingReceiverState extends State {
      */
     @Override
     public void exit() {
-        System.out.println("[INFO::FSM] Scheduler:BindingReceiverState:Exit");
         // Next State: BindingReceiverState
         // Required Constructor Arguments: context
         context.setNextState(new ReceivingState(context));

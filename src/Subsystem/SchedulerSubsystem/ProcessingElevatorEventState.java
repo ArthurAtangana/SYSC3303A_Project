@@ -46,7 +46,8 @@ public class ProcessingElevatorEventState extends State {
      */
     @Override
     public void entry() {
-        System.out.println("[INFO::FSM] Scheduler:ProcessingElevatorEventState:Entry");
+        String msg = "ProcessingElevatorEventState:Entry";
+        ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
     }
 
     /**
@@ -58,14 +59,13 @@ public class ProcessingElevatorEventState extends State {
      */
     @Override
     public void doActivity() {
-        System.out.println("[INFO::FSM] Scheduler:ProcessingElevatorEventState:Do");
-
         // Case: Elevator indicates it is Idle.
         // Description: Elevator has neither Floors nor Passengers to service, and is
         //              not in motion. It's just chillin'.
         if (!((Scheduler)context).hasPendingDestinationEvents() && event.passengerCountMap().isEmpty()) {
 
-            System.out.printf("Scheduler: Elevator %s idle%n", event.elevatorNum());
+            String msg = "Elevator " + event.elevatorNum() + " is idle.";
+            ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
 
             // Register this Elevator as Idle
             ((Scheduler)context).addIdleElevator(event);
@@ -77,7 +77,9 @@ public class ProcessingElevatorEventState extends State {
         // Case: Elevator indicates it is Stopping.
         // Description: Since the Elevator is stopping, it must be servicing this Floor.
         else if (((Scheduler)context).isElevatorStopping(event)) { 
-            System.out.printf("Elevator %s stopped.%n", event.elevatorNum());
+
+            String msg = "Elevator " + event.elevatorNum() + " has stopped.";
+            ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
 
             // Notify Floor for service
             ((Scheduler)context).transmitToFloor(new SendPassengersCommand(event.currentFloor(), event.elevatorNum(), ((Scheduler)context).getElevatorDirection(event)));
@@ -109,7 +111,6 @@ public class ProcessingElevatorEventState extends State {
      */
     @Override
     public void exit() {
-        System.out.println("[INFO::FSM] Scheduler:ProcessingElevatorEventState:Exit");
     }
 
 }

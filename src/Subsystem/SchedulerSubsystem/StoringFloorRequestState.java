@@ -45,7 +45,8 @@ public class StoringFloorRequestState extends State {
      */
     @Override
     public void entry() {
-        System.out.println("[INFO::FSM] Scheduler:StoringFloorRequestState:Entry");
+        String msg = "StoringFloorRequestState:Entry";
+        ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
     }
 
     /**
@@ -56,7 +57,6 @@ public class StoringFloorRequestState extends State {
      */
     @Override
     public void doActivity() {
-        System.out.println("[INFO::FSM] Scheduler:StoringFloorRequestState:Do");
 
         // Store the FloorRequestEvent
         ((Scheduler)context).storeFloorRequest(event);
@@ -84,7 +84,6 @@ public class StoringFloorRequestState extends State {
      */
     @Override
     public void exit() {
-        System.out.println("[INFO::FSM] Scheduler:StoringFloorRequestState:Exit");
     }
 
 }
