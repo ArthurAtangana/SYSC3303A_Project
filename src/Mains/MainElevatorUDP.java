@@ -15,7 +15,7 @@ public class MainElevatorUDP {
      */
     public static void main(String[] args) {
         // 1. Configure system from JSON
-        System.out.println("\n****** Configuring System ******\n");
+        System.out.println("\n****** Configuring Elevators ******\n");
         Config config = (new Configurator().getConfig());
         config.printConfig();
 
