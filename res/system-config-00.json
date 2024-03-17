@@ -2,5 +2,6 @@
   "numFloors": 8,
   "numElevators": 1,
   "travelTime": 8500,
-  "loadTime": 1000
+  "loadTime": 1000,
+  "inputFilename": "test/resources/test-input-file.txt"
 }
