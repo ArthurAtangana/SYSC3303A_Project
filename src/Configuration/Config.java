@@ -10,6 +10,7 @@ package Configuration;
 public class Config {
 
     /* Instance Variables */
+    private final int verbosity;
     private final int numFloors;
     private final int numElevators;
     private final long travelTime;
@@ -21,6 +22,7 @@ public class Config {
      * Default constructor for class Config.
      */
     public Config() {
+        this.verbosity = 0;
         this.numFloors = 0;
         this.numElevators = 0;
         this.travelTime = 0;
@@ -28,6 +30,10 @@ public class Config {
     }
 
     /* Methods */
+
+    public int getVerbosity() {
+        return verbosity;
+    }
 
     public int getNumFloors() {
         return numFloors;
@@ -47,6 +53,7 @@ public class Config {
 
     public void printConfig() {
         System.out.println("Launching system under the following configuration:");
+        System.out.println("-- verbosity: " + getVerbosity());
         System.out.println("-- numFloors: " + getNumFloors());
         System.out.println("-- numElevators: " + getNumElevators());
         System.out.println("-- travelTime: " + getTravelTime() + " [ms]");
