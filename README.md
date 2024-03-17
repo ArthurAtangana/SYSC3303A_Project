@@ -1,5 +1,5 @@
 # README
-* Last Edited: 2024/02/03
+* Last Edited: 2024/03/16
 
 ## Table of Contents
 
@@ -38,7 +38,9 @@ Note: Compiled using JDK - 21 Oracle OpenJDK version 21.0.1
    2. Select add as library
    3. Leave settings as default, select ok
 3. Run the files in the "Mains" package in this order:
-   MainSchedulerUDP, MainElevatorUDP, MainFloorUDP
+   1. MainSchedulerUDP
+   2. MainElevatorUDP
+   3. MainFloorUDP
 
 For test execution, see [test section](#test).
 
@@ -141,6 +143,36 @@ the highest throughput possible.If the design can lead to starvation, it is an i
 | Scheduler logic         |Arthur Atangana|
 | System test             |Arthur Atangana|
 
+### Iteration 3
+
+| Task                           | Assignee        |
+|--------------------------------|-----------------|
+| Scheduler State Machine        |Michael De Santis|
+| System Logging                 |Michael De Santis|
+| System Configuration           |Michael De Santis|
+| Scenario Tests                 |Michael De Santis|
+| Elevator Logic                 |Michael De Santis|
+| Elevator State Machine         |Braeden Kloke    |
+| UML Diagrams                   |Braeden Kloke    |
+| Elevator Logic                 |Braeden Kloke    |
+| UML Diagrams                   |Victoria Malouf  |
+| Unit Tests                     |Victoria Malouf  |
+| UDP Implementation             |Victoria Malouf  |
+| Subsytem Separation            |Victoria Malouf  |
+| Scenario Tests                 |Victoria Malouf  |
+| System Integration             |Victoria Malouf  |
+| UDP Implementation             |Alexandre Marques|
+| Subsystem Separation           |Alexandre Marques|
+| Factory Implementations        |Alexandre Marques|
+| System Integration             |Alexandre Marques|
+| Transceivers                   |Alexandre Marques|
+| Project Management             |Arthur Atangana  |
+| Version Control Management     |Arthur Atangana  |
+| Scheduler State Machine        |Arthur Atangana  |
+| Elevator Logic                 |Arthur Atangana  |
+| Scenario Tests                 |Arthur Atangana  |
+| Cool Haircut                   |Arthur Atangana  |
+
 ## Test
 
 All tests are located in directory `test`.
@@ -184,6 +216,13 @@ System input files are text files used to simulate input into the system, and co
 
 ### System Configuration
 System configuration files are stored as JSONs, and specify values for the system components that configure its runtime behaviour.
+
+### System Output
+System outputs during real-time operation are categorized as either __INFO__ or __DEBUG__ level messages. Using the system confioguration JSON, the verbosity of the system my be set by supplying an integer value to the `"verbosity"` field as follows:
+* `"verbosity" : 1`
+    * Print only __INFO__ level messages.
+* `"verbosity" : 2`
+    * Print both __DEBUG__ and __INFO__ level messages.
 
 ## Known Issues
 See GitHub project issues for most up-to-date issues
