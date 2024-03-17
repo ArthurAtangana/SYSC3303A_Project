@@ -1,4 +1,5 @@
 {
+  "verbosity": 1,
   "numFloors": 8,
   "numElevators": 1,
   "travelTime": 8500,
