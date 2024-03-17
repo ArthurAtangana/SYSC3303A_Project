@@ -7,12 +7,13 @@ import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
- * TODO: docs,
- *  - note the receive function may be reworked/renamed once UDP is fully implemented
- * TODO: Explain in docs why its abstract: Has no way to receive as is.
- *  - Strategy pattern could make sense? Not worth imo
+ * Receiver is an abstract class that provides functionalities for de/queuing received messages.
+ *
+ * Note: The class is abstract because it has no way to receive as is. (Subclasses provide their respective
+ * implementation)
+ *
+ * Receiver parent has to be serializable because we use the constructor.
  */
-// Receiver parent has to be serializable because we use the constructor.
 public abstract class Receiver implements Serializable {
     // Message buffer TODO: replace w/ priority queue class (prioritizes based on message class)
     private final LinkedList<SystemMessage> msgBuf;
