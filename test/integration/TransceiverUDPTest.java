@@ -8,9 +8,10 @@ import Messaging.Transceivers.Transmitters.TransmitterUDP;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Integration test that asserts proper send/receive communication between the TransmitterUDP and the ReceiverUDP.
+ * Integration test that asserts proper send/receive communication between the TransmitterUDP and the ReceiverUDP
+ * using a DestinationEvent SystemMessage.
  */
-public class TransceiverTestUDP {
+public class TransceiverUDPTest {
 
     public static void main(String[] args) {
         System.out.println("Initialize ReceiverUDP thread to receive from port 5000.");
@@ -26,7 +27,7 @@ public class TransceiverTestUDP {
         DestinationEvent destEvent = new DestinationEvent(2, Direction.UP);
         udp_transmitter.send(destEvent);
 
-        System.out.println("Call receive on the ReceiverUDP to read the SystemMessage.");
+        System.out.println("Call dequeueMessage on the ReceiverUDP to read the SystemMessage.");
         DestinationEvent receivedDestEvent = (DestinationEvent) udp_receiver.dequeueMessage();
 
         System.out.println("Assert correct information is received.");
