@@ -158,8 +158,6 @@ the highest throughput possible.If the design can lead to starvation, it is an i
 | UML Diagrams                   |Victoria Malouf  |
 | Unit Tests                     |Victoria Malouf  |
 | UDP Implementation             |Victoria Malouf  |
-| Subsytem Separation            |Victoria Malouf  |
-| Scenario Tests                 |Victoria Malouf  |
 | System Integration             |Victoria Malouf  |
 | UDP Implementation             |Alexandre Marques|
 | Subsystem Separation           |Alexandre Marques|
