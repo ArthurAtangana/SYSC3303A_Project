@@ -24,7 +24,7 @@ public class MainElevatorUDP {
 
         // 3. Create and start elevator threads
         for (int i = 0; i < config.getNumElevators(); ++i) {
-            new Thread(new Elevator(i, udpFactory.createClientReceiver(i),
+            new Thread(new Elevator(config, i, udpFactory.createClientReceiver(i),
                     udpFactory.createClientTransmitter())).start();
         }
     }
