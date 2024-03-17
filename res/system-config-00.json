@@ -1,7 +1,7 @@
 {
   "verbosity": 1,
   "numFloors": 8,
-  "numElevators": 1,
+  "numElevators": 5,
   "travelTime": 8500,
   "loadTime": 1000,
   "inputFilename": "test/resources/test-input-file.txt"
