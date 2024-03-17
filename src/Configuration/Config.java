@@ -14,6 +14,7 @@ public class Config {
     private final int numElevators;
     private final long travelTime;
     private final long loadTime;
+    private final String inputFilename;
 
     /* Constructors */
 
@@ -25,6 +26,7 @@ public class Config {
         this.numElevators = 0;
         this.travelTime = 0;
         this.loadTime = 0;
+        this.inputFilename = "";
     }
 
     /* Methods */
@@ -45,12 +47,17 @@ public class Config {
         return loadTime;
     }
 
+    public String getInputFilename() {
+        return inputFilename;
+    }
+
     public void printConfig() {
         System.out.println("Launching system under the following configuration:");
         System.out.println("-- numFloors: " + getNumFloors());
         System.out.println("-- numElevators: " + getNumElevators());
         System.out.println("-- travelTime: " + getTravelTime() + " [ms]");
         System.out.println("-- loadTime: " + getLoadTime() + " [ms]");
+        System.out.println("-- inputFilename: " + getInputFilename());
         System.out.println();
     }
 
