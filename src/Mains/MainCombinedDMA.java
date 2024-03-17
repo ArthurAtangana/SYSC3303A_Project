@@ -43,7 +43,7 @@ public class MainCombinedDMA {
                     dmaFactory.createClientTransmitter())).start();
         }
         for (int i = 0; i < config.getNumElevators(); ++i) {
-            new Thread(new Elevator(i, dmaFactory.createClientReceiver(i),
+            new Thread(new Elevator(config, i, dmaFactory.createClientReceiver(i),
                     dmaFactory.createClientTransmitter())).start();
         }
 
