@@ -1,5 +1,7 @@
 package Mains;
 
+import Configuration.Config;
+import Configuration.Configurator;
 import Messaging.Messages.Events.FloorInputEvent;
 import Messaging.Transceivers.TransceiverFactory;
 import Subsystem.FloorSubsystem.DestinationDispatcher;
@@ -13,7 +15,8 @@ public class MainUtils {
         // 1. Instantiate Parser and parse input file to FloorInputEvents
         System.out.println("\n****** Generating System Input Events ******\n");
         Parser parser = new Parser();
-        String inputFilename = "test/resources/test-input-file.txt";
+        Config config = (new Configurator().getConfig());
+        String inputFilename = config.getInputFilename();
         ArrayList<FloorInputEvent> inputEvents = parser.parse(inputFilename);
 
         // 2. Start dispatcher (want all systems to be ready before sending events)
