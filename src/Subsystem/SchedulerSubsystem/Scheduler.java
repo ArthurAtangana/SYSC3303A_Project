@@ -73,7 +73,7 @@ public class Scheduler extends Context implements Subsystem {
      */
     void storeFloorRequest(FloorRequestEvent event) {
         // Log
-        String msg = ("Floor " + event.destinationEvent().destinationFloor() + ": request made: " + event.destinationEvent().direction() + ".");
+        String msg = ("Floor " + event.destinationEvent().destinationFloor() + ": Request made: " + event.destinationEvent().direction() + ".");
         logger.log(Logger.LEVEL.INFO, logId, msg);
         // Store event locally to use in scheduling
         if (!floorRequestsToTime.containsKey(event.destinationEvent()))
