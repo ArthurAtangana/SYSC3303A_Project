@@ -1,6 +1,7 @@
 package Subsystem.ElevatorSubsytem;
 
 import Configuration.Config;
+import Logging.Logger;
 import Configuration.Configurator;
 import Messaging.Messages.Commands.MovePassengersCommand;
 import Messaging.Messages.Direction;
@@ -33,14 +34,11 @@ public class Elevator extends Context implements Subsystem {
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
     private final Transmitter<?> transmitterToScheduler;
     private final Receiver receiver;
+    final Logging.Logger logger;
+    String logId;
 
-    public Elevator(int elevNum, Receiver receiver, Transmitter<?> transmitter) {
+    public Elevator(Config config, int elevNum, Receiver receiver, Transmitter<?> transmitter) {
 
-        // Configure Elevator from JSON
-        // FIXME: get this config init out of the subsystems.
-        String jsonFilename = "res/system-config-00.json";
-        System.out.println("Configuring Elevator " + elevNum + "...");
-        Config config = (new Configurator(jsonFilename).getConfig());
         this.travelTime = config.getTravelTime();
         this.loadTime = config.getLoadTime();
 
@@ -49,6 +47,10 @@ public class Elevator extends Context implements Subsystem {
         this.passengerCountMap = new HashMap<>();
         this.transmitterToScheduler = transmitter;
         this.receiver = receiver;
+
+        // Logging
+        logId = "ELEVATOR " + this.elevNum;
+        logger = new Logging.Logger(config.getVerbosity());
 
         // Notify scheduler of new subsystem creation -> could fit in subsystem super class
         this.transmitterToScheduler.send(new ReceiverBindingEvent(receiver, this.getClass()));
@@ -61,7 +63,10 @@ public class Elevator extends Context implements Subsystem {
      * @param direction the direction to travel towards.
      */
     void move(Direction direction) {
-        System.out.printf("Elevator %s: Going %s from floor %s.%n",this.elevNum,direction,this.currentFloor);
+        // Log
+        String msg = "Going " + direction + " from Floor " + this.currentFloor + ".";
+        logger.log(Logger.LEVEL.INFO, logId, msg);
+
         try {
             Thread.sleep(this.travelTime);
         } catch (InterruptedException e) {
@@ -70,7 +75,9 @@ public class Elevator extends Context implements Subsystem {
 
         currentFloor += direction.getDisplacement();
 
-        System.out.printf("Elevator %s: Elevator reached floor #%s%n", this.elevNum, this.currentFloor);
+        // Log
+        msg = "Reached floor " + this.currentFloor + ".";
+        logger.log(Logger.LEVEL.INFO, logId, msg);
     }
     void unload(){
         Direction direction = ElevatorUtilities.getPassengersDirection(passengerCountMap.keySet());
@@ -78,8 +85,10 @@ public class Elevator extends Context implements Subsystem {
             return;
         }
         try {
+            // Log
+            String msg = "Unloading Passenger: " + passengerCountMap.get(new DestinationEvent(currentFloor, direction));
+            logger.log(Logger.LEVEL.INFO, logId, msg);
             // each passenger takes loadTime to leave the elevator.
-            System.out.println("Passenger unloading from the elevator: " + passengerCountMap.get(new DestinationEvent(currentFloor, direction)));
             Thread.sleep(loadTime * passengerCountMap.remove(new DestinationEvent(currentFloor,direction)));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -91,7 +100,9 @@ public class Elevator extends Context implements Subsystem {
      * Loads passengers in and/or out of the elevator
      */
     void load(MovePassengersCommand command){
-        System.out.println("Loading passengers: " + command.newPassengers());
+        // Log
+        String msg = "Loading Passengers: " + command.newPassengers();
+        logger.log(Logger.LEVEL.INFO, logId, msg);
         // load passengers into the elevator, taking LOAD_TIME per passengers waiting on the floor.
         try {
             Thread.sleep(loadTime * command.newPassengers().size());
@@ -103,7 +114,9 @@ public class Elevator extends Context implements Subsystem {
             passengerCountMap.merge(e,1, Integer::sum);
             // if the key exists in passengerCountMap, increment value by 1. if not, add new entry.
         }
-        System.out.println("Passengers in the elevator: " + passengerCountMap.toString());
+        // Log
+        msg = "Passengers in the elevator: " + passengerCountMap.toString();
+        logger.log(Logger.LEVEL.DEBUG, logId, msg);
     }
     /**
      * Update scheduler with this elevator's state.
@@ -113,9 +126,10 @@ public class Elevator extends Context implements Subsystem {
         transmitterToScheduler.send(stateEvent);
     }
     SystemMessage receive() {
-        System.out.println("receive in elevator");
         SystemMessage event = receiver.dequeueMessage();
-        System.out.println(event);
+        // Log
+        String msg = "Received SystemMessage: " + event;
+        logger.log(Logger.LEVEL.DEBUG, logId, msg);
         return event;
     }
 }
