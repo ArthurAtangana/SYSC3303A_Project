@@ -17,7 +17,9 @@ public class MainSchedulerUDP {
         TransceiverFactory transceiverFactory = new TransceiverUDPFactory();
 
         // 2. Get Config
+        System.out.println("\n****** Configuring Scheduler ******\n");
         Config config = (new Configurator().getConfig());
+        config.printConfig();
 
         // 3. Create and start scheduler
         Scheduler scheduler = new Scheduler(config,
