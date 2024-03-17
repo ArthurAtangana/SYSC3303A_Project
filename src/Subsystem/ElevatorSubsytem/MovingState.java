@@ -19,7 +19,8 @@ public class MovingState extends State {
 
     @Override
     public void entry() {
-        System.out.println("MOVING STATE");
+        String msg = "MovingState:Entry";
+        ((Elevator)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Elevator)context).logId, msg);
     }
 
     @Override

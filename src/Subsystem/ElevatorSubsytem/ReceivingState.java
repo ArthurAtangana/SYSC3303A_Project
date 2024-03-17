@@ -22,10 +22,14 @@ public class ReceivingState extends State {
 
     @Override
     public void entry() {
-        System.out.println("RECEIVING STATE");
+        String msg = "ReceivingState:Entry";
+        ((Elevator)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Elevator)context).logId, msg);
+
         ((Elevator) context).sendStateUpdate();
         event = ((Elevator) context).receive();
-        System.out.println("received event: "+ event);
+
+        msg = "Received event: " + event;
+        ((Elevator)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Elevator)context).logId, msg);
     }
 
     @Override

@@ -20,7 +20,8 @@ public class LoadingState extends State {
 
     @Override
     public void entry() {
-        System.out.println("LOADING STATE");
+        String msg = "LoadingState:Entry";
+        ((Elevator)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Elevator)context).logId, msg);
         ((Elevator) context).unload();
     }
     @Override
