@@ -47,7 +47,8 @@ public class LoadingPassengerState extends State {
      */
     @Override
     public void entry() {
-        System.out.println("[INFO::FSM] Scheduler:LoadingPassengerState:Entry");
+        String msg = "LoadingPassengerState:Entry";
+        ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
     }
 
     /**
@@ -58,8 +59,6 @@ public class LoadingPassengerState extends State {
      */
     @Override
     public void doActivity() {
-        System.out.println("[INFO::FSM] Scheduler:LoadingPassengerState:Do");
-
         // Load Passengers, notify Elevator
         MovePassengersCommand movePassengersCommand = new MovePassengersCommand(event.elevNumber(), event.passengers());
         ((Scheduler)context).transmitToElevator(movePassengersCommand);
@@ -70,7 +69,6 @@ public class LoadingPassengerState extends State {
      */
     @Override
     public void exit() {
-        System.out.println("[INFO::FSM] Scheduler:LoadingPassengerState:Exit");
         // Next State: ReceivingState
         // Required Constructor Arguments: context
         context.setNextState(new ReceivingState(context));
