@@ -31,7 +31,7 @@ public class MainCombinedDMA {
         TransceiverFactory dmaFactory = new TransceiverDMAFactory();
 
         // 3. Create and start Subsystem threads
-        Scheduler scheduler = new Scheduler(dmaFactory.createServerReceiver(),
+        Scheduler scheduler = new Scheduler(config, dmaFactory.createServerReceiver(),
                 dmaFactory.createServerTransmitter(),
                 dmaFactory.createServerTransmitter());
         Thread schedulerThread = new Thread(scheduler);

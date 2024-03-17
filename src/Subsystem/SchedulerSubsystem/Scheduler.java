@@ -1,5 +1,7 @@
 package Subsystem.SchedulerSubsystem;
 
+import Configuration.Config;
+import Logging.Logger;
 import Messaging.Messages.Commands.SystemCommand;
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
@@ -28,8 +30,11 @@ public class Scheduler extends Context implements Subsystem {
     private final Receiver receiver;
     private final Map<DestinationEvent, Long> floorRequestsToTime;
     private final ArrayList<ElevatorStateEvent> idleElevators;
+    final Logger logger;
+    final String logId = "SCHEDULER";
 
-    public Scheduler(Receiver receiver,
+    public Scheduler(Config config,
+                     Receiver receiver,
                      Transmitter<? extends Receiver> transmitterToFloor,
                      Transmitter<? extends Receiver> transmitterToElevator) {
         this.receiver = receiver;
@@ -37,6 +42,8 @@ public class Scheduler extends Context implements Subsystem {
         this.transmitterToFloor = transmitterToFloor;
         floorRequestsToTime = new HashMap<>();
         idleElevators = new ArrayList<>();
+        // Logging
+        logger = new Logger(config.getVerbosity());
 
         // Initialize first state for this Subsystem's State Machine
         setNextState(new ReceivingState(this));
@@ -65,7 +72,9 @@ public class Scheduler extends Context implements Subsystem {
      * @param event Event to process.
      */
     void storeFloorRequest(FloorRequestEvent event) {
-        System.out.println("Floor " + event.destinationEvent().destinationFloor() + ": request made: " + event.destinationEvent().direction() + ".");
+        // Log
+        String msg = ("Floor " + event.destinationEvent().destinationFloor() + ": request made: " + event.destinationEvent().direction() + ".");
+        logger.log(Logger.LEVEL.INFO, logId, msg);
         // Store event locally to use in scheduling
         if (!floorRequestsToTime.containsKey(event.destinationEvent()))
             // Only store request if it does not already exist
