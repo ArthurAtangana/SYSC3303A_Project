@@ -34,8 +34,8 @@ class ElevatorUtilitiesTest {
      */
     @Test
     void passengersGoingUp() {
-        DestinationEvent dest1 = new DestinationEvent(3, Direction.UP);
-        DestinationEvent dest2 = new DestinationEvent(5, Direction.UP);
+        DestinationEvent dest1 = new DestinationEvent(3, Direction.UP, null);
+        DestinationEvent dest2 = new DestinationEvent(5, Direction.UP, null);
 
         passengers.add(dest1);
         passengers.add(dest2);
@@ -49,8 +49,8 @@ class ElevatorUtilitiesTest {
      */
     @Test
     void passengersGoingDown() {
-        DestinationEvent dest1 = new DestinationEvent(1, Direction.DOWN);
-        DestinationEvent dest2 = new DestinationEvent(2, Direction.DOWN);
+        DestinationEvent dest1 = new DestinationEvent(1, Direction.DOWN, null);
+        DestinationEvent dest2 = new DestinationEvent(2, Direction.DOWN, null);
 
         passengers.add(dest1);
         passengers.add(dest2);
@@ -64,8 +64,8 @@ class ElevatorUtilitiesTest {
      */
     @Test
     void passengersGoingDifferentDirections() {
-        DestinationEvent dest1 = new DestinationEvent(5, Direction.UP);
-        DestinationEvent dest2 = new DestinationEvent(3, Direction.DOWN);
+        DestinationEvent dest1 = new DestinationEvent(5, Direction.UP, null);
+        DestinationEvent dest2 = new DestinationEvent(3, Direction.DOWN, null);
 
         passengers.add(dest1);
         passengers.add(dest2);
