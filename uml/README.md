@@ -15,5 +15,8 @@ UML diagrams, organized by iteration.
 ### `03/`
 * Iteration 3 UML diagrams.
 
+### `04/`
+* Iteration 4 UML diagrams.
+
 ## Notes
 
