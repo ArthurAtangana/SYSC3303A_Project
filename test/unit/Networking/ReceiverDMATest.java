@@ -10,7 +10,7 @@ import Messaging.Transceivers.Receivers.ReceiverDMA;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ReceiverDMATest {
 
@@ -22,7 +22,7 @@ class ReceiverDMATest {
     @Test
     void setReceiveEvent() {
         // Verify single set/receive scenario works
-        SystemEvent sndEvent = new DestinationEvent(2, Direction.UP);
+        SystemEvent sndEvent = new DestinationEvent(2, Direction.UP, null);
         receiver.receiveDMA(sndEvent);
 
         SystemMessage receivedEvent = receiver.dequeueMessage();
@@ -32,11 +32,11 @@ class ReceiverDMATest {
     @Test
     void setReceiveEventFIFO() {
         // Verify receiver Queue behavior (FIFO)
-        SystemEvent sndEvent = new DestinationEvent(1, Direction.UP);
+        SystemEvent sndEvent = new DestinationEvent(1, Direction.UP, null);
         receiver.receiveDMA(sndEvent);
-        SystemEvent sndEvent2 = new DestinationEvent(2, Direction.UP);
+        SystemEvent sndEvent2 = new DestinationEvent(2, Direction.UP, null);
         receiver.receiveDMA(sndEvent2);
-        SystemEvent sndEvent3 = new DestinationEvent(3, Direction.UP);
+        SystemEvent sndEvent3 = new DestinationEvent(3, Direction.UP, null);
         receiver.receiveDMA(sndEvent3);
 
         assertEquals(receiver.dequeueMessage(), sndEvent);
