@@ -1,8 +1,7 @@
 package Messaging.Messages.Events;
 
 import Messaging.Messages.Direction;
-
-import java.io.Serializable;
+import Messaging.Messages.Fault;
 
 /**
  * DestinationEvent record, holds data modelling a destination.
@@ -15,5 +14,5 @@ import java.io.Serializable;
  * @author Alexandre Marques
  */
 public record DestinationEvent
-        (int destinationFloor, Direction direction)
+        (int destinationFloor, Direction direction, Fault faultType)
         implements SystemEvent {}
