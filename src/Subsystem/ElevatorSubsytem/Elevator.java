@@ -2,7 +2,6 @@ package Subsystem.ElevatorSubsytem;
 
 import Configuration.Config;
 import Logging.Logger;
-import Configuration.Configurator;
 import Messaging.Messages.Commands.MovePassengersCommand;
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
@@ -86,10 +85,10 @@ public class Elevator extends Context implements Subsystem {
         }
         try {
             // Log
-            String msg = "Unloading Passenger: " + passengerCountMap.get(new DestinationEvent(currentFloor, direction));
+            String msg = "Unloading Passenger: " + passengerCountMap.get(new DestinationEvent(currentFloor, direction, null));
             logger.log(Logger.LEVEL.INFO, logId, msg);
             // each passenger takes loadTime to leave the elevator.
-            Thread.sleep(loadTime * passengerCountMap.remove(new DestinationEvent(currentFloor,direction)));
+            Thread.sleep(loadTime * passengerCountMap.remove(new DestinationEvent(currentFloor, direction, null)));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (NullPointerException e) {

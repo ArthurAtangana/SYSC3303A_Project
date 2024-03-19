@@ -15,4 +15,30 @@ import Messaging.Messages.Fault;
  */
 public record DestinationEvent
         (int destinationFloor, Direction direction, Fault faultType)
-        implements SystemEvent {}
+        implements SystemEvent {
+
+    /**
+     * Override default equals method to accept a null faultType as a wildcard match against other faults
+     *
+     * @param o the reference object with which to compare.
+     * @return True if all fields match,
+     * or all fields except fault match and one of the two objects has a null (wildcard) fault.
+     */
+    @Override
+    public boolean equals(Object o) {
+        // Check identical
+        if (this == o)
+            return true;
+        // Type cast o to this type
+        if (!(o instanceof DestinationEvent de))
+            return false;
+        // Check normal fields (no wildcards)
+        if (de.destinationFloor != this.destinationFloor || de.direction != this.direction)
+            return false;
+        // Wildcard fault type exists (no need to check it)
+        if (de.faultType == null || this.faultType == null)
+            return true;
+        // Check fault type
+        return de.faultType == this.faultType;
+    }
+}
