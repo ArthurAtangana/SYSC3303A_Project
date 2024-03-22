@@ -1,0 +1,28 @@
+###############################################################################
+# scenario-4-hard-fault-test.txt                                              #
+###############################################################################
+# Input file used to provide inputs to the system. This file is assumed to be #
+# well-formed and is NOT validated at runtime.                                #
+###############################################################################
+#  arrivalTime  | sourceFloor | direction | destinationFloor |   faultCode    #
+# --------------|-------------|-----------|------------------|----------------#
+#      int      |    int      | Direction |       int        |      int       #
+# --------------|-------------|-----------|------------------|----------------#
+#  hh:mm:ss.mmm |     n       | Up | Down |        n         |   0 | 1 | 2    #
+###############################################################################
+
+## Test Sequence ##
+09:05:22.123 1 Up 7 0
+# Hard Fault:
+# Passenger Arthur hiccups, hits head on elevator, breaks through ceiling.
+09:05:32.994 1 Up 3 2
+09:05:35.061 1 Up 6 0
+# Hard Fault:
+# Passenger Alex skateboards into another elevator, breaks through wall.
+09:05:52.485 7 Down 4 2
+09:06:03.669 2 Up 5 0
+09:06:14.334 5 Down 2 0
+09:06:16.301 5 Down 1 0
+09:06:19.449 4 Down 1 0
+09:06:27.678 2 Up 7 0
+09:06:33.994 3 Down 1 0
