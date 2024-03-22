@@ -1,0 +1,55 @@
+###############################################################################
+# scenario-6-combined-fault-test.txt                                          #
+###############################################################################
+# Input file used to provide inputs to the system. This file is assumed to be #
+# well-formed and is NOT validated at runtime.                                #
+###############################################################################
+#  arrivalTime  | sourceFloor | direction | destinationFloor |   faultCode    #
+# --------------|-------------|-----------|------------------|----------------#
+#      int      |    int      | Direction |       int        |      int       #
+# --------------|-------------|-----------|------------------|----------------#
+#  hh:mm:ss.mmm |     n       | Up | Down |        n         |   0 | 1 | 2    #
+###############################################################################
+
+## Test Sequence ##
+09:05:22.123 1 Up 7 0
+09:05:32.994 1 Up 3 0
+# Transient Fault:
+# Passenger Alex remembers code idea as he crosses elevator threshold, stops
+# mid-stride to implement it and issue PR.
+09:05:35.001 1 Up 6 1
+# Transient Fault:
+# Passenger Arthur receives notification of Alex's PR as he enters elevator,
+# stops in place to review and approve because he is efficient PM.
+09:05:35.061 2 Up 6 1
+09:05:52.485 7 Down 4 0
+09:06:03.669 2 Up 5 0
+09:06:14.334 5 Down 2 0
+# Hard Fault:
+# Passenger Rami nunchakus elevator cable. It plummets and explodes. No one
+# is hurt, but everyone is impressed.
+09:06:16.301 5 Down 1 2
+09:06:19.449 4 Down 1 0
+09:06:27.678 2 Up 7 0
+# Transient Fault:
+# Passenger Michael gets hair stuck in elevator door, has to wait for emergency
+# barber to cut him out. Is late to class, but achieves haircut. 
+09:06:33.994 3 Down 1 1
+09:06:38.165 1 Up 2 0
+# Hard Fault:
+# Passenger Braeden re-enacts favourite elevator meme by pushing all buttons
+# in elevator, but it just totally breaks. He wore the hat for nothing.
+09:06:50.778 1 Up 7 2
+09:06:52.393 7 Down 1 0
+09:06:54.651 7 Down 2 0
+09:06:59.912 4 Down 1 0
+# Hard Fault:
+# Passenger Rami nunchakus another elevator cable. What's going on?
+09:07:08.870 5 Up 6 2
+09:07:09.113 4 Up 6 0
+# Transient Fault:
+# Passenger Victoria hesitates in getting on elevator because of history of
+# elevator-related trauma incurred by group project.
+09:07:21.833 7 Down 1 1
+09:07:24.113 7 Down 4 0
+09:07:31.113 2 Down 1 0

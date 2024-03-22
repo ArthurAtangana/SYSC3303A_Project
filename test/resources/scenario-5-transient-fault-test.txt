@@ -1,0 +1,40 @@
+###############################################################################
+# scenario-5-transient-fault-test.txt                                         #
+###############################################################################
+# Input file used to provide inputs to the system. This file is assumed to be #
+# well-formed and is NOT validated at runtime.                                #
+###############################################################################
+#  arrivalTime  | sourceFloor | direction | destinationFloor |   faultCode    #
+# --------------|-------------|-----------|------------------|----------------#
+#      int      |    int      | Direction |       int        |      int       #
+# --------------|-------------|-----------|------------------|----------------#
+#  hh:mm:ss.mmm |     n       | Up | Down |        n         |   0 | 1 | 2    #
+###############################################################################
+
+## Test Sequence ##
+09:05:22.123 1 Up 7 0
+# Transient Fault:
+# Passenger Braeden takes foreverrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+# to load into elevator because of his banged up foot.
+09:05:32.994 1 Up 3 1
+09:05:35.001 1 Up 6 0
+# Transient Fault:
+# Passenger Victoria forgets cupcake in class, asks other passenger to hold
+# door while she runs back to get it.
+09:05:35.061 1 Up 6 1
+09:05:52.485 7 Down 4 0
+# Transient Fault:
+# Passenger Michael is old and haggard and therefore walks very slowly into 
+elevator, muttering something about kids these days.
+09:06:03.669 2 Up 5 1
+09:06:14.334 5 Down 2 0
+# Transient Fault:
+# Passenger Alex wants to measure fault times for elevator simulator, keeps
+# going in and out of elevator to keep door open.
+09:06:16.301 5 Down 1 1
+09:06:19.449 4 Down 1 0
+09:06:27.678 2 Up 7 0
+# Transient Fault:
+# Passenger Arthur strolls very leisurely into elevator. Very leisurely. He's
+# really in no rush, this guy.
+09:06:33.994 3 Down 1 1
