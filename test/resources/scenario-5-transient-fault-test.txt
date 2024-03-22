@@ -4,6 +4,10 @@
 # Input file used to provide inputs to the system. This file is assumed to be #
 # well-formed and is NOT validated at runtime.                                #
 ###############################################################################
+# Scenario Description                                                        #
+# --------------------                                                        #
+# Introduce transient faults into system via fault codes.                     #
+###############################################################################
 #  arrivalTime  | sourceFloor | direction | destinationFloor |   faultCode    #
 # --------------|-------------|-----------|------------------|----------------#
 #      int      |    int      | Direction |       int        |      int       #
@@ -25,7 +29,7 @@
 09:05:52.485 7 Down 4 0
 # Transient Fault:
 # Passenger Michael is old and haggard and therefore walks very slowly into 
-elevator, muttering something about kids these days.
+# elevator, muttering something about kids these days.
 09:06:03.669 2 Up 5 1
 09:06:14.334 5 Down 2 0
 # Transient Fault:
