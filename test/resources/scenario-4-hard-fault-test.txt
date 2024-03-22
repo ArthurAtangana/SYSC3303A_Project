@@ -4,6 +4,10 @@
 # Input file used to provide inputs to the system. This file is assumed to be #
 # well-formed and is NOT validated at runtime.                                #
 ###############################################################################
+# Scenario Description                                                        #
+# --------------------                                                        #
+# Introduce hard faults into system via fault codes.                          #
+###############################################################################
 #  arrivalTime  | sourceFloor | direction | destinationFloor |   faultCode    #
 # --------------|-------------|-----------|------------------|----------------#
 #      int      |    int      | Direction |       int        |      int       #

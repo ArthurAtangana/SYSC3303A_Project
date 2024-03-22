@@ -4,6 +4,10 @@
 # Input file used to provide inputs to the system. This file is assumed to be #
 # well-formed and is NOT validated at runtime.                                #
 ###############################################################################
+# Scenario Description                                                        #
+# --------------------                                                        #
+# Introduce transient and hard faults into system via fault codes.            #
+###############################################################################
 #  arrivalTime  | sourceFloor | direction | destinationFloor |   faultCode    #
 # --------------|-------------|-----------|------------------|----------------#
 #      int      |    int      | Direction |       int        |      int       #
@@ -27,7 +31,7 @@
 09:06:14.334 5 Down 2 0
 # Hard Fault:
 # Passenger Rami nunchakus elevator cable. It plummets and explodes. No one
-# is hurt, but everyone is impressed.
+# is hurt, but everyone is impressed - and confused.
 09:06:16.301 5 Down 1 2
 09:06:19.449 4 Down 1 0
 09:06:27.678 2 Up 7 0
@@ -44,7 +48,8 @@
 09:06:54.651 7 Down 2 0
 09:06:59.912 4 Down 1 0
 # Hard Fault:
-# Passenger Rami nunchakus another elevator cable. What's going on?
+# Passenger Rami nunchakus another elevator cable, explaining that it is to 
+# deliberately inject hard faults into the system.
 09:07:08.870 5 Up 6 2
 09:07:09.113 4 Up 6 0
 # Transient Fault:

@@ -4,18 +4,18 @@
 # Input file used to provide inputs to the system. This file is assumed to be #
 # well-formed and is NOT validated at runtime.                                #
 ###############################################################################
-#   arrivalTime   |   sourceFloor   |    direction    |    destinationFloor   #
-# ----------------|-----------------|-----------------|---------------------- #
-#       int       |       int       |    Direction    |         int           #
-# ----------------|-----------------|-----------------|---------------------- #
-#   hh:mm:ss.mmm  |        n        |    Up | Down    |          n            #
+#  arrivalTime  | sourceFloor | direction | destinationFloor |   faultCode    #
+# --------------|-------------|-----------|------------------|----------------#
+#      int      |    int      | Direction |       int        |      int       #
+# --------------|-------------|-----------|------------------|----------------#
+#  hh:mm:ss.mmm |     n       | Up | Down |        n         |   0 | 1 | 2    #
 ###############################################################################
 
-## Test Sequence 1: 2 Passengers over ~2 min ##
-09:05:24.994 1 Up 7
-09:05:52.994 1 Up 3
-09:06:01.100 6 Down 2
-09:06:02.100 5 Up 6
-09:06:03.100 3 Down 1
-09:06:10.100 1 Up 6
-09:06:30.100 2 Up 6
+## Test Sequence ##
+09:05:24.994 1 Up 7 0
+09:05:52.994 1 Up 3 0
+09:06:01.100 6 Down 2 0
+09:06:02.100 5 Up 6 0
+09:06:03.100 3 Down 1 0
+09:06:10.100 1 Up 6 0
+09:06:30.100 2 Up 6 0

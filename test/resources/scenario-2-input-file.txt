@@ -6,19 +6,19 @@
 ###############################################################################
 # Scenario:                                                                   #
 # Elevator picks up a passengers going up, serves it,                         #
-# Elevator gets a request to go up from floor1 to floor3 but                  #
+# Elevator gets a request to go up from floor 1 to floor 3 but                #
 # already passed that floor                                                   #
 # Elevator gets a request to go down from floor 6 to floor 2                  #
 # passenger going down, serving it.                                           #
 ###############################################################################
-#   arrivalTime   |   sourceFloor   |    direction    |    destinationFloor   #
-# ----------------|-----------------|-----------------|---------------------- #
-#       int       |       int       |    Direction    |         int           #
-# ----------------|-----------------|-----------------|---------------------- #
-#   hh:mm:ss.mmm  |        n        |    Up | Down    |          n            #
+#  arrivalTime  | sourceFloor | direction | destinationFloor |   faultCode    #
+# --------------|-------------|-----------|------------------|----------------#
+#      int      |    int      | Direction |       int        |      int       #
+# --------------|-------------|-----------|------------------|----------------#
+#  hh:mm:ss.mmm |     n       | Up | Down |        n         |   0 | 1 | 2    #
 ###############################################################################
 
-## Test Sequence 1: 2 Passengers over ~2 min ##
-09:05:25.994 1 Up 7
-09:05:52.994 1 Up 3
-09:06:01.100 6 Down 2
+## Test Sequence ##
+09:05:25.994 1 Up 7 0
+09:05:52.994 1 Up 3 0
+09:06:01.100 6 Down 2 0
