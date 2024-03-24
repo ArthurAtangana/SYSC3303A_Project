@@ -154,17 +154,7 @@ public class Parser {
 
         // fault
         int faultCode = Integer.parseInt(splits[4]);
-        Fault fault;
-        switch (faultCode) {
-            case 0:
-                fault = Fault.NONE;
-            case 1:
-                fault = Fault.TRANSIENT;
-            case 2:
-                fault = Fault.HARD;
-            default:
-                fault = Fault.NONE;
-        }
+        Fault fault = Fault.fromInt(faultCode);
 
         // Create and return FloorInputEvent record with the above values as fields
         floorInputEvent = new FloorInputEvent(arrivalTime, sourceFloor, direction, destinationFloor, fault);
