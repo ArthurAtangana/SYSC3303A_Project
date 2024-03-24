@@ -2,6 +2,7 @@ package Subsystem.FloorSubsystem;
 
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.FloorInputEvent;
+import Messaging.Messages.Fault;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -31,12 +32,12 @@ import java.util.ArrayList;
  * 1. Although time measurements are codified in a 24-hour clock in the input
  *    file, as per specification, the parsed objects maintain only a relative
  *    count of time, in milliseconds, from the start of a day.
- * 2. The input file should be placed adjacently in the Parser's directory, and
- *    only the file name, and not path, shall be argued to this Parser.
+ * 2. The input file should be argued to this Parser by specifying the 
+ *    the file path (from JVM root) in the system configuration JSON.
  * 3. Input line format:
- *      hh:mm:ss.mmm n [ Up | Down ] n
+ *      hh:mm:ss.mmm n [ Up | Down ] n [ 0 | 1 | 2 ]
  *    Example:
- *      09:05:22.123 1 Up 7
+ *      09:05:22.123 1 Up 7 2
  *
  * Public Usage:
  * ------------
@@ -49,7 +50,7 @@ import java.util.ArrayList;
  *      ArrayList<FloorInputEvent> floorInputEvents = parser.parse("input-file.txt");
  *
  * @author Michael De Santis
- * @version Iteration-1
+ * @version Iteration-4
  */
 public class Parser {
 
@@ -151,9 +152,22 @@ public class Parser {
         // destinationFloor
         int destinationFloor = Integer.parseInt(splits[3]);
 
+        // fault
+        int faultCode = Integer.parseInt(splits[4]);
+        Fault fault;
+        switch (faultCode) {
+            case 0:
+                fault = Fault.NONE;
+            case 1:
+                fault = Fault.TRANSIENT;
+            case 2:
+                fault = Fault.HARD;
+            default:
+                fault = Fault.NONE;
+        }
+
         // Create and return FloorInputEvent record with the above values as fields
-        // TODO: Modify null value with a real fault!!
-        floorInputEvent = new FloorInputEvent(arrivalTime, sourceFloor, direction, destinationFloor, null);
+        floorInputEvent = new FloorInputEvent(arrivalTime, sourceFloor, direction, destinationFloor, fault);
 
         return floorInputEvent;
     }
