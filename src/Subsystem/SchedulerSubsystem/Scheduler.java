@@ -4,7 +4,6 @@ import Configuration.Config;
 import Logging.Logger;
 import Messaging.Messages.Commands.SystemCommand;
 import Messaging.Messages.Direction;
-import Messaging.Messages.Fault;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import Messaging.Messages.Events.FloorRequestEvent;
@@ -200,9 +199,8 @@ public class Scheduler extends Context implements Subsystem {
         if (isMovingOppositeToFutureDirection(e)) {
             return false;
         }
-        // Fault: Assume last parameter (ie. fault type) is: Fault.NONE.
-        // NB: If it's null, no elevators will ever stop for a load.
-        return union.contains(new DestinationEvent(e.currentFloor(), getElevatorDirection(e), Fault.NONE));
+        // Fault: Assume null -> matches against any fault which is important for parity with legacy behavior.
+        return union.contains(new DestinationEvent(e.currentFloor(), getElevatorDirection(e), null));
     }
 
     /**
