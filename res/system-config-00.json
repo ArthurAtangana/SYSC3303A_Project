@@ -1,8 +1,8 @@
 {
   "verbosity": 1,
-  "numFloors": 8,
+  "numFloors": 7,
   "numElevators": 5,
   "travelTime": 8500,
   "loadTime": 1000,
-  "inputFilename": "test/resources/test-input-file.txt"
+  "inputFilename": "test/resources/scenario-6-combined-fault-test.txt"
 }
