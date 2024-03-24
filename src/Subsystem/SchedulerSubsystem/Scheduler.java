@@ -140,7 +140,7 @@ public class Scheduler extends Context implements Subsystem {
         // Convenience variable to extract and hold target floor
         int targetFloor = floorRequestEvent.destinationEvent().destinationFloor();
         // Distance tracker (in number of floors)
-        int distance = 0;
+        int distance;
         // Initialize variables for our sort algorithm using the first idle elevator
         int closestIdleElevatorIndex = 0;
         int closestDistance = abs(idleElevators.get(0).currentFloor()- targetFloor);
@@ -191,7 +191,8 @@ public class Scheduler extends Context implements Subsystem {
         if (isMovingOppositeToFutureDirection(e)) {
             return false;
         }
-        return union.contains(new DestinationEvent(e.currentFloor(), getElevatorDirection(e)));
+        // Fault: Assume NONE,
+        return union.contains(new DestinationEvent(e.currentFloor(), getElevatorDirection(e), null));
     }
 
     /**

@@ -152,7 +152,8 @@ public class Parser {
         int destinationFloor = Integer.parseInt(splits[3]);
 
         // Create and return FloorInputEvent record with the above values as fields
-        floorInputEvent = new FloorInputEvent(arrivalTime, sourceFloor, direction, destinationFloor);
+        // TODO: Modify null value with a real fault!!
+        floorInputEvent = new FloorInputEvent(arrivalTime, sourceFloor, direction, destinationFloor, null);
 
         return floorInputEvent;
     }
