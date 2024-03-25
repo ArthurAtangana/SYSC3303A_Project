@@ -7,8 +7,6 @@ import Messaging.Messages.Events.ElevatorStateEvent;
 import StatePatternLib.Context;
 import StatePatternLib.State;
 
-import java.util.Timer;
-
 /**
  * Scheduler FSM State: Processing Elevator Event State.
  *
@@ -48,8 +46,7 @@ public class ProcessingElevatorEventState extends State {
         String msg = "ProcessingElevatorEventState:Entry";
         ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
 
-        // Received a status update from an elevator ...
-        // thus we know its alive and should kill its timer.
+        // Received a status update from an elevator ... thus we know its alive and should kill its timer.
         ((Scheduler) context).killElevatorTimer(event.elevatorNum());
     }
 
@@ -102,7 +99,7 @@ public class ProcessingElevatorEventState extends State {
             // Request Elevator to keep moving
             ((Scheduler)context).transmitToElevator(new MoveElevatorCommand(event.elevatorNum(), ((Scheduler)context).getElevatorDirection(event)));
 
-            // Start timer
+            // Start timer ... assume hard fault occurred in transit if this timer goes off.
             ((Scheduler) context).startElevatorTimer(event.elevatorNum());
 
             // Next State: ReceivingState
