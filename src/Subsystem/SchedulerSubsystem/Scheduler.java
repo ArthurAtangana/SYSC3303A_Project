@@ -30,6 +30,7 @@ public class Scheduler extends Context implements Subsystem {
     private final Receiver receiver;
     private final Map<DestinationEvent, Long> floorRequestsToTime;
     private final ArrayList<ElevatorStateEvent> idleElevators;
+    private final Collection<Timer> elevatorTimers;
     final Logger logger;
     final String logId = "SCHEDULER";
 
@@ -42,6 +43,7 @@ public class Scheduler extends Context implements Subsystem {
         this.transmitterToFloor = transmitterToFloor;
         floorRequestsToTime = new HashMap<>();
         idleElevators = new ArrayList<>();
+        elevatorTimers = new LinkedList<>();
         // Logging
         logger = new Logger(config.getVerbosity());
 
@@ -255,6 +257,30 @@ public class Scheduler extends Context implements Subsystem {
      */
     SystemMessage receive() {
         return receiver.dequeueMessage();
+    }
+
+    /**
+     * Starts the timer for an elevator.
+     *
+     * @param elevNum The elevator whose timer should start.
+     */
+    void startElevatorTimer(int elevNum) {
+        elevatorTimers.add(new Timer());
+
+        String msg = "Timer started for elevator " + elevNum + ".";
+        logger.log(Logging.Logger.LEVEL.DEBUG, logId, msg);
+    }
+
+    /**
+     * Kills the timer for an elevator.
+     *
+     * @param elevNum The elevator whose timer should stop.
+     */
+    void killElevatorTimer(int elevNum) {
+        // TODO
+
+        String msg = "Timer killed for elevator " + elevNum + ".";
+        logger.log(Logging.Logger.LEVEL.DEBUG, logId, msg);
     }
 
     /** 
