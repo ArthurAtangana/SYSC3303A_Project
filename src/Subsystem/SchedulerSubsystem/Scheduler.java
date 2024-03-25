@@ -33,6 +33,7 @@ public class Scheduler extends Context implements Subsystem {
     private final Map<Integer, Timer> elevatorTimers;
     final Logger logger;
     final String logId = "SCHEDULER";
+    final long ELEVATOR_TIMEOUT_DELAY = 10000; // milliseconds
 
     public Scheduler(Config config,
                      Receiver receiver,
@@ -265,7 +266,18 @@ public class Scheduler extends Context implements Subsystem {
      * @param elevNum The elevator whose timer should start.
      */
     void startElevatorTimer(int elevNum) {
-        elevatorTimers.put(elevNum, new Timer());
+
+        class HandleHardFault extends TimerTask {
+            @Override
+            public void run() {
+                String msg = "Hard fault detected for elevator " + elevNum + ".Taking elevator out of service.";
+                logger.log(Logging.Logger.LEVEL.INFO, logId, msg);
+            }
+        }
+
+        Timer timer = new Timer();
+        timer.schedule(new HandleHardFault(), ELEVATOR_TIMEOUT_DELAY);
+        elevatorTimers.put(elevNum, timer);
 
         String msg = "Timer started for elevator " + elevNum + ".";
         logger.log(Logging.Logger.LEVEL.DEBUG, logId, msg);
