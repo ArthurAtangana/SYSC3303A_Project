@@ -266,7 +266,6 @@ public class Scheduler extends Context implements Subsystem {
      * @param elevNum The elevator whose timer should start.
      */
     void startElevatorTimer(int elevNum) {
-
         class HandleHardFault extends TimerTask {
             @Override
             public void run() {
@@ -290,10 +289,12 @@ public class Scheduler extends Context implements Subsystem {
      */
     void killElevatorTimer(int elevNum) {
         Timer timer = elevatorTimers.get(elevNum);
-        if (timer != null) {timer.cancel();}
-
-        String msg = "Timer killed for elevator " + elevNum + ".";
-        logger.log(Logging.Logger.LEVEL.DEBUG, logId, msg);
+        if (timer != null) {
+            timer.cancel();
+            elevatorTimers.remove(elevNum);
+            String msg = "Timer killed for elevator " + elevNum + ".";
+            logger.log(Logging.Logger.LEVEL.DEBUG, logId, msg);
+        }
     }
 
     /** 
