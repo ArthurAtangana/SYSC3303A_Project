@@ -36,7 +36,8 @@ public class Scheduler extends Context implements Subsystem {
     private final Map<Integer, Timer> elevatorTimers; // Elevator number mapping to an elevator timer
     final Logger logger;
     final String logId = "SCHEDULER";
-    final long ELEVATOR_TIMEOUT_DELAY = 10000; // milliseconds
+    final long ELEVATOR_TIMEOUT_DELAY; // milliseconds
+    final double ELEVATOR_TIMEOUT_DELAY_FACTOR = 1.5;
 
     public Scheduler(Config config,
                      Receiver receiver,
@@ -48,6 +49,7 @@ public class Scheduler extends Context implements Subsystem {
         floorRequestsToTime = new HashMap<>();
         idleElevators = new ArrayList<>();
         elevatorTimers = new HashMap<>();
+        ELEVATOR_TIMEOUT_DELAY = (long) (config.getTravelTime() * ELEVATOR_TIMEOUT_DELAY_FACTOR);
         // Logging
         logger = new Logger(config.getVerbosity());
 
