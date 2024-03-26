@@ -199,7 +199,7 @@ public class Scheduler extends Context implements Subsystem {
         if (isMovingOppositeToFutureDirection(e)) {
             return false;
         }
-        // Fault: Assume NONE,
+        // Fault: Assume null -> matches against any fault which is important for parity with legacy behavior.
         return union.contains(new DestinationEvent(e.currentFloor(), getElevatorDirection(e), null));
     }
 

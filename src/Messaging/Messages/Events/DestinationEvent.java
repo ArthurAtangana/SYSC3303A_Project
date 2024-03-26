@@ -41,4 +41,22 @@ public record DestinationEvent
         // Check fault type
         return de.faultType == this.faultType;
     }
+
+    /**
+     * Override hashCode such that faults are all grouped the same for equality.
+     *
+     * @return HashCode of record.
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+
+        // Combine hash codes of each field
+        result = prime * result + destinationFloor;
+        result = prime * result + ((direction == null) ? 0 : direction.hashCode());
+        // Do not do faults, They should all be grouped together. Loses efficiency but allows equality with nulls
+
+        return result;
+    }
 }

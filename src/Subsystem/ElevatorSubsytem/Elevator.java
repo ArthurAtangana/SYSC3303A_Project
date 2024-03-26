@@ -85,8 +85,12 @@ public class Elevator extends Context implements Subsystem {
         }
         try {
             // Log
-            String msg = "Unloading Passenger: " + passengerCountMap.get(new DestinationEvent(currentFloor, direction, null));
-            logger.log(Logger.LEVEL.INFO, logId, msg);
+            // Only print if not null, or it's just too much.
+            Integer passengerInt = passengerCountMap.get(new DestinationEvent(currentFloor, direction, null));
+            if (passengerInt > 0) {
+                String msg = "Unloading Passenger: " + passengerInt;
+                logger.log(Logger.LEVEL.INFO, logId, msg);
+            }
             // each passenger takes loadTime to leave the elevator.
             Thread.sleep(loadTime * passengerCountMap.remove(new DestinationEvent(currentFloor, direction, null)));
         } catch (InterruptedException e) {
@@ -99,9 +103,15 @@ public class Elevator extends Context implements Subsystem {
      * Loads passengers in and/or out of the elevator
      */
     void load(MovePassengersCommand command){
-        // Log
-        String msg = "Loading Passengers: " + command.newPassengers();
-        logger.log(Logger.LEVEL.INFO, logId, msg);
+        
+        String msg;
+        
+        // Only print if we're actually loading a passenger, or things get out of hand.
+        if (command.newPassengers().size() > 0) {
+            // Log
+            msg = "Loading Passengers: " + command.newPassengers();
+            logger.log(Logger.LEVEL.INFO, logId, msg);
+        }
         // load passengers into the elevator, taking LOAD_TIME per passengers waiting on the floor.
         try {
             Thread.sleep(loadTime * command.newPassengers().size());
@@ -113,9 +123,11 @@ public class Elevator extends Context implements Subsystem {
             passengerCountMap.merge(e,1, Integer::sum);
             // if the key exists in passengerCountMap, increment value by 1. if not, add new entry.
         }
+
         // Log
         msg = "Passengers in the elevator: " + passengerCountMap.toString();
         logger.log(Logger.LEVEL.DEBUG, logId, msg);
+
     }
     /**
      * Update scheduler with this elevator's state.
