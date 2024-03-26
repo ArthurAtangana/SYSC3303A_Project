@@ -7,6 +7,7 @@ import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import Messaging.Messages.Events.ReceiverBindingEvent;
+import Messaging.Messages.Fault;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
@@ -120,6 +121,18 @@ public class Elevator extends Context implements Subsystem {
         }
         // for every passenger that board, we add them to the passengerCountMap.
         for (DestinationEvent e : command.newPassengers()){
+            // if a passenger has a fault, take an extra second to load.
+            if (e.faultType() == Fault.TRANSIENT){
+                try {
+                    msg = "Passenger " + e + " is holding up the elevator";
+                    logger.log(Logger.LEVEL.INFO, logId, msg);
+                    Thread.sleep(1000);
+                    msg = "Passenger " + e + " has boarded";
+                    logger.log(Logger.LEVEL.INFO, logId, msg);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
             passengerCountMap.merge(e,1, Integer::sum);
             // if the key exists in passengerCountMap, increment value by 1. if not, add new entry.
         }
