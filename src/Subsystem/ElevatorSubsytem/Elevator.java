@@ -67,10 +67,26 @@ public class Elevator extends Context implements Subsystem {
         String msg = "Going " + direction + " from Floor " + this.currentFloor + ".";
         logger.log(Logger.LEVEL.INFO, logId, msg);
 
+        // If a passenger has a hard fault, send an interrupt to terminate current thread.
+        for (DestinationEvent e: passengerCountMap.keySet()) {
+            if (e.faultType() == Fault.HARD) {
+                msg = "Elevator " + elevNum + " is malfunctioning. Calling Carleton's elevator support contractor.";
+                logger.log(Logger.LEVEL.INFO, logId, msg);
+                Thread.currentThread().interrupt();
+            }
+        }
+
         try {
             Thread.sleep(this.travelTime);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            // Interrupt flag was set, joining thread for graceful termination.
+            msg = "Elevator " + elevNum + " is OUT OF SERVICE... forever.";
+            logger.log(Logger.LEVEL.INFO, logId, msg);
+            try {
+                Thread.currentThread().join();
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(e);
+            }
         }
 
         currentFloor += direction.getDisplacement();
