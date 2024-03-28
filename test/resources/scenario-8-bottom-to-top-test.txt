@@ -1,0 +1,19 @@
+###############################################################################
+# scenario-8-bottom-to-top-test.txt                                           #
+###############################################################################
+# Input file used to provide inputs to the system. This file is assumed to be #
+# well-formed and is NOT validated at runtime.                                #
+###############################################################################
+# Scenario:                                                                   #
+# Elevator picks up a passengers on the bottom floor                          #
+# and sends it up to the top floor                                            #
+###############################################################################
+#  arrivalTime  | sourceFloor | direction | destinationFloor |   faultCode    #
+# --------------|-------------|-----------|------------------|----------------#
+#      int      |    int      | Direction |       int        |      int       #
+# --------------|-------------|-----------|------------------|----------------#
+#  hh:mm:ss.mmm |     n       | Up | Down |        n         |   0 | 1 | 2    #
+###############################################################################
+
+## Test Sequence ##
+09:05:52.994 0 Up 7 0
