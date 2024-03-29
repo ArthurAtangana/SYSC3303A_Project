@@ -1,5 +1,7 @@
 package Subsystem.FloorSubsystem;
 
+import Configuration.Config;
+import Configuration.Configurator;
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.FloorInputEvent;
 import Messaging.Messages.Fault;
@@ -61,6 +63,7 @@ public class Parser {
     private final String TIME_DELIMITER_ONE = ":";
     private final String TIME_DELIMITER_TWO= "\\.";
     // Input file comment char
+    private final int topFloor;
     private final char COMMENT_CHAR = '#';
 
     /* Instance Variables */
@@ -71,7 +74,10 @@ public class Parser {
      * Default constructor for this Parser.
      *
      */
-    public Parser() {}
+    public Parser() {
+        Config config = (new Configurator().getConfig());
+        topFloor = config.getNumFloors();
+    }
 
     /* Methods */
 
@@ -151,6 +157,9 @@ public class Parser {
 
         // destinationFloor
         int destinationFloor = Integer.parseInt(splits[3]);
+        if (destinationFloor < 0 || destinationFloor > topFloor){
+            return null;
+        }
 
         // fault
         int faultCode = Integer.parseInt(splits[4]);
@@ -195,7 +204,9 @@ public class Parser {
                         // Ingest this line as a FloorInputEvent
                         FloorInputEvent floorInputEvent = stringToFloorInputEvent(line);
                         // Add to queue
-                        floorInputEvents.add(floorInputEvent);
+                        if (floorInputEvent != null){
+                            floorInputEvents.add(floorInputEvent);
+                        }
                     }
                 }
             }
