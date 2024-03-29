@@ -38,7 +38,7 @@ public class MainCombinedDMA {
         schedulerThread.start();
 
         // Floor and elevator thread creation
-        for (int i = 0; i < config.getNumFloors(); ++i) {
+        for (int i = 0; i < config.getNumFloors()+1; ++i) {
             new Thread(new Floor(i, dmaFactory.createClientReceiver(i),
                     dmaFactory.createClientTransmitter())).start();
         }
