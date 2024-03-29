@@ -36,6 +36,7 @@ public class Elevator extends Context implements Subsystem {
     private final Receiver receiver;
     final Logging.Logger logger;
     String logId;
+    private final int topFloor;
 
     public Elevator(Config config, int elevNum, Receiver receiver, Transmitter<?> transmitter) {
 
@@ -55,6 +56,9 @@ public class Elevator extends Context implements Subsystem {
         // Notify scheduler of new subsystem creation -> could fit in subsystem super class
         this.transmitterToScheduler.send(new ReceiverBindingEvent(receiver, this.getClass()));
         setNextState(new ReceivingState(this));
+
+        // Store highest floor
+        topFloor = config.getNumFloors();
     }
 
     /**
@@ -63,6 +67,14 @@ public class Elevator extends Context implements Subsystem {
      * @param direction the direction to travel towards.
      */
     void move(Direction direction) {
+        // Do not move if attempting to travel past the top floor.
+        if (direction == Direction.UP && this.currentFloor + 1 > topFloor) {
+            return;
+        }
+        // Do not move if attempting to travel below floor 0.
+        if (direction == Direction.DOWN && this.currentFloor - 1 == -1) {
+            return;
+        }
         // Log
         String msg = "Going " + direction + " from Floor " + this.currentFloor + ".";
         logger.log(Logger.LEVEL.INFO, logId, msg);
