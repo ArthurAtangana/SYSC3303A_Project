@@ -5,7 +5,7 @@
 # well-formed and is NOT validated at runtime.                                #
 ###############################################################################
 # Scenario:                                                                   #
-# Request to go down on the bottom floor. nothing should happen.              #
+# Request to go down on the bottom floor. first request should be ignored.    #
 ###############################################################################
 #  arrivalTime  | sourceFloor | direction | destinationFloor |   faultCode    #
 # --------------|-------------|-----------|------------------|----------------#
@@ -16,3 +16,4 @@
 
 ## Test Sequence ##
 09:05:52.994 0 Down -1 0
+09:05:53.000 4 Down 1 0
