@@ -1,5 +1,5 @@
 # README
-* Last Edited: 2024/03/16
+* Last Edited: 2024/03/29
 
 ## Table of Contents
 
@@ -88,7 +88,11 @@ See test README for test file structure.
 | SystemMessage           | Messaging              | Interface definition for all messages passed in the system to inherit.                        |
 | Loader                  | SchedulerSubsystem     | Loads appropriate passengers into an elevator.                                                |
 | Scheduler               | SchedulerSubsystem     | Models a scheduler in the simulation.                                                         |
-| Mains.MainCombinedDMA   |                        | Models a scheduler in the simulation.                                                         |
+| Logger                  | Logging                | Provides logging services to subsystems with configurable verbosity                           |
+| MainCombinedDMA         | Mains                  | Run all subsystems in a single process with shared memory communication.                      |
+| MainSchedulerUDP        | Mains                  | Run Scheduler subsystem in a dedicated process with networked communication via UDP.          |
+| MainElevatorUDP         | Mains                  | Run Elevator subsystem in a dedicated process with networked communication via UDP.           |
+| MainFloorUDP            | Mains                  | Run Floor subsystem in a dedicated process with networked communication via UDP.              |
 
 ## Design Considerations
 
@@ -171,6 +175,27 @@ the highest throughput possible.If the design can lead to starvation, it is an i
 | Scenario Tests                 |Arthur Atangana  |
 | Cool Haircut                   |Arthur Atangana  |
 
+### Iteration 4
+
+|          Task                           | Assignee        |
+|-----------------------------------------|-----------------|
+| Parser Update for Fault Handling        |Michael De Santis|
+| Scenario Tests for Fault Handling       |Michael De Santis|
+| Update Documentation                    |Michael De Santis|
+| Timing Diagrams                         |Braeden Kloke    |
+| Timer in Scheduler                      |Braeden Kloke    |
+| Elevator Fault Handling                 |Victoria Malouf  |
+| Scenario Tests for Fault Handling       |Victoria Malouf  |
+| Update Documentation                    |Victoria Malouf  |
+| Fix: Elevator Bound Handling            |Victoria Malouf  |
+| Fault Message Passing                   |Alexandre Marques|
+| Fix: Faulty Fault Behaviour             |Alexandre Marques|
+| System Integration                      |Alexandre Marques|
+| Elevator Fault Handling                 |Arthur Atangana  |
+| Scenario Tests for Fault Handling       |Arthur Atangana  |
+| Parser Validation                       |Arthur Atangana  |
+| Fix: Elevator Bound Handling            |Arthur Atangana  |
+
 ## Test
 
 All tests are located in directory `test`.
@@ -188,6 +213,22 @@ The testing framework used for unit tests is JUnit 5.8.1.
 
 For detailed test layout, see test README.
 
+### Scenario-based System Testing
+To test the system, a variety of scenario tests have been written by modifying a standardized system input file, which is parsed by the FloorSubsystem to create input events at runtime. These scenarios each define specific conditions under which the system will be tested, and are used to test the overall functionality of the system, as well as aid in debugging efforts. Scenario files may be found in the `test/resources/` directory, and each test file includes a doc header and commentary that describes the scenario and its operation. Scenario testing from these files is easily configurable from the system configuration JSON, located in the project `res/` directory, by specifying the scenario file as the value of the `"inputFilename"` property. For example:
+```json
+...
+  "inputFilename": "test/resources/scenario-6-combined-fault-test.txt"
+...
+```
+
+### Fault Injection and Handling
+The system is equipped to handle both __HARD__ and __TRANSIENT__ faults, where:
+* __TRANSIENT__ faults represent a minor fault that affects the quality of service of the system, such as a passenger blocking an elevator door, that may be gracefully recovered from by the system to permit full and continued operation after recovery.
+* __HARD__ faults represent a significant fault, such as mechanical failure of an elevator, that requires the elevator to be safely removed from service, leaving the overall system functional but with a reduced number of elevators.
+Faults are simulated, as per project specifications, by attaching a fault code to modeled passengers. Faults may be attached to passengers and injected into the system by supplying a scenario input file with fault codes according to the following scheme:
+* `0`: indicates __NO__ fault; the system will operate as normal.
+* `1`: indicates a __TRANSIENT__ fault; the system will gracefully handle the fault, and subsequently resume normal operation with all elevators still functional.
+* `2`: indicates a __HARD__ fault; the system will handle the fault by removing the faulty elevator from service, and subsequently resume normal operation less the removed elevator.
 
 ### Troubleshooting
 
@@ -213,7 +254,17 @@ Resources for this project, such as system configuration and input files, are in
 System input files are text files used to simulate input into the system, and contain newline separated input strings adherent to the form specified in the project requirements.
 
 ### System Configuration
-System configuration files are stored as JSONs, and specify values for the system components that configure its runtime behaviour.
+System configuration files are stored as JSONs, and specify values for the system components that configure its runtime behaviour. This allows fast and easy configuration of a variety of system parameters from a single source without the need for code modifications. The currently configurable options are as follows:
+```bash
+{
+  "verbosity": <verbosity-level>,                        [ 0 (SILENT) | 1 (INFO) | 2 (DEBUG and INFO) ]
+  "numFloors": <number-of-floors>,                       [integer]
+  "numElevators": <number-of-elevators>,                 [integer]
+  "travelTime": <travel-time-between-adjacent-floors>,   [integer milliseconds]
+  "loadTime": <load-time-per-passenger-at-each-floor>,   [integer milliseconds]
+  "inputFilename": <path-to-input-file>                  [string]
+}
+```
 
 ### System Output
 System outputs during real-time operation are categorized as either __INFO__ or __DEBUG__ level messages. Using the system confioguration JSON, the verbosity of the system my be set by supplying an integer value to the `"verbosity"` field as follows:
