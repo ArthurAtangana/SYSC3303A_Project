@@ -72,7 +72,7 @@ public class Elevator extends Context implements Subsystem {
             return;
         }
         // Do not move if attempting to travel below floor 0.
-        if (direction == Direction.DOWN && this.currentFloor - 1 == -1) {
+        if (direction == Direction.DOWN && this.currentFloor - 1 < 0) {
             return;
         }
         // Log
