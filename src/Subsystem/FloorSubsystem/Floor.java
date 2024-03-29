@@ -100,8 +100,8 @@ public class Floor implements Runnable, Subsystem {
         // Send passengers with current direction
         for (DestinationEvent dest : passengers) {
             if (dest.direction() == currentDirection) {
-                // Do not send passenger if destination floor is out of range.
-                if (dest.destinationFloor() != -1 && dest.destinationFloor() <= topFloor) {
+                // Send passenger if destination floor is in range.
+                if (dest.destinationFloor() >= 0 && dest.destinationFloor() <= topFloor) {
                     passengersToLoad.add(dest);
                 }
             }
