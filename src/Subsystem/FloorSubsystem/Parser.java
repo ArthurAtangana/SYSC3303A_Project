@@ -1,7 +1,10 @@
 package Subsystem.FloorSubsystem;
 
+import Configuration.Config;
+import Configuration.Configurator;
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.FloorInputEvent;
+import Messaging.Messages.Fault;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -31,12 +34,12 @@ import java.util.ArrayList;
  * 1. Although time measurements are codified in a 24-hour clock in the input
  *    file, as per specification, the parsed objects maintain only a relative
  *    count of time, in milliseconds, from the start of a day.
- * 2. The input file should be placed adjacently in the Parser's directory, and
- *    only the file name, and not path, shall be argued to this Parser.
+ * 2. The input file should be argued to this Parser by specifying the 
+ *    the file path (from JVM root) in the system configuration JSON.
  * 3. Input line format:
- *      hh:mm:ss.mmm n [ Up | Down ] n
+ *      hh:mm:ss.mmm n [ Up | Down ] n [ 0 | 1 | 2 ]
  *    Example:
- *      09:05:22.123 1 Up 7
+ *      09:05:22.123 1 Up 7 2
  *
  * Public Usage:
  * ------------
@@ -49,7 +52,7 @@ import java.util.ArrayList;
  *      ArrayList<FloorInputEvent> floorInputEvents = parser.parse("input-file.txt");
  *
  * @author Michael De Santis
- * @version Iteration-1
+ * @version Iteration-4
  */
 public class Parser {
 
@@ -60,6 +63,7 @@ public class Parser {
     private final String TIME_DELIMITER_ONE = ":";
     private final String TIME_DELIMITER_TWO= "\\.";
     // Input file comment char
+    private final int topFloor;
     private final char COMMENT_CHAR = '#';
 
     /* Instance Variables */
@@ -70,7 +74,10 @@ public class Parser {
      * Default constructor for this Parser.
      *
      */
-    public Parser() {}
+    public Parser() {
+        Config config = (new Configurator().getConfig());
+        topFloor = config.getNumFloors();
+    }
 
     /* Methods */
 
@@ -150,9 +157,16 @@ public class Parser {
 
         // destinationFloor
         int destinationFloor = Integer.parseInt(splits[3]);
+        if (destinationFloor < 0 || destinationFloor > topFloor){
+            return null;
+        }
+
+        // fault
+        int faultCode = Integer.parseInt(splits[4]);
+        Fault fault = Fault.fromInt(faultCode);
 
         // Create and return FloorInputEvent record with the above values as fields
-        floorInputEvent = new FloorInputEvent(arrivalTime, sourceFloor, direction, destinationFloor);
+        floorInputEvent = new FloorInputEvent(arrivalTime, sourceFloor, direction, destinationFloor, fault);
 
         return floorInputEvent;
     }
@@ -190,7 +204,9 @@ public class Parser {
                         // Ingest this line as a FloorInputEvent
                         FloorInputEvent floorInputEvent = stringToFloorInputEvent(line);
                         // Add to queue
-                        floorInputEvents.add(floorInputEvent);
+                        if (floorInputEvent != null){
+                            floorInputEvents.add(floorInputEvent);
+                        }
                     }
                 }
             }

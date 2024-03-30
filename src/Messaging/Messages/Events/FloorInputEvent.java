@@ -1,8 +1,7 @@
 package Messaging.Messages.Events;
 
 import Messaging.Messages.Direction;
-
-import java.io.Serializable;
+import Messaging.Messages.Fault;
 
 /**
  * FloorInputEvent record, models an input event to the system. These events
@@ -18,5 +17,5 @@ import java.io.Serializable;
  * @version Iteration-2
  */
 public record FloorInputEvent
-        (long time, int sourceFloor, Direction direction, int destinationFloor)
+        (long time, int sourceFloor, Direction direction, int destinationFloor, Fault faultType)
         implements SystemEvent {}

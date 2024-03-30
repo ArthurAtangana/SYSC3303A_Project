@@ -1,14 +1,11 @@
 package Subsystem.SchedulerSubsystem;
 
 import Messaging.Messages.Commands.MoveElevatorCommand;
+import Messaging.Messages.Commands.SendPassengersCommand;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
-import Messaging.Messages.Events.PassengerLoadEvent;
-import Messaging.Messages.SystemMessage;
-import Messaging.Messages.Commands.SendPassengersCommand;
 import StatePatternLib.Context;
 import StatePatternLib.State;
-import com.sun.jdi.InvalidTypeException;
 
 /**
  * Scheduler FSM State: Processing Elevator Event State.
@@ -28,7 +25,7 @@ public class ProcessingElevatorEventState extends State {
     /* Instance Variables */
     
     // The ElevatorStentEvent to process
-    private ElevatorStateEvent event;
+    private final ElevatorStateEvent event;
 
     /**
      * Parametric constructor.
@@ -48,6 +45,9 @@ public class ProcessingElevatorEventState extends State {
     public void entry() {
         String msg = "ProcessingElevatorEventState:Entry";
         ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
+
+        // Received a status update from an elevator ... thus we know its alive and should kill its timer.
+        ((Scheduler) context).killElevatorTimer(event.elevatorNum());
     }
 
     /**
@@ -85,7 +85,7 @@ public class ProcessingElevatorEventState extends State {
             ((Scheduler)context).transmitToFloor(new SendPassengersCommand(event.currentFloor(), event.elevatorNum(), ((Scheduler)context).getElevatorDirection(event)));
 
             // Remove the serviced DestinationRequest request
-            ((Scheduler)context).removeDestinationEvent(new DestinationEvent(event.currentFloor(),((Scheduler)context).getElevatorDirection(event)));
+            ((Scheduler) context).removeDestinationEvent(new DestinationEvent(event.currentFloor(), ((Scheduler) context).getElevatorDirection(event), null));
 
             // Next State: ReceivingState
             // Required Constructor Arguments: context
@@ -98,6 +98,9 @@ public class ProcessingElevatorEventState extends State {
 
             // Request Elevator to keep moving
             ((Scheduler)context).transmitToElevator(new MoveElevatorCommand(event.elevatorNum(), ((Scheduler)context).getElevatorDirection(event)));
+
+            // Start timer ... assume hard fault occurred in transit if this timer goes off.
+            ((Scheduler) context).startElevatorTimer(event.elevatorNum());
 
             // Next State: ReceivingState
             // Required Constructor Arguments: context

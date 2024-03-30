@@ -40,7 +40,7 @@ public class TransceiverUDPMultiReceiversTest {
 
         // Initializing ElevatorStateEvent for the scheduler to send to the floors
         HashMap<DestinationEvent, Integer> passengerCountMap = new HashMap<>();
-        DestinationEvent e = new DestinationEvent(3, Direction.DOWN);
+        DestinationEvent e = new DestinationEvent(3, Direction.DOWN, null);
         passengerCountMap.put(e, 5);
         ElevatorStateEvent elevatorStateEvent = new ElevatorStateEvent(5, 7, passengerCountMap);
 

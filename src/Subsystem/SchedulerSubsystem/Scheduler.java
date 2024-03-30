@@ -23,6 +23,9 @@ import static java.lang.Math.abs;
  * Scheduler class which models a scheduler in the simulation.
  *
  * @version Iteration-3
+ *
+ * @version Iteration-4
+ * Add elevator timers and hard fault handling.
  */
 public class Scheduler extends Context implements Subsystem {
     private final Transmitter<? extends Receiver> transmitterToFloor;
@@ -30,8 +33,11 @@ public class Scheduler extends Context implements Subsystem {
     private final Receiver receiver;
     private final Map<DestinationEvent, Long> floorRequestsToTime;
     private final ArrayList<ElevatorStateEvent> idleElevators;
+    private final Map<Integer, Timer> elevatorTimers; // Elevator number mapping to an elevator timer
     final Logger logger;
     final String logId = "SCHEDULER";
+    final long ELEVATOR_TIMEOUT_DELAY; // milliseconds
+    final double ELEVATOR_TIMEOUT_DELAY_FACTOR = 1.5;
 
     public Scheduler(Config config,
                      Receiver receiver,
@@ -42,6 +48,8 @@ public class Scheduler extends Context implements Subsystem {
         this.transmitterToFloor = transmitterToFloor;
         floorRequestsToTime = new HashMap<>();
         idleElevators = new ArrayList<>();
+        elevatorTimers = new HashMap<>();
+        ELEVATOR_TIMEOUT_DELAY = (long) (config.getTravelTime() * ELEVATOR_TIMEOUT_DELAY_FACTOR);
         // Logging
         logger = new Logger(config.getVerbosity());
 
@@ -140,7 +148,7 @@ public class Scheduler extends Context implements Subsystem {
         // Convenience variable to extract and hold target floor
         int targetFloor = floorRequestEvent.destinationEvent().destinationFloor();
         // Distance tracker (in number of floors)
-        int distance = 0;
+        int distance;
         // Initialize variables for our sort algorithm using the first idle elevator
         int closestIdleElevatorIndex = 0;
         int closestDistance = abs(idleElevators.get(0).currentFloor()- targetFloor);
@@ -191,7 +199,8 @@ public class Scheduler extends Context implements Subsystem {
         if (isMovingOppositeToFutureDirection(e)) {
             return false;
         }
-        return union.contains(new DestinationEvent(e.currentFloor(), getElevatorDirection(e)));
+        // Fault: Assume null -> matches against any fault which is important for parity with legacy behavior.
+        return union.contains(new DestinationEvent(e.currentFloor(), getElevatorDirection(e), null));
     }
 
     /**
@@ -254,6 +263,46 @@ public class Scheduler extends Context implements Subsystem {
      */
     SystemMessage receive() {
         return receiver.dequeueMessage();
+    }
+
+    /**
+     * Starts the timer for an elevator. If the elevator's timer blows its lid,
+     * the timer assumes a hard fault has occurred and then handles it.
+     * An example of a hard fault would be gophers chewing through the elevator cables.
+     *
+     * @param elevNum The elevator whose timer should start.
+     */
+    void startElevatorTimer(int elevNum) {
+        class HandleHardFault extends TimerTask {
+            @Override
+            public void run() {
+                String msg = "Hard fault detected (possibly gophers) for elevator " + elevNum + ". Taking elevator out of service.";
+                logger.log(Logging.Logger.LEVEL.INFO, logId, msg);
+                elevatorTimers.remove(elevNum);
+            }
+        }
+
+        Timer timer = new Timer();
+        timer.schedule(new HandleHardFault(), ELEVATOR_TIMEOUT_DELAY);
+        elevatorTimers.put(elevNum, timer);
+
+        String msg = "Timer started for elevator " + elevNum + ".";
+        logger.log(Logging.Logger.LEVEL.DEBUG, logId, msg);
+    }
+
+    /**
+     * Kills the timer for an elevator.
+     *
+     * @param elevNum The elevator whose timer should stop.
+     */
+    void killElevatorTimer(int elevNum) {
+        Timer timer = elevatorTimers.get(elevNum);
+        if (timer != null) {
+            timer.cancel();
+            elevatorTimers.remove(elevNum);
+            String msg = "Timer killed for elevator " + elevNum + ".";
+            logger.log(Logging.Logger.LEVEL.DEBUG, logId, msg);
+        }
     }
 
     /** 

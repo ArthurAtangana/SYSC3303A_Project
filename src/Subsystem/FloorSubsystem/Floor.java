@@ -1,5 +1,7 @@
 package Subsystem.FloorSubsystem;
 
+import Configuration.Config;
+import Configuration.Configurator;
 import Messaging.Messages.Commands.PassengerArrivedCommand;
 import Messaging.Messages.Commands.SendPassengersCommand;
 import Messaging.Messages.Direction;
@@ -37,6 +39,8 @@ public class Floor implements Runnable, Subsystem {
 
     private final ArrayList<DestinationEvent> passengers;
 
+    private final int topFloor;
+
     public Floor(int floorNumber, Receiver receiver, Transmitter<? extends Receiver> transmitterToScheduler) {
         this.floorNum = floorNumber;
         this.transmitterToScheduler = transmitterToScheduler;
@@ -55,6 +59,10 @@ public class Floor implements Runnable, Subsystem {
 
         // Notify scheduler of new subsystem creation -> could fit in subsystem super class
         this.transmitterToScheduler.send(new ReceiverBindingEvent(receiver, this.getClass()));
+
+        // Store highest floor
+        Config config = (new Configurator().getConfig());
+        topFloor = config.getNumFloors();
     }
 
     public static TransmitterDMA getFloorsTransmitter() {
@@ -92,7 +100,10 @@ public class Floor implements Runnable, Subsystem {
         // Send passengers with current direction
         for (DestinationEvent dest : passengers) {
             if (dest.direction() == currentDirection) {
-                passengersToLoad.add(dest);
+                // Send passenger if destination floor is in range.
+                if (dest.destinationFloor() >= 0 && dest.destinationFloor() <= topFloor) {
+                    passengersToLoad.add(dest);
+                }
             }
         }
 
