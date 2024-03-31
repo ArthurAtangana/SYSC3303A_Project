@@ -37,7 +37,9 @@ Note: Compiled using JDK - 21 Oracle OpenJDK version 21.0.1
    1. Right click lib folder in root directory
    2. Select add as library
    3. Leave settings as default, select ok
-3. Run the files in the "Mains" package in this order:
+3. Initiate system-wide monitoring display console:
+   1. Run process for `src/Subsystem/Logging/DisplayConsole`
+4. Run the files in the "Mains" package in this order:
    1. MainSchedulerUDP
    2. MainElevatorUDP
    3. MainFloorUDP
@@ -88,7 +90,8 @@ See test README for test file structure.
 | SystemMessage           | Messaging              | Interface definition for all messages passed in the system to inherit.                        |
 | Loader                  | SchedulerSubsystem     | Loads appropriate passengers into an elevator.                                                |
 | Scheduler               | SchedulerSubsystem     | Models a scheduler in the simulation.                                                         |
-| Logger                  | Logging                | Provides logging services to subsystems with configurable verbosity                           |
+| Logger                  | Logging                | Provides logging services to subsystems with configurable verbosity.                          |
+| DisplayConsole          | Logging                | Centralizes subsystem logging to single console for system-wide monitoring.                   |
 | MainCombinedDMA         | Mains                  | Run all subsystems in a single process with shared memory communication.                      |
 | MainSchedulerUDP        | Mains                  | Run Scheduler subsystem in a dedicated process with networked communication via UDP.          |
 | MainElevatorUDP         | Mains                  | Run Elevator subsystem in a dedicated process with networked communication via UDP.           |
@@ -195,6 +198,17 @@ the highest throughput possible.If the design can lead to starvation, it is an i
 | Scenario Tests for Fault Handling       |Arthur Atangana  |
 | Parser Validation                       |Arthur Atangana  |
 | Fix: Elevator Bound Handling            |Arthur Atangana  |
+
+### Iteration 5
+
+|          Task                           | Assignee        |
+|-----------------------------------------|-----------------|
+| Display Console                         |Michael De Santis|
+|                                         |Braeden Kloke    |
+|                                         |Victoria Malouf  |
+|                                         |Alexandre Marques|
+|                                         |Arthur Atangana  |
+
 
 ## Test
 
