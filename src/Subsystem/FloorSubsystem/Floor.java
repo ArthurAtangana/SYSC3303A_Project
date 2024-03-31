@@ -2,6 +2,7 @@ package Subsystem.FloorSubsystem;
 
 import Configuration.Config;
 import Configuration.Configurator;
+import Logging.Logger;
 import Messaging.Messages.Commands.PassengerArrivedCommand;
 import Messaging.Messages.Commands.SendPassengersCommand;
 import Messaging.Messages.Direction;
@@ -23,13 +24,19 @@ import java.util.ArrayList;
 /**
  * Floor class which models a floor in the simulation.
  *
- * @version Iteration-2
+ * @version Iteration-5
  */
 public class Floor implements Runnable, Subsystem {
     private static final TransmitterDMA allFloorsDMATransmitter = new TransmitterDMA();
 
     private int floorLamp;
     private final int floorNum;
+    private boolean upLamp;
+    private boolean downLamp;
+
+    final Config config;
+    final Logger logger;
+    String logId;
 
     // Receivers
     private final ReceiverComposite receiverComposite; // Groups multiple receivers into 1 queue
@@ -41,9 +48,17 @@ public class Floor implements Runnable, Subsystem {
 
     private final int topFloor;
 
-    public Floor(int floorNumber, Receiver receiver, Transmitter<? extends Receiver> transmitterToScheduler) {
+    public Floor(Config config, int floorNumber, Receiver receiver, Transmitter<? extends Receiver> transmitterToScheduler) {
         this.floorNum = floorNumber;
         this.transmitterToScheduler = transmitterToScheduler;
+        this.config = config;
+        this.upLamp = false;
+        this.downLamp = false;
+
+        // Logging
+        logId = "FLOOR " + this.floorNum;
+        logger = new Logging.Logger(config.getVerbosity());
+
         // Start elevator location at 0 until an update is received
         floorLamp = 0;
         passengers = new ArrayList<>();
@@ -61,7 +76,6 @@ public class Floor implements Runnable, Subsystem {
         this.transmitterToScheduler.send(new ReceiverBindingEvent(receiver, this.getClass()));
 
         // Store highest floor
-        Config config = (new Configurator().getConfig());
         topFloor = config.getNumFloors();
     }
 
@@ -80,12 +94,117 @@ public class Floor implements Runnable, Subsystem {
     }
 
     /**
+     * Illuminate an UP/DOWN button lamp on this floor, if not already lit.
+     *
+     * @param requestDirection [UP | DOWN] button the passenger has pushed on
+     * this floor.
+     *
+     * @author MD
+     * @version Iteration-5
+     */
+    private void illuminateButtonLamp(Direction requestDirection) {
+        
+        // Indicator to see if we have lit a lamp.
+        boolean illuminated = false;
+        // Message storage for log.
+        String msg;
+        Logger.LEVEL level = Logger.LEVEL.DEBUG;
+        
+        // Case: Passenger has pushed UP button
+        if (requestDirection == Direction.UP) {
+            // Case: UP lamp not yet lit. Light it.
+            if (!upLamp) {
+                upLamp = true;
+                illuminated = true;
+            }
+        }
+        // Case: Passenger has pushed DOWN button
+        else {
+            // Case: DOWN lamp not yet lit. Light it.
+            if (!downLamp) {
+                downLamp = true;
+                illuminated = true;
+            }
+        }
+
+        // Case: We have lit a lamp. Make it so on console. (INFO)
+        if (illuminated) {
+            level = Logger.LEVEL.INFO;
+            msg = "Illuminating " + requestDirection + " button lamp.";
+        }
+        // Case: We have NOT lit a lamp. Indicate it is already pushed. (DEBUG)
+        else {
+            msg = requestDirection + " button lamp is already lit.";
+        }
+
+        // Log it.
+        logger.log(level, logId, msg);
+
+    }
+
+    /**
+     * Extinguish an UP/DOWN button lamp on this floor once an elevator has serviced
+     * this request, if not already extinguished.
+     *
+     * @param servicedDirection [UP | DOWN] the direction the elevator has serviced.
+     *
+     * @author MD
+     * @version Iteration-5
+     */
+    private void extinguishButtonLamp(Direction servicedDirection) {
+        
+        // Indicator to see if we have extinguished a lamp.
+        boolean extinguished = false;
+        // Message storage for log.
+        String msg;
+        Logger.LEVEL level = Logger.LEVEL.DEBUG;
+        
+        // Case: Elevator has serviced UP request.
+        if (servicedDirection == Direction.UP) {
+            // Case: UP lamp lit. Extinguish it.
+            if (upLamp) {
+                upLamp = false;
+                extinguished = true;
+            }
+        }
+        // Case: Elevator has serviced DOWN request.
+        else {
+            // Case: DOWN lamp not yet lit. Light it.
+            if (downLamp) {
+                downLamp = false;
+                extinguished = true;
+            }
+        }
+
+        // Case: We have extinguished a lamp. Make it so on console. (INFO)
+        if (extinguished) {
+            level = Logger.LEVEL.INFO;
+            msg = "Extinguishing " + servicedDirection + " button lamp.";
+        }
+        // Case: We have NOT extinguished a lamp. Indicate it is already out. (DEBUG)
+        // NB: This should prolly never happen...
+        else {
+            msg = servicedDirection + " button lamp is already extinguished.";
+        }
+
+        // Log it.
+        logger.log(level, logId, msg);
+
+    }
+
+
+    /**
      * Storing the floor request made by a passenger.
      *
      * @param cmd passenger cmd received from the scheduler.
      */
     private void storePassenger(PassengerArrivedCommand cmd) {
         passengers.add(cmd.passenger());
+        // Log
+        String msg = "Passenger has requested to go " + cmd.passenger().direction() + " to Floor " + cmd.passenger().destinationFloor() + ".";
+        logger.log(Logger.LEVEL.INFO, logId, msg);
+        // Light appropriate button lamp, if not already lit.
+        illuminateButtonLamp(cmd.passenger().direction());
     }
 
     /**
@@ -97,12 +216,26 @@ public class Floor implements Runnable, Subsystem {
     private void sendPassengers(SendPassengersCommand sendPassengersCommand) {
         ArrayList<DestinationEvent> passengersToLoad = new ArrayList<>();
         Direction currentDirection = sendPassengersCommand.dir();
+        String msg;
+        int numBoardingPassengers = 0;
+        
+        // Log: Indicate elevator arrival at floor. 
+        msg = "*Ding!* Elevator " + sendPassengersCommand.elevNum() + " has arrived for service.";
+        logger.log(Logger.LEVEL.INFO, logId, msg);
+        // Extinguish the button lamp for current direction, since elevator has arrived.
+        extinguishButtonLamp(currentDirection);
+
         // Send passengers with current direction
         for (DestinationEvent dest : passengers) {
             if (dest.direction() == currentDirection) {
                 // Send passenger if destination floor is in range.
                 if (dest.destinationFloor() >= 0 && dest.destinationFloor() <= topFloor) {
                     passengersToLoad.add(dest);
+                    // Increment our count for prints
+                    numBoardingPassengers++;
+                    // Log: Indicate a discrete passenger has entered elevator.
+                    msg = "Passenger is entering Elevator " + sendPassengersCommand.elevNum() + " for service " + dest.direction() + " to Floor " + dest.destinationFloor() + ".";
+                    logger.log(Logger.LEVEL.INFO, logId, msg);
                 }
             }
         }
