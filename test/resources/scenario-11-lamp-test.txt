@@ -1,0 +1,31 @@
+###############################################################################
+# scenario-11-lamp-test.txt                                                   #
+###############################################################################
+# Input file used to provide inputs to the system. This file is assumed to be #
+# well-formed and is NOT validated at runtime.                                #
+###############################################################################
+# Scenario Description                                                        #
+# --------------------                                                        #
+# Simulate many button pushes on same floor to test UP/DOWN button lamp       #
+# handling.                                                                   #
+###############################################################################
+#  arrivalTime  | sourceFloor | direction | destinationFloor |   faultCode    #
+# --------------|-------------|-----------|------------------|----------------#
+#      int      |    int      | Direction |       int        |      int       #
+# --------------|-------------|-----------|------------------|----------------#
+#  hh:mm:ss.mmm |     n       | Up | Down |        n         |   0 | 1 | 2    #
+###############################################################################
+
+## Test Sequence ##
+
+# Floor 1: Impatient people keep hitting UP button even though already lit.
+09:05:32.123 3 Up 4 0
+09:05:33.994 3 Up 5 0
+09:05:35.001 3 Up 6 0
+09:05:37.061 3 Up 7 0
+
+# Floor 2: Impatient people keep hitting DOWN button even though already lit.
+09:06:12.123 3 Down 1 0
+09:06:13.994 3 Down 1 0
+09:06:15.001 3 Down 1 0
+09:06:17.061 3 Down 1 0
