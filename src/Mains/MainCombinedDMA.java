@@ -39,7 +39,7 @@ public class MainCombinedDMA {
 
         // Floor and elevator thread creation
         for (int i = 0; i < config.getNumFloors()+1; ++i) {
-            new Thread(new Floor(i, dmaFactory.createClientReceiver(i),
+            new Thread(new Floor(config, i, dmaFactory.createClientReceiver(i),
                     dmaFactory.createClientTransmitter())).start();
         }
         for (int i = 0; i < config.getNumElevators(); ++i) {
