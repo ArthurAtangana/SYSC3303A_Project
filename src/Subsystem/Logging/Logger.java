@@ -1,10 +1,14 @@
 package Logging;
 
+import java.io.IOException;
+import java.net.*;
+
 /**
- *  Logger class which handles system logging via console print to `stdout`.
+ * Logger class which handles subsystem logging via console print per process, 
+ * and also sends log messages to a centralized DisplayConsole via UDP.
  *
  * @author M. Desantis
- * @version Iteration-3
+ * @version Iteration-5
  */
 public class Logger {
 
@@ -16,6 +20,8 @@ public class Logger {
 
     /* Instance Variables */
     private final int verbosity;
+
+    private DatagramSocket txSocket;
 
     /* Constructors */
 
@@ -30,13 +36,24 @@ public class Logger {
      */
     public Logger(int verbosity) {
         this.verbosity = verbosity;
+
+        try {
+            // For Tx to DisplayConsole
+            txSocket = new DatagramSocket();
+        } catch (SocketException se) {
+            se.printStackTrace();
+            System.exit(1);
+        }
+
     }
 
     /* Methods */
 
     /**
      * Log a message by printing to console, specifying the log level, the 
-     * identifier of the message source, and the message.
+     * identifier of the message source, and the message. This function 
+     * formats the message for print, and prepends a System clock timestamp
+     * (in UNIX milliseconds).
      *
      * @param level Log level: [Logger.INFO | Logger.DEBUG]
      * @param logId Log ID for message source (eg. "Elevator 1")
@@ -45,20 +62,86 @@ public class Logger {
      */
     public void log(Logger.LEVEL level, String logId, String message) {
 
+        // The timestamp for this message
+        //String timestamp = LocalDateTime.now().toString();
+        long timestamp = System.currentTimeMillis();
+
         // The prefix for this message
-        String prefix = "[" + level + "::" + logId + "] ";
+        String prefix = "[" + timestamp + "::" + level + "::" + logId + "] ";
+
+        // The whole thing
+        String prefixedMessage = prefix + message;
+
+        // Packet for DisplayConsole
+        byte[] data;
+        data = prefixedMessage.getBytes();
+        // UDP packets and sockets
+        DatagramPacket txPacket;
+        try {
+            txPacket = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), DisplayConsole.RX_PORT);
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
 
         // Case: Print INFO level messages only
         //if ((verbosity == 1) && (level == Logger.LEVEL.INFO)) {
         if (verbosity > 0) {
             // Case: Print INFO level messages only
             if (level == Logger.LEVEL.INFO) {
-                System.out.println(prefix + message);
+                // Local print
+                System.out.println(prefixedMessage);
+                // Send to DisplayConsole via UDP
+                try {
+                    txSocket.send(txPacket);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
             }
             if ((verbosity == 2) && (level == Logger.LEVEL.DEBUG)) {
-                System.out.println(prefix + message);
+                // Local print
+                System.out.println(prefixedMessage);
+                // Send to DisplayConsole via UDP
+                try {
+                    txSocket.send(txPacket);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
             }
         }
+    }
+
+    /**
+     * Main method for this class. Just a quick test.
+     */
+    public static void main(String[] args) {
+        // Quick test
+        int verbosity = 2;
+        int loops = 20;
+        int delay = 2000;
+        Logger logger = new Logger(verbosity);
+        String logId = "TEST-LOGGER";
+        String debugMsg, infoMsg;
+        debugMsg = "This is DEBUG message ";
+        infoMsg = "This is INFO message ";
+
+        for (int i = 0; i < loops; ++i) {
+            if ((i % 2) == 0) {
+                logger.log(Logger.LEVEL.DEBUG, logId, debugMsg + i);
+            }
+            else {
+                logger.log(Logger.LEVEL.INFO, logId, infoMsg + i);
+            }
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        System.out.println("All messages logged.");
+
     }
 
 }
