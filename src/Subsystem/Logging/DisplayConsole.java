@@ -32,6 +32,29 @@ public class DisplayConsole {
      * Default constructor for class Console. Set up a socket.
      */
     public DisplayConsole() {
+        String welcomeString = "************************************************************\n"
+                             + "**************** ELEVATOR SIMULATOR 3303 *******************\n"
+                             + "************************************************************\n"
+                             + "******* A real-cool, real-time elevator simulator. *********\n"
+                             + "************************************************************\n"
+                             + "*                                            |  |  |       *\n"
+                             + "* Authors: SYSC 3303A Group 1             ___|__|__|___    *\n"
+                             + "* ----------------------------           | ||       || |   *\n"
+                             + "* Arthur Atangana:   101005197           | ||   0   || |   *\n"
+                             + "* Victoria Malouf:   101179986           | || <`W'> || |   *\n"
+                             + "* Michael De Santis: 101213450           | ||   |   || |   *\n"
+                             + "* Braeden Kloke:     100895984           | ||  / \\  || |   *\n"
+                             + "* Alexandre Marques: 101189743           |_||_______||_|   *\n"
+                             + "*                                            |  |  |       *\n"
+                             + "* Thanks:                                    |  |  |       *\n"
+                             + "* ----------------------------               |  |  |       *\n"
+                             + "* TA Maede Davoudzade                        |  |  |       *\n"
+                             + "* Dr. Rami Sabouni                           |  |  |       *\n"
+                             + "*                                            |  |  |       *\n"
+                             + "************************************************************\n"
+                             + "* (づ｡◕‿‿◕｡)づ Ride safe!!                                  *\n"
+                             + "************************************************************\n";
+        System.out.println(welcomeString);
         try {
             // Rx from Logger
             rxSocket = new DatagramSocket(RX_PORT);
