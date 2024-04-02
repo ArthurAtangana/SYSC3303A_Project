@@ -2,6 +2,7 @@ package Subsystem.SchedulerSubsystem;
 
 import Messaging.Messages.Commands.MoveElevatorCommand;
 import Messaging.Messages.Commands.SendPassengersCommand;
+import Messaging.Messages.Commands.UnloadPassengersCommand;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import StatePatternLib.Context;
@@ -82,7 +83,7 @@ public class ProcessingElevatorEventState extends State {
             ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
 
             // Notify Floor for service
-            // TODO: (Send a message to elevator) make elevator unload __before capacity check__, probably a message of some kind
+            ((Scheduler) context).transmitToElevator(new UnloadPassengersCommand(event.elevatorNum()));
 
             int availableSpots = ((Scheduler) context).getCurCapacity(event);
             assert (availableSpots > 0);
