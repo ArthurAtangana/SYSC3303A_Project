@@ -11,7 +11,7 @@ import Messaging.Messages.Direction;
  * @author Alexandre Marques
  * @version Iteration-2
  */
-public record SendPassengersCommand(int floorNum, int elevNum, Direction dir) implements SystemCommand {
+public record SendPassengersCommand(int floorNum, int elevNum, Direction dir, int capacity) implements SystemCommand {
     /**
      * Match floor number with the given key.
      * @param key The floor number of the floor trying to process this event.

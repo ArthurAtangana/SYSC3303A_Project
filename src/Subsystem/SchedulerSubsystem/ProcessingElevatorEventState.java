@@ -82,10 +82,13 @@ public class ProcessingElevatorEventState extends State {
             ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
 
             // Notify Floor for service
-            ((Scheduler)context).transmitToFloor(new SendPassengersCommand(event.currentFloor(), event.elevatorNum(), ((Scheduler)context).getElevatorDirection(event)));
+            // TODO: (Send a message to elevator) make elevator unload __before capacity check__, probably a message of some kind
 
+            int availableSpots = getCurCapacity(event);
+            assert (availableSpots > 0);
             // Remove the serviced DestinationRequest request
             ((Scheduler) context).removeDestinationEvent(new DestinationEvent(event.currentFloor(), ((Scheduler) context).getElevatorDirection(event), null));
+            ((Scheduler) context).transmitToFloor(new SendPassengersCommand(event.currentFloor(), event.elevatorNum(), ((Scheduler) context).getElevatorDirection(event), availableSpots));
 
             // Next State: ReceivingState
             // Required Constructor Arguments: context
@@ -107,6 +110,12 @@ public class ProcessingElevatorEventState extends State {
             context.setNextState(new ReceivingState(context)); 
         }
 
+    }
+
+    private int getCurCapacity(ElevatorStateEvent event) {
+        // TODO: make unit test (or confirm some other way, not tested yet)
+        // Return int stream to sum on number of passengers, reduce from capacity to find empty spots
+        return ((Scheduler) context).MAX_CAPACITY - event.passengerCountMap().values().stream().mapToInt(Integer::intValue).sum();
     }
 
     /**
