@@ -42,8 +42,8 @@ public class Scheduler extends Context implements Subsystem {
     final String logId = "SCHEDULER";
     final long ELEVATOR_TIMEOUT_DELAY; // milliseconds
     final double ELEVATOR_TIMEOUT_DELAY_FACTOR = 1.5;
-    private int totalMoveElevatorCommandsSent; // statistic for tracking elevator movement
-    private int totalGophersHandled; // statistic for tracking how many gopher faults are handled
+    private int totalMoveElevatorCommandsSent; // statistic for tracking total elevator movements
+    private int totalGophersHandled; // statistic for tracking total gopher faults handled
 
     public Scheduler(Config config,
                      Receiver receiver,
