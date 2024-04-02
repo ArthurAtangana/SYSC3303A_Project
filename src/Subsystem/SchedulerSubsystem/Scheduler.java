@@ -207,9 +207,10 @@ public class Scheduler extends Context implements Subsystem {
         // Create new object for union set to avoid funny business of destination events
         // being added to the scheduler's floor requests!
         Set<DestinationEvent> union = new HashSet<>();
-        union.addAll(floorRequestsToTime.keySet());
-        union.addAll(e.passengerCountMap().keySet());
+        // TODO: If unloading, just return true (short-circuit)
+        //  ELSE, check max capacity, if so return false... Rest behaves as before
 
+        union.addAll(floorRequestsToTime.keySet());
         if (isMovingOppositeToFutureDirection(e)) {
             return false;
         }
