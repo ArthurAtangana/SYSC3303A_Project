@@ -194,16 +194,21 @@ public class Scheduler extends Context implements Subsystem {
 
         // Create new object for union set to avoid funny business of destination events
         // being added to the scheduler's floor requests!
-        Set<DestinationEvent> union = new HashSet<>();
-        // TODO: If unloading, just return true (short-circuit)
-        //  ELSE, check max capacity, if so return false... Rest behaves as before
+        DestinationEvent currentElevDest = (new DestinationEvent(e.currentFloor(), getElevatorDirection(e), null));
 
-        union.addAll(floorRequestsToTime.keySet());
+        // Check if unloading:
+        if (isUnloading(e)) {
+            return true;
+        } else if (getCurCapacity(e) == 0) { // If no more capacity, skip load
+            return false;
+        }
+
+        Set<DestinationEvent> union = new HashSet<>(floorRequestsToTime.keySet());
         if (isMovingOppositeToFutureDirection(e)) {
             return false;
         }
         // Fault: Assume null -> matches against any fault which is important for parity with legacy behavior.
-        return union.contains(new DestinationEvent(e.currentFloor(), getElevatorDirection(e), null));
+        return union.contains(currentElevDest);
     }
 
     /**
@@ -306,6 +311,16 @@ public class Scheduler extends Context implements Subsystem {
             String msg = "Timer killed for elevator " + elevNum + ".";
             logger.log(Logging.Logger.LEVEL.DEBUG, logId, msg);
         }
+    }
+
+    private boolean isUnloading(ElevatorStateEvent e) {
+        return e.passengerCountMap().keySet().stream().anyMatch((DestinationEvent d) -> d.destinationFloor() == e.currentFloor());
+    }
+
+    int getCurCapacity(ElevatorStateEvent event) {
+        // TODO: make unit test (or confirm some other way, not tested yet)
+        // Return int stream to sum on number of passengers, reduce from capacity to find empty spots
+        return MAX_CAPACITY - event.passengerCountMap().values().stream().mapToInt(Integer::intValue).sum();
     }
 
     /** 
