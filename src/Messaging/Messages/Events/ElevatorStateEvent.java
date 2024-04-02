@@ -1,6 +1,5 @@
 package Messaging.Messages.Events;
 
-import java.io.Serializable;
 import java.util.HashMap;
 
 /**
