@@ -89,6 +89,9 @@ public class ProcessingElevatorEventState extends State {
             assert (availableSpots > 0);
             // Remove the serviced DestinationRequest request
             ((Scheduler) context).removeDestinationEvent(new DestinationEvent(event.currentFloor(), ((Scheduler) context).getElevatorDirection(event), null));
+            // FIXME: someone sent a new destination event
+            //  This person gets loaded -> causes race condition problem
+            //  LABELED NOT CRITICAL ISSUE
             ((Scheduler) context).transmitToFloor(new SendPassengersCommand(event.currentFloor(), event.elevatorNum(), ((Scheduler) context).getElevatorDirection(event), availableSpots));
 
             // Next State: ReceivingState
