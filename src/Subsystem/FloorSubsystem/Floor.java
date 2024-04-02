@@ -1,15 +1,11 @@
 package Subsystem.FloorSubsystem;
 
 import Configuration.Config;
-import Configuration.Configurator;
 import Logging.Logger;
 import Messaging.Messages.Commands.PassengerArrivedCommand;
 import Messaging.Messages.Commands.SendPassengersCommand;
 import Messaging.Messages.Direction;
-import Messaging.Messages.Events.DestinationEvent;
-import Messaging.Messages.Events.ElevatorStateEvent;
-import Messaging.Messages.Events.PassengerLoadEvent;
-import Messaging.Messages.Events.ReceiverBindingEvent;
+import Messaging.Messages.Events.*;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Receivers.ReceiverComposite;
@@ -217,8 +213,7 @@ public class Floor implements Runnable, Subsystem {
         ArrayList<DestinationEvent> passengersToLoad = new ArrayList<>();
         Direction currentDirection = sendPassengersCommand.dir();
         String msg;
-        int numBoardingPassengers = 0;
-        
+
         // Log: Indicate elevator arrival at floor. 
         msg = "*Ding!* Elevator " + sendPassengersCommand.elevNum() + " has arrived for service.";
         logger.log(Logger.LEVEL.INFO, logId, msg);
@@ -226,22 +221,34 @@ public class Floor implements Runnable, Subsystem {
         extinguishButtonLamp(currentDirection);
 
         // Send passengers with current direction
-        for (DestinationEvent dest : passengers) {
-            if (dest.direction() == currentDirection) {
-                // Send passenger if destination floor is in range.
-                if (dest.destinationFloor() >= 0 && dest.destinationFloor() <= topFloor) {
-                    passengersToLoad.add(dest);
-                    // Increment our count for prints
-                    numBoardingPassengers++;
-                    // Log: Indicate a discrete passenger has entered elevator.
-                    msg = "Passenger is entering Elevator " + sendPassengersCommand.elevNum() + " for service " + dest.direction() + " to Floor " + dest.destinationFloor() + ".";
-                    logger.log(Logger.LEVEL.INFO, logId, msg);
-                }
+        int curCapacity = sendPassengersCommand.capacity();
+        int passengerIndex = 0;
+        while (curCapacity > 0 || passengerIndex < passengers.size()) {
+            DestinationEvent passenger = passengers.get(passengerIndex);
+            // Send passenger if destination floor is in range and requested direction matches elevator direction.
+            if (passenger.direction() == currentDirection
+                    && passenger.destinationFloor() >= 0
+                    && passenger.destinationFloor() <= topFloor) {
+                passengersToLoad.add(passenger);
+                // Increment our count for prints
+                // Log: Indicate a discrete passenger has entered elevator.
+                msg = "Passenger is entering Elevator " + sendPassengersCommand.elevNum() + " for service " + passenger.direction() + " to Floor " + passenger.destinationFloor() + ".";
+                logger.log(Logger.LEVEL.INFO, logId, msg);
+                // Remove 1 capacity because passenger added elevator
+                curCapacity--;
             }
+            passengerIndex++;
         }
 
         transmitterToScheduler.send(new PassengerLoadEvent(sendPassengersCommand.elevNum(), passengersToLoad));
         passengers.removeAll(passengersToLoad);
+
+        // Check if we need to renotify the scheduler that passengers are still waiting at this location
+        if (passengers.stream().anyMatch((DestinationEvent d) -> d.direction() == currentDirection)) {
+            transmitterToScheduler.send(new FloorRequestEvent(
+                    new DestinationEvent(floorNum, currentDirection, null),
+                    0)); // Time doesn't matter: it's not being dispatched by dispatcher
+        }
     }
 
     /**
