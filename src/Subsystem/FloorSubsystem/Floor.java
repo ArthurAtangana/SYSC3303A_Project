@@ -209,7 +209,8 @@ public class Floor implements Runnable, Subsystem {
      *
      * @param sendPassengersCommand Passenger load event received from the scheduler.
      */
-    private void sendPassengers(SendPassengersCommand sendPassengersCommand) {
+    // TODO: Check if this can be unsynced? LABELED NOT CRITICAL
+    private synchronized void sendPassengers(SendPassengersCommand sendPassengersCommand) {
         ArrayList<DestinationEvent> passengersToLoad = new ArrayList<>();
         Direction currentDirection = sendPassengersCommand.dir();
         String msg;
@@ -223,7 +224,7 @@ public class Floor implements Runnable, Subsystem {
         // Send passengers with current direction
         int curCapacity = sendPassengersCommand.capacity();
         int passengerIndex = 0;
-        while (curCapacity > 0 || passengerIndex < passengers.size()) {
+        while (curCapacity > 0 && passengerIndex < passengers.size()) {
             DestinationEvent passenger = passengers.get(passengerIndex);
             // Send passenger if destination floor is in range and requested direction matches elevator direction.
             if (passenger.direction() == currentDirection
