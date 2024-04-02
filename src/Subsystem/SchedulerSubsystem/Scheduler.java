@@ -44,6 +44,7 @@ public class Scheduler extends Context implements Subsystem {
     final double ELEVATOR_TIMEOUT_DELAY_FACTOR = 1.5;
     private int totalMoveElevatorCommandsSent; // statistic for tracking total elevator movements
     private int totalGophersHandled; // statistic for tracking total gopher faults handled
+    final int MAX_CAPACITY;
 
     public Scheduler(Config config,
                      Receiver receiver,
@@ -60,6 +61,7 @@ public class Scheduler extends Context implements Subsystem {
         totalGophersHandled = 0;
         // Logging
         logger = new Logger(config.getVerbosity());
+        MAX_CAPACITY = config.getElevatorCapacity();
 
         // Initialize first state for this Subsystem's State Machine
         setNextState(new ReceivingState(this));
