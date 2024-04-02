@@ -88,7 +88,7 @@ public class Scheduler extends Context implements Subsystem {
         // Store event locally to use in scheduling
         if (!floorRequestsToTime.containsKey(event.destinationEvent()))
             // Only store request if it does not already exist
-            floorRequestsToTime.put(event.destinationEvent(), event.time());
+            floorRequestsToTime.put(event.destinationEvent(), System.currentTimeMillis());
             // NB: StoringFloorRequestState will now handle idle Elevator removal
     }
 
