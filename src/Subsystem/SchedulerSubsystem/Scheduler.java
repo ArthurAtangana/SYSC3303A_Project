@@ -38,6 +38,7 @@ public class Scheduler extends Context implements Subsystem {
     final String logId = "SCHEDULER";
     final long ELEVATOR_TIMEOUT_DELAY; // milliseconds
     final double ELEVATOR_TIMEOUT_DELAY_FACTOR = 1.5;
+    final int MAX_CAPACITY;
 
     public Scheduler(Config config,
                      Receiver receiver,
@@ -52,6 +53,7 @@ public class Scheduler extends Context implements Subsystem {
         ELEVATOR_TIMEOUT_DELAY = (long) (config.getTravelTime() * ELEVATOR_TIMEOUT_DELAY_FACTOR);
         // Logging
         logger = new Logger(config.getVerbosity());
+        MAX_CAPACITY = config.getElevatorCapacity();
 
         // Initialize first state for this Subsystem's State Machine
         setNextState(new ReceivingState(this));
