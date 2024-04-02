@@ -37,7 +37,6 @@ public class Elevator extends Context implements Subsystem {
     final Logging.Logger logger;
     String logId;
     private final int topFloor;
-    private final int maxCapacity;
 
     public Elevator(Config config, int elevNum, Receiver receiver, Transmitter<?> transmitter) {
 
@@ -60,9 +59,6 @@ public class Elevator extends Context implements Subsystem {
 
         // Store highest floor
         topFloor = config.getNumFloors();
-
-        // Store max capacity
-        maxCapacity = config.getElevatorCapacity();
     }
 
     /**
