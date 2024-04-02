@@ -1,5 +1,5 @@
 # README
-* Last Edited: 2024/03/29
+* Last Edited: 2024/04/02
 
 ## Table of Contents
 
@@ -7,11 +7,12 @@
 2. [Usage](#usage)
 3. [Description](#description)
 4. [Design Considerations](#design-considerations)
-5. [Scope](#scope)
-6. [Tasks](#tasks)
-7. [Test](#test)
-8. [Resources](#resources)
-9. [Known Issues](#known-issues)
+5. [Statistics](#statistics)
+6. [Scope](#scope)
+7. [Tasks](#tasks)
+8. [Test](#test)
+9. [Resources](#resources)
+10. [Known Issues](#known-issues)
 
 ## Authors
 Group A1:1
@@ -112,6 +113,28 @@ the highest throughput possible.If the design can lead to starvation, it is an i
 
 ### Documentation
 - All public methods and classes require javadoc, private methods are optional.
+
+<a id="statistics"></a>
+## Statistics
+All statistics are displayed to console at the end of the simulation.
+The following three subsections describe each statistic tracked in this simulator.
+
+### Total Simulation Time
+TODO(@md OR @braeden)
+
+### Elevator Movements
+Total elevator movements are assumed to mean the total number of floors travelled by all elevators.
+Each MoveElevatorCommand sent by the Scheduler corresponds to an elevator travelling one floor.
+Thus, the system tracks the total floors travelled by all elevators by tracking
+the total number of MoveElevatorCommands sent by the Scheduler. 
+
+### Gophers Handled
+Hard faults are simulated with gophers chewing through the elevator cables,
+causing the elevator cab to plummet through the Earth's crust and disrupt subterranean ecosystems. 
+No rescue mission is mounted because passengers are assumed to be engineering students.
+Since gophers are hard faults,
+the system tracks total gophers handled by tracking total hard faults handled.
+
 
 ## Tasks
 
