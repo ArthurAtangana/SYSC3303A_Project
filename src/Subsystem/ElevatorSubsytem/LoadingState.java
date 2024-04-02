@@ -22,7 +22,6 @@ public class LoadingState extends State {
     public void entry() {
         String msg = "LoadingState:Entry";
         ((Elevator)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Elevator)context).logId, msg);
-        ((Elevator) context).unload();
     }
     @Override
     public void doActivity() {
