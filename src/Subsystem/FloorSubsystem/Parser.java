@@ -183,7 +183,7 @@ public class Parser {
         // Local variables
         String line;
         BufferedReader bufferedReader;
-        ArrayList<FloorInputEvent> floorInputEvents = new ArrayList<FloorInputEvent>();
+        ArrayList<FloorInputEvent> floorInputEvents = new ArrayList<>();
 
         // File pathing
         System.out.println("Parser: Reading input file: " + filename);

@@ -2,7 +2,6 @@ package Messaging.Messages.Commands;
 
 import Messaging.Messages.Events.DestinationEvent;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
