@@ -43,6 +43,7 @@ public class Scheduler extends Context implements Subsystem {
     final long ELEVATOR_TIMEOUT_DELAY; // milliseconds
     final double ELEVATOR_TIMEOUT_DELAY_FACTOR = 1.5;
     private int totalMoveElevatorCommandsSent; // statistic for tracking elevator movement
+    private int totalGophersHandled; // statistic for tracking how many gopher faults are handled
 
     public Scheduler(Config config,
                      Receiver receiver,
@@ -56,6 +57,7 @@ public class Scheduler extends Context implements Subsystem {
         elevatorTimers = new HashMap<>();
         ELEVATOR_TIMEOUT_DELAY = (long) (config.getTravelTime() * ELEVATOR_TIMEOUT_DELAY_FACTOR);
         totalMoveElevatorCommandsSent = 0;
+        totalGophersHandled = 0;
         // Logging
         logger = new Logger(config.getVerbosity());
 
@@ -289,6 +291,7 @@ public class Scheduler extends Context implements Subsystem {
                 String msg = "Hard fault detected (possibly gophers) for elevator " + elevNum + ". Taking elevator out of service.";
                 logger.log(Logging.Logger.LEVEL.INFO, logId, msg);
                 elevatorTimers.remove(elevNum);
+                totalGophersHandled++;
             }
         }
 
