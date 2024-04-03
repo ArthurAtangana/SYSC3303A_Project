@@ -106,11 +106,8 @@ public class ReceivingState extends State {
         else if (event instanceof EndSimulationEvent) {
             msg = "Received event to end simulation ... setting flag.";
             ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
-            // Set a flag for BK's check.
-            // endCondition = true;
-            // Next State: ReceivingState
-            // Required Constructor Arguments: NA
-            context.setNextState(new ReceivingState(context));
+            ((Scheduler)context).setSimulationEnding(); // Flag set. Nailed it!
+            context.setNextState(new ReceivingState(context)); // Go back to receiving ...
         }
         else {
             InvalidTypeException e = new InvalidTypeException("Event type received cannot be handled by this subsystem.");

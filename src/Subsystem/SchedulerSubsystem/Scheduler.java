@@ -44,6 +44,7 @@ public class Scheduler extends Context implements Subsystem {
     final double ELEVATOR_TIMEOUT_DELAY_FACTOR = 1.5;
     private int totalMoveElevatorCommandsSent; // statistic for tracking total elevator movements
     private int totalGophersHandled; // statistic for tracking total gopher faults handled
+    private boolean simulationEnding; // flag indicating whether this simulation is ending
 
     public Scheduler(Config config,
                      Receiver receiver,
@@ -58,6 +59,7 @@ public class Scheduler extends Context implements Subsystem {
         ELEVATOR_TIMEOUT_DELAY = (long) (config.getTravelTime() * ELEVATOR_TIMEOUT_DELAY_FACTOR);
         totalMoveElevatorCommandsSent = 0;
         totalGophersHandled = 0;
+        simulationEnding = false;
         // Logging
         logger = new Logger(config.getVerbosity());
 
@@ -321,6 +323,11 @@ public class Scheduler extends Context implements Subsystem {
             logger.log(Logging.Logger.LEVEL.DEBUG, logId, msg);
         }
     }
+
+    /**
+     * Sets the flag to start ending simulation.
+     */
+    void setSimulationEnding() {simulationEnding = true;}
 
     /** 
      * Start the State Machine, with initial state of ReceivingState.
