@@ -103,7 +103,7 @@ public class ReceivingState extends State {
         }
         // Case: Event is EndSchedulingEvent
         // Description: End it all.
-        else if (event instanceof EndSchedulingEvent) {
+        else if (event instanceof endSimulationEvent) {
             msg = "Received EndSchedulingEvent.";
             ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
             // Set a flag for BK's check.
