@@ -41,13 +41,12 @@ public class ReceivingState extends State {
     public void entry() {
         String msg = "ReceivingState:Entry";
         ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
-        // Get the SystemMessage (pop from Receiver buffer)
-        event = ((Scheduler) context).receive();
 
-        // Check if simulation has ended
-        if (((Scheduler)context).isEndOfSimulation()) {
-            msg = "Simulation ended.";
-            ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
+        if (!((Scheduler) context).isEndOfSimulation()) {
+            // Simulation has not ended, keep receiving events!
+
+            // Get the SystemMessage (pop from Receiver buffer)
+            event = ((Scheduler) context).receive();
         }
     }
 
@@ -63,9 +62,16 @@ public class ReceivingState extends State {
 
         String msg = "";
 
+        // Case: Simulation has ended
+        // Description: Transition to final state.
+        if (((Scheduler)context).isEndOfSimulation()) {
+            msg = "Simulation ended.";
+            ((Scheduler) context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler) context).logId, msg);
+            context.setNextState(new FinalState(context));
+        }
         // Case: Event is ElevatorStateEvent
         // Description: Notification from Elevator conveying its state
-        if (event instanceof ElevatorStateEvent esEvent) {
+        else if (event instanceof ElevatorStateEvent esEvent) {
             msg = "Received ElevatorStateEvent.";
             ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
             // Next State: ProcessingElevatorEventState
@@ -118,7 +124,5 @@ public class ReceivingState extends State {
      * Exit activities for this state.
      */
     @Override
-    public void exit() {
-    }
-
+    public void exit() {}
 }

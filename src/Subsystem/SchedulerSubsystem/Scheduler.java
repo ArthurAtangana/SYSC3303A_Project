@@ -335,8 +335,7 @@ public class Scheduler extends Context implements Subsystem {
      * @return True if end of simulation, false otherwise.
      */
     boolean isEndOfSimulation() {
-        // TODO include check for idle elevators
-        return simulationEnding;
+        return simulationEnding && areIdleElevators();
     }
 
     /** 
