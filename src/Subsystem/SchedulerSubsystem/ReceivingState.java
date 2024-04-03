@@ -44,12 +44,11 @@ public class ReceivingState extends State {
         // Get the SystemMessage (pop from Receiver buffer)
         event = ((Scheduler) context).receive();
 
-        // Attempt to end simulation
-        if (((Scheduler)context).isSimulationEnding()) {
-            msg = "Ending simulation ...";
+        // Check if simulation has ended
+        if (((Scheduler)context).isEndOfSimulation()) {
+            msg = "Simulation ended.";
             ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
         }
-
     }
 
     

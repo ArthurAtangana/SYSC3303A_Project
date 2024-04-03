@@ -330,11 +330,14 @@ public class Scheduler extends Context implements Subsystem {
     void setSimulationEnding() {simulationEnding = true;}
 
     /**
-     * Checks if simulation should end.
+     * Checks if this simulation has ended.
      *
-     * @return True if simulation should end, false otherwise.
+     * @return True if end of simulation, false otherwise.
      */
-    boolean isSimulationEnding() {return simulationEnding;}
+    boolean isEndOfSimulation() {
+        // TODO include check for idle elevators
+        return simulationEnding;
+    }
 
     /** 
      * Start the State Machine, with initial state of ReceivingState.
