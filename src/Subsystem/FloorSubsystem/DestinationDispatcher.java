@@ -4,7 +4,7 @@ import Messaging.Messages.Commands.PassengerArrivedCommand;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.FloorInputEvent;
 import Messaging.Messages.Events.FloorRequestEvent;
-import Messaging.Messages.Events.endSimulationEvent;
+import Messaging.Messages.Events.EndSimulationEvent;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
 
@@ -95,6 +95,6 @@ public class DestinationDispatcher implements Runnable {
 
         // All FloorInputEvents have been dispatched for this simulation.
         // Send a final message to notify Scheduler.
-        txToScheduler.send(new endSimulationEvent("I love this job."));
+        txToScheduler.send(new EndSimulationEvent("I love this job."));
     }
 }

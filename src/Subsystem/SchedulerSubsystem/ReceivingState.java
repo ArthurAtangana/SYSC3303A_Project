@@ -101,10 +101,10 @@ public class ReceivingState extends State {
             // Required Constructor Arguments: ReceiverBindingEvent
             context.setNextState(new BindingReceiverState(context, rbEvent));
         }
-        // Case: Event is EndSchedulingEvent
+        // Case: Event is EndSimulationEvent
         // Description: End it all.
-        else if (event instanceof endSimulationEvent) {
-            msg = "Received EndSchedulingEvent.";
+        else if (event instanceof EndSimulationEvent) {
+            msg = "Received event to end simulation ... setting flag.";
             ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
             // Set a flag for BK's check.
             // endCondition = true;
