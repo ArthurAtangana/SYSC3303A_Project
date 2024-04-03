@@ -4,6 +4,7 @@ import Messaging.Messages.Commands.PassengerArrivedCommand;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.FloorInputEvent;
 import Messaging.Messages.Events.FloorRequestEvent;
+import Messaging.Messages.Events.EndSchedulingEvent;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
 
@@ -91,5 +92,12 @@ public class DestinationDispatcher implements Runnable {
             PassengerArrivedCommand passengerCmd = new PassengerArrivedCommand(curEvent.sourceFloor(), passengerDestination);
             txToFloor.send(passengerCmd);
         }
+
+        // All FloorInputEvents have been dispatched for this runtime scenario.
+        // Send a final message to the Scheduler to notify, so that it may perform
+        // its measurements.
+        EndSchedulingEvent endSchedulingEvent = new EndschedulingEvent();
+        txToScheduler.send(endSchedulingEvent);
+        // Done!
     }
 }

@@ -46,6 +46,14 @@ public class ReceivingState extends State {
         ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
         // Get the SystemMessage (pop from Receiver buffer)
         event = ((Scheduler) context).receive();
+
+        // Check for end conditions
+        if (endCondition) {
+            // TODO: Braeden Logic
+            String msg = "TODO: Braeden - End Condition Handling...";
+            ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
+        }
+
     }
 
     
@@ -95,6 +103,17 @@ public class ReceivingState extends State {
             // Next State: BindingReceiverState
             // Required Constructor Arguments: ReceiverBindingEvent
             context.setNextState(new BindingReceiverState(context, rbEvent));
+        }
+        // Case: Event is EndSchedulingEvent
+        // Description: End it all.
+        else if (event instanceof EndSchedulingEvent esEvent) {
+            msg = "Received EndSchedulingEvent.";
+            ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
+            // Set a flag for BK's check.
+            endCondition = true;
+            // Next State: ReceivingState
+            // Required Constructor Arguments: NA
+            context.setNextState(new ReceivingState());
         }
         else {
             InvalidTypeException e = new InvalidTypeException("Event type received cannot be handled by this subsystem.");
