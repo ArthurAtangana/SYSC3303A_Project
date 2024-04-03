@@ -2,6 +2,7 @@ package Subsystem.SchedulerSubsystem;
 
 import Configuration.Config;
 import Logging.Logger;
+import Messaging.Messages.Commands.MoveElevatorCommand;
 import Messaging.Messages.Commands.SystemCommand;
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
@@ -26,6 +27,9 @@ import static java.lang.Math.abs;
  *
  * @version Iteration-4
  * Add elevator timers and hard fault handling.
+ *
+ * @version Iteration-5
+ * Add simulation statistics.
  */
 public class Scheduler extends Context implements Subsystem {
     private final Transmitter<? extends Receiver> transmitterToFloor;
@@ -38,6 +42,8 @@ public class Scheduler extends Context implements Subsystem {
     final String logId = "SCHEDULER";
     final long ELEVATOR_TIMEOUT_DELAY; // milliseconds
     final double ELEVATOR_TIMEOUT_DELAY_FACTOR = 1.5;
+    private int totalMoveElevatorCommandsSent; // statistic for tracking total elevator movements
+    private int totalGophersHandled; // statistic for tracking total gopher faults handled
 
     public Scheduler(Config config,
                      Receiver receiver,
@@ -50,6 +56,8 @@ public class Scheduler extends Context implements Subsystem {
         idleElevators = new ArrayList<>();
         elevatorTimers = new HashMap<>();
         ELEVATOR_TIMEOUT_DELAY = (long) (config.getTravelTime() * ELEVATOR_TIMEOUT_DELAY_FACTOR);
+        totalMoveElevatorCommandsSent = 0;
+        totalGophersHandled = 0;
         // Logging
         logger = new Logger(config.getVerbosity());
 
@@ -123,7 +131,11 @@ public class Scheduler extends Context implements Subsystem {
      * @param command The SystemCommand to send to the Elevator.
      */
     void transmitToElevator(SystemCommand command) {
-        transmitterToElevator.send(command);
+       transmitterToElevator.send(command);
+       if (command instanceof MoveElevatorCommand) {
+            totalMoveElevatorCommandsSent++;
+            logger.log(Logger.LEVEL.DEBUG, logId, "Total move elevator commands sent: " + totalMoveElevatorCommandsSent);
+       }
     }
 
     /**
@@ -279,6 +291,7 @@ public class Scheduler extends Context implements Subsystem {
                 String msg = "Hard fault detected (possibly gophers) for elevator " + elevNum + ". Taking elevator out of service.";
                 logger.log(Logging.Logger.LEVEL.INFO, logId, msg);
                 elevatorTimers.remove(elevNum);
+                totalGophersHandled++;
             }
         }
 
