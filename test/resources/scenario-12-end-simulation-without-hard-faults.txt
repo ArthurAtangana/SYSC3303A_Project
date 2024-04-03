@@ -5,8 +5,8 @@
 # well-formed and is NOT validated at runtime.                                #
 ###############################################################################
 # Scenario:                                                                   #
-# Elevator picks up a passengers going up, serves it, then picks up a         #
-# passenger going down, serving it.                                           #
+# Elevator picks up a passengers going up, serves it, then promptly ends      #
+# the simulation.                                                             #
 ###############################################################################
 #  arrivalTime  | sourceFloor | direction | destinationFloor |   faultCode    #
 # --------------|-------------|-----------|------------------|----------------#
