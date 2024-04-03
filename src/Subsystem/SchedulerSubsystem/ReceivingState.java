@@ -44,10 +44,9 @@ public class ReceivingState extends State {
         // Get the SystemMessage (pop from Receiver buffer)
         event = ((Scheduler) context).receive();
 
-        // Check for end conditions
-        if (false) {
-            // TODO: Braeden Logic
-            msg = "TODO: Braeden - End Condition Handling...";
+        // Attempt to end simulation
+        if (((Scheduler)context).isSimulationEnding()) {
+            msg = "Ending simulation ...";
             ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
         }
 
