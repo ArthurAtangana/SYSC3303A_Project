@@ -1,8 +1,5 @@
 package Messaging.Messages.Events;
 
-import Messaging.Messages.Direction;
-import Messaging.Messages.Fault;
-
 /**
  * EndSchedulingEvent record, models a kill event to the system. 
  *
@@ -11,5 +8,4 @@ import Messaging.Messages.Fault;
  * @author MD
  * @version Iteration-5
  */
-public record FloorInputEvent
-        (String msg) implements SystemEvent {}
+public record EndSchedulingEvent(String msg) implements SystemEvent {}

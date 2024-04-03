@@ -93,11 +93,8 @@ public class DestinationDispatcher implements Runnable {
             txToFloor.send(passengerCmd);
         }
 
-        // All FloorInputEvents have been dispatched for this runtime scenario.
-        // Send a final message to the Scheduler to notify, so that it may perform
-        // its measurements.
-        EndSchedulingEvent endSchedulingEvent = new EndschedulingEvent();
-        txToScheduler.send(endSchedulingEvent);
-        // Done!
+        // All FloorInputEvents have been dispatched for this simulation.
+        // Send a final message to notify Scheduler.
+        txToScheduler.send(new EndSchedulingEvent("I love this job."));
     }
 }

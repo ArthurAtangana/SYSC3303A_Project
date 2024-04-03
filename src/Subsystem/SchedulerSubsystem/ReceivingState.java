@@ -1,9 +1,6 @@
 package Subsystem.SchedulerSubsystem;
 
-import Messaging.Messages.Events.ElevatorStateEvent;
-import Messaging.Messages.Events.FloorRequestEvent;
-import Messaging.Messages.Events.PassengerLoadEvent;
-import Messaging.Messages.Events.ReceiverBindingEvent;
+import Messaging.Messages.Events.*;
 import Messaging.Messages.SystemMessage;
 import StatePatternLib.Context;
 import StatePatternLib.State;
@@ -48,9 +45,9 @@ public class ReceivingState extends State {
         event = ((Scheduler) context).receive();
 
         // Check for end conditions
-        if (endCondition) {
+        if (false) {
             // TODO: Braeden Logic
-            String msg = "TODO: Braeden - End Condition Handling...";
+            msg = "TODO: Braeden - End Condition Handling...";
             ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
         }
 
@@ -106,14 +103,14 @@ public class ReceivingState extends State {
         }
         // Case: Event is EndSchedulingEvent
         // Description: End it all.
-        else if (event instanceof EndSchedulingEvent esEvent) {
+        else if (event instanceof EndSchedulingEvent) {
             msg = "Received EndSchedulingEvent.";
             ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
             // Set a flag for BK's check.
-            endCondition = true;
+            // endCondition = true;
             // Next State: ReceivingState
             // Required Constructor Arguments: NA
-            context.setNextState(new ReceivingState());
+            context.setNextState(new ReceivingState(context));
         }
         else {
             InvalidTypeException e = new InvalidTypeException("Event type received cannot be handled by this subsystem.");
