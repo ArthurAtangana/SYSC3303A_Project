@@ -338,6 +338,22 @@ public class Scheduler extends Context implements Subsystem {
         return simulationEnding && areIdleElevators();
     }
 
+    /**
+     * Displays current simulation statistics to console.
+     */
+    void displaySimulationStatistics() {
+        logger.log(Logger.LEVEL.INFO, logId, "Displaying simulation statistics ...");
+
+        List<String> stats = new LinkedList<>();
+        stats.add("Total simulation time: TODO");
+        stats.add("Total elevator movements: " + totalMoveElevatorCommandsSent);
+        stats.add("Total gophers handled: " + totalGophersHandled);
+
+        for (String stat: stats) {
+            logger.log(Logger.LEVEL.INFO, logId, stat);
+        }
+    }
+
     /** 
      * Start the State Machine, with initial state of ReceivingState.
      * Initial state is set in Constructor.

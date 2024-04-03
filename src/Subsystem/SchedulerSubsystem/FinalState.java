@@ -28,8 +28,7 @@ public class FinalState extends State {
 
     @Override
     public void entry() {
-        String msg = "Displaying simulation statistics to console.";
-        ((Scheduler)context).logger.log(Logger.LEVEL.INFO, ((Scheduler) context).logId, msg);
+        ((Scheduler)context).displaySimulationStatistics();
         System.exit(0);
     }
 }
