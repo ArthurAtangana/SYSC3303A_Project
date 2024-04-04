@@ -197,11 +197,14 @@ public class DisplayConsole {
 
             // Case: GUI
             // If message is only 2 char, it is a GUI update.
-            if (msg.length() == 2) {
+            if (msg.length() == 4) {
                
                // Catch our message params as integers in the most verbose Java way possible.
-               msgCol = Character.getNumericValue(msg.charAt(0));
-               msgRow = Character.getNumericValue(msg.charAt(1));
+               msgCol = Character.getNumericValue(msg.charAt(0)) * 10 +
+                        Character.getNumericValue(msg.charAt(1));
+
+               msgRow = Character.getNumericValue(msg.charAt(2)) * 10 +
+                        Character.getNumericValue(msg.charAt(3));
 
                // Check our floor/elevator cells for a match.
                for (CellButton cb : cellButtons) {

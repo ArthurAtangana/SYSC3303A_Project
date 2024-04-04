@@ -66,7 +66,8 @@ public class Logger {
 
         // Packet for DisplayConsole
         byte[] data;
-        String msg = "" + elevator + floor;
+        //String msg = "" + elevator + floor;
+        String msg = String.format("%02d", elevator) + String.format("%02d", floor);
         data = msg.getBytes();
         DatagramPacket txPacket;
 
