@@ -74,7 +74,7 @@ public class DisplayConsole {
     private JPanel gridPanel;
     private int msgCol;
     private int msgRow;
-    private int msgFault;
+    private int msgType;
 
     /* Constructors */
 
@@ -132,7 +132,7 @@ public class DisplayConsole {
         //System.out.println("Initializing grid: " + this.floorRows + " by " + this.elevatorCols);
         gridPanel = new JPanel();
         gridPanel.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-        gridPanel.setBackground(Color.BLUE);
+        gridPanel.setBackground(Color.BLACK);
         gridPanel.setLayout(new GridLayout(this.floorRows, this.elevatorCols, 10, 10));
         gridPanel.setOpaque(true);
 
@@ -207,24 +207,44 @@ public class DisplayConsole {
                msgRow = Character.getNumericValue(msg.charAt(2)) * 10 +
                         Character.getNumericValue(msg.charAt(3));
 
-               msgFault = Character.getNumericValue(msg.charAt(4));
+               msgType = Character.getNumericValue(msg.charAt(4));
 
                // Check our floor/elevator cells for a match.
                for (CellButton cb : cellButtons) {
                     // Case: This is the column of elevators we are looking for.
                     //       Paint them black. Paint them red if fault.
                     if (msgCol == cb.getCol()) {
-                        if (msgFault == 1) {
-                            if (cb.getBackground() == Color.YELLOW) {
+                        if (msgType == 1) { // transient fault
+                            if (cb.getBackground() != Color.GRAY){
+                                cb.setBackground(Color.ORANGE);
+                            }
+                        }
+                        else if (msgType == 2) { // hard fault
+                            if (cb.getBackground() != Color.GRAY) {
                                 cb.setBackground(Color.RED);
                             }
                         }
-                        else {
-                            cb.setBackground(Color.BLACK);
-                            // Case: This is the elevator you are looking for.
-                            //       Paint it yellow.
-                            if (msgRow == cb.getRow()) {
+                        else if (msgType == 3) { // idle
+                            if (cb.getBackground() != Color.GRAY){
                                 cb.setBackground(Color.YELLOW);
+                            }
+                        }
+                        else if (msgType == 4) { // loading
+                            if (cb.getBackground() != Color.GRAY){
+                                cb.setBackground(Color.MAGENTA);
+                            }
+                        }
+                        else if (msgType == 5) { // unloading
+                            if (cb.getBackground() != Color.GRAY){
+                                cb.setBackground(Color.PINK);
+                            }
+                        }
+                        else {
+                            cb.setBackground(Color.GRAY);
+                            // Case: This is the elevator you are looking for.
+                            //       Paint it green (its moving).
+                            if (msgRow == cb.getRow()) {
+                                cb.setBackground(Color.GREEN);
                             }
                         }
                     }

@@ -188,6 +188,8 @@ public class Scheduler extends Context implements Subsystem {
      */
     void addIdleElevator(ElevatorStateEvent event) {
        idleElevators.add(event);
+       // GUI
+        logger.updateGui(event.elevatorNum(),event.currentFloor(),3);
     }
 
     /**
@@ -293,7 +295,7 @@ public class Scheduler extends Context implements Subsystem {
                 elevatorTimers.remove(elevNum);
                 totalGophersHandled++;
                 // GUI
-                logger.updateGui(elevNum, 0, 1);
+                logger.updateGui(elevNum, 0, 2);
             }
         }
 

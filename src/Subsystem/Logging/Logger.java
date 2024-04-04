@@ -58,17 +58,17 @@ public class Logger {
      *
      * @param elevator The elevator number.
      * @param floor The floor number.
-     * @param fault Fault: 1 for fault, 0 for none.
+     * @param type types: 1  for transient, 2 for hard, 3 for idle, 4 for loading, 5 for unloading.
      *
      * @author M. Desantis
      * @version Iteration-5
      */
-    public void updateGui(int elevator, int floor, int fault) {
+    public void updateGui(int elevator, int floor, int type) {
 
         // Packet for DisplayConsole
         byte[] data;
         //String msg = "" + elevator + floor;
-        String msg = String.format("%02d", elevator) + String.format("%02d", floor) + fault;
+        String msg = String.format("%02d", elevator) + String.format("%02d", floor) + type;
         data = msg.getBytes();
         DatagramPacket txPacket;
 

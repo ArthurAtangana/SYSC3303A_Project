@@ -26,10 +26,10 @@ public class CellButton extends JButton {
     public CellButton(int row, int col)
     {
         super("[F:" + row + ", E:" + col + "]");
-        this.setForeground(Color.BLUE);
+        this.setForeground(Color.BLACK);
         this.row = row;
         this.col = col;
-        this.setBackground(Color.BLACK);
+        this.setBackground(Color.GRAY);
         this.setOpaque(true);
         this.setContentAreaFilled(true);
         this.setBorderPainted(false);
