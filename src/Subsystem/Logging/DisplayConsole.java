@@ -72,6 +72,7 @@ public class DisplayConsole {
     private int floorRows;
     private int elevatorCols;
     private JPanel gridPanel;
+    private JPanel legendPanel;
     private int msgCol;
     private int msgRow;
     private int msgType;
@@ -109,7 +110,7 @@ public class DisplayConsole {
         System.out.println(banner);
 
         /* GUI */
-        frame = new JFrame("Get Elevated");
+        frame = new JFrame("Elfevator");
         frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -118,6 +119,8 @@ public class DisplayConsole {
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         initializeGridPanel();
         contentPane.add(gridPanel);
+        initializeLegendPanel();
+        contentPane.add(legendPanel);
         frame.pack();
         frame.setVisible(true);
 
@@ -153,6 +156,37 @@ public class DisplayConsole {
                 }
             }
         }
+
+    }
+    private void initializeLegendPanel(){
+        legendPanel = new JPanel();
+        legendPanel.setSize(FRAME_WIDTH,40);
+        legendPanel.setBackground(Color.BLACK);
+        legendPanel.setLayout(new GridLayout(1,7));
+        legendPanel.setOpaque(true);
+
+        JButton legend = new JButton("Legend: ");
+        JButton moving = new JButton("Moving");
+        JButton idle = new JButton("Idle");
+        JButton loading = new JButton("Loading");
+        JButton unloading = new JButton("Unloading");
+        JButton transientFault = new JButton("Transient");
+        JButton hardFault = new JButton("Hard fault");
+
+        legend.setBackground(Color.WHITE);
+        moving.setBackground(Color.GREEN);
+        idle.setBackground(Color.YELLOW);
+        loading.setBackground(Color.MAGENTA);
+        unloading.setBackground(Color.PINK);
+        transientFault.setBackground(Color.ORANGE);
+        hardFault.setBackground(Color.RED);
+        this.legendPanel.add(legend,0);
+        this.legendPanel.add(moving,1);
+        this.legendPanel.add(idle,2);
+        this.legendPanel.add(loading,3);
+        this.legendPanel.add(unloading,4);
+        this.legendPanel.add(transientFault,5);
+        this.legendPanel.add(hardFault,6);
 
     }
 
