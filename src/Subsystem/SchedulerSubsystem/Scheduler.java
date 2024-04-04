@@ -292,6 +292,8 @@ public class Scheduler extends Context implements Subsystem {
                 logger.log(Logging.Logger.LEVEL.INFO, logId, msg);
                 elevatorTimers.remove(elevNum);
                 totalGophersHandled++;
+                // GUI
+                logger.updateGui(elevNum, 0, 1);
             }
         }
 

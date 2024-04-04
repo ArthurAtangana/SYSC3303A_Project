@@ -74,6 +74,7 @@ public class DisplayConsole {
     private JPanel gridPanel;
     private int msgCol;
     private int msgRow;
+    private int msgFault;
 
     /* Constructors */
 
@@ -197,7 +198,7 @@ public class DisplayConsole {
 
             // Case: GUI
             // If message is only 2 char, it is a GUI update.
-            if (msg.length() == 4) {
+            if (msg.length() == 5) {
                
                // Catch our message params as integers in the most verbose Java way possible.
                msgCol = Character.getNumericValue(msg.charAt(0)) * 10 +
@@ -206,16 +207,25 @@ public class DisplayConsole {
                msgRow = Character.getNumericValue(msg.charAt(2)) * 10 +
                         Character.getNumericValue(msg.charAt(3));
 
+               msgFault = Character.getNumericValue(msg.charAt(4));
+
                // Check our floor/elevator cells for a match.
                for (CellButton cb : cellButtons) {
                     // Case: This is the column of elevators we are looking for.
-                    //       Paint them black.
+                    //       Paint them black. Paint them red if fault.
                     if (msgCol == cb.getCol()) {
-                        cb.setBackground(Color.BLACK);
-                        // Case: This is the elevator you are looking for.
-                        //       Paint it yellow.
-                        if (msgRow == cb.getRow()) {
-                            cb.setBackground(Color.YELLOW);
+                        if (msgFault == 1) {
+                            if (cb.getBackground() == Color.YELLOW) {
+                                cb.setBackground(Color.RED);
+                            }
+                        }
+                        else {
+                            cb.setBackground(Color.BLACK);
+                            // Case: This is the elevator you are looking for.
+                            //       Paint it yellow.
+                            if (msgRow == cb.getRow()) {
+                                cb.setBackground(Color.YELLOW);
+                            }
                         }
                     }
                }
