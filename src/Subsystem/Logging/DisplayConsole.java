@@ -64,7 +64,7 @@ public class DisplayConsole {
 
     private JFrame frame;
     private Container contentPane;
-    private static final int FRAME_HEIGHT = 800;
+    private static final int FRAME_HEIGHT = 1000;
     private static final int FRAME_WIDTH = 1200;
     private int cellWidth;
     private int cellHeight;

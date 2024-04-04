@@ -1,6 +1,6 @@
 {
   "verbosity": 1,
-  "numFloors": 7,
+  "numFloors": 23,
   "numElevators": 5,
   "travelTime": 8500,
   "loadTime": 1000,
