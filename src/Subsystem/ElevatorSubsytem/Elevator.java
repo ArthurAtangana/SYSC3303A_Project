@@ -106,6 +106,8 @@ public class Elevator extends Context implements Subsystem {
         // Log
         msg = "Reached floor " + this.currentFloor + ".";
         logger.log(Logger.LEVEL.INFO, logId, msg);
+        // GUI
+        logger.updateGui(elevNum, this.currentFloor);
     }
     void unload(){
         Direction direction = ElevatorUtilities.getPassengersDirection(passengerCountMap.keySet());
