@@ -119,7 +119,10 @@ All statistics are displayed to console at the end of the simulation.
 The following three subsections describe each statistic tracked in this simulator.
 
 ### Total Simulation Time
-TODO(@md OR @braeden)
+The simulation starts when the first the passenger request is received by the Scheduler.
+The simulation ends when all the in-service elevators are idle and there are no more passenger requests.
+Total simulation time is calculated by subtracting the simulation start time from the simulation
+end time.
 
 ### Elevator Movements
 Total elevator movements are assumed to mean the total number of floors travelled by all elevators.
