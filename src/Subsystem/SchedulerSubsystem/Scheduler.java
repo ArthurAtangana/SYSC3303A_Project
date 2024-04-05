@@ -45,7 +45,8 @@ public class Scheduler extends Context implements Subsystem {
     final long ELEVATOR_TIMEOUT_DELAY; // milliseconds
     final double ELEVATOR_TIMEOUT_DELAY_FACTOR = 1.5;
 
-    // Simulation Statistics
+    /* Simulation Statistics */
+
     private int totalElevatorMovements; // measured as total elevator move commands sent
     private int totalGophersHandled;
     private boolean simulationEnding; // flag indicating whether this simulation is ending
