@@ -71,11 +71,16 @@ public class DestinationDispatcher implements Runnable {
      */
     @Override
     public void run() {
-        // Send event to notify scheduler the simulation has started.
-        txToScheduler.send(new StartSimulationEvent("Let's go! (Arthur's voice)"));
+        boolean firstFloorRequest = true; // flag so that at most one start simulation event is sent
 
         while(!eventQueue.isEmpty()) {
             waitEvent();
+
+            if (firstFloorRequest) {
+                // Send event to notify scheduler the simulation has started
+                txToScheduler.send(new StartSimulationEvent("Let's go! (Arthur's voice)"));
+            }
+
             // Could pop from bottom for performance increase... if that's necessary
             FloorInputEvent curEvent = eventQueue.remove(0);
 
@@ -91,6 +96,8 @@ public class DestinationDispatcher implements Runnable {
                     curEvent.direction(), curEvent.faultType());
             PassengerArrivedCommand passengerCmd = new PassengerArrivedCommand(curEvent.sourceFloor(), passengerDestination);
             txToFloor.send(passengerCmd);
+
+            firstFloorRequest = false;
         }
 
         // All FloorInputEvents have been dispatched for this simulation.
