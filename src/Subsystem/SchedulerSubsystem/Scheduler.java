@@ -46,7 +46,7 @@ public class Scheduler extends Context implements Subsystem {
     final double ELEVATOR_TIMEOUT_DELAY_FACTOR = 1.5;
 
     // Simulation Statistics
-    private int totalMoveElevatorCommandsSent; // stat for tracking total elevator movements
+    private int totalElevatorMovements; // measured as total elevator move commands sent
     private int totalGophersHandled;
     private boolean simulationEnding; // flag indicating whether this simulation is ending
 
@@ -67,7 +67,7 @@ public class Scheduler extends Context implements Subsystem {
         totalElevatorsInService = config.getNumElevators();
         elevatorTimers = new HashMap<>();
         ELEVATOR_TIMEOUT_DELAY = (long) (config.getTravelTime() * ELEVATOR_TIMEOUT_DELAY_FACTOR);
-        totalMoveElevatorCommandsSent = 0;
+        totalElevatorMovements = 0;
         totalGophersHandled = 0;
         simulationEnding = false;
         // Logging
@@ -145,8 +145,8 @@ public class Scheduler extends Context implements Subsystem {
     void transmitToElevator(SystemCommand command) {
        transmitterToElevator.send(command);
        if (command instanceof MoveElevatorCommand) {
-            totalMoveElevatorCommandsSent++;
-            logger.log(Logger.LEVEL.DEBUG, logId, "Total move elevator commands sent: " + totalMoveElevatorCommandsSent);
+            totalElevatorMovements++;
+            logger.log(Logger.LEVEL.DEBUG, logId, "Total move elevator commands sent: " + totalElevatorMovements);
        }
     }
 
@@ -380,7 +380,7 @@ public class Scheduler extends Context implements Subsystem {
         if (isEndOfSimulation()) {
             stats.add("Total simulation time (HH:MM:SS): " + convertMillisToHHMMSS(getTotalSimulationTime()));
         }
-        stats.add("Total elevator movements: " + totalMoveElevatorCommandsSent);
+        stats.add("Total elevator movements: " + totalElevatorMovements);
         stats.add("Total gophers handled: " + totalGophersHandled);
 
         for (String stat: stats) {
