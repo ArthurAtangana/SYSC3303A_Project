@@ -1,10 +1,7 @@
 package Subsystem.FloorSubsystem;
 
 import Messaging.Messages.Commands.PassengerArrivedCommand;
-import Messaging.Messages.Events.DestinationEvent;
-import Messaging.Messages.Events.FloorInputEvent;
-import Messaging.Messages.Events.FloorRequestEvent;
-import Messaging.Messages.Events.EndSimulationEvent;
+import Messaging.Messages.Events.*;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
 
@@ -74,6 +71,9 @@ public class DestinationDispatcher implements Runnable {
      */
     @Override
     public void run() {
+        // Send event to notify scheduler the simulation has started.
+        txToScheduler.send(new StartSimulationEvent("Let's go! (Arthur's voice)"));
+
         while(!eventQueue.isEmpty()) {
             waitEvent();
             // Could pop from bottom for performance increase... if that's necessary
@@ -94,7 +94,7 @@ public class DestinationDispatcher implements Runnable {
         }
 
         // All FloorInputEvents have been dispatched for this simulation.
-        // Send a final message to notify Scheduler.
-        txToScheduler.send(new EndSimulationEvent("I love this job."));
+        // Send a final message to notify Scheduler the simulation has ended.
+        txToScheduler.send(new EndSimulationEvent("I love my job."));
     }
 }

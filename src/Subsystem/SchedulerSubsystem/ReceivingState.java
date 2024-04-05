@@ -63,10 +63,11 @@ public class ReceivingState extends State {
         String msg = "";
 
         // Case: Simulation has ended
-        // Description: Transition to final state.
+        // Description: Let's get outta here.
         if (((Scheduler)context).isEndOfSimulation()) {
             msg = "Simulation ended.";
             ((Scheduler) context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler) context).logId, msg);
+            ((Scheduler)context).setSimulationEndTime();
             context.setNextState(new FinalState(context));
         }
         // Case: Event is ElevatorStateEvent
@@ -104,6 +105,13 @@ public class ReceivingState extends State {
             // Next State: BindingReceiverState
             // Required Constructor Arguments: ReceiverBindingEvent
             context.setNextState(new BindingReceiverState(context, rbEvent));
+        }
+        // Case: Event is StartSimulationEvent
+        // Description: Let's go.
+        else if (event instanceof StartSimulationEvent) {
+            msg = "Received event to start simulation ... recording start time.";
+            ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
+            ((Scheduler)context).setSimulationStartTime();
         }
         // Case: Event is EndSimulationEvent
         // Description: End it all.

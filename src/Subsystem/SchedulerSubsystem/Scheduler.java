@@ -16,6 +16,7 @@ import StatePatternLib.Context;
 import Subsystem.ElevatorSubsytem.ElevatorUtilities;
 import Subsystem.Subsystem;
 
+import java.time.Duration;
 import java.util.*;
 
 import static java.lang.Math.abs;
@@ -42,9 +43,16 @@ public class Scheduler extends Context implements Subsystem {
     final String logId = "SCHEDULER";
     final long ELEVATOR_TIMEOUT_DELAY; // milliseconds
     final double ELEVATOR_TIMEOUT_DELAY_FACTOR = 1.5;
-    private int totalMoveElevatorCommandsSent; // statistic for tracking total elevator movements
-    private int totalGophersHandled; // statistic for tracking total gopher faults handled
+
+    // Simulation Statistics
+    private int totalMoveElevatorCommandsSent; // stat for tracking total elevator movements
+    private int totalGophersHandled;
     private boolean simulationEnding; // flag indicating whether this simulation is ending
+
+    // Simulation times are measured in milliseconds,
+    // between the current time and midnight, January 1, 1970 UTC.
+    private Long simulationStartTime;
+    private Long simulationEndTime;
 
     public Scheduler(Config config,
                      Receiver receiver,
@@ -338,6 +346,26 @@ public class Scheduler extends Context implements Subsystem {
         return simulationEnding && areIdleElevators();
     }
 
+    void setSimulationStartTime() {simulationStartTime = System.currentTimeMillis();}
+
+    void setSimulationEndTime() {simulationEndTime = System.currentTimeMillis();}
+
+    /**
+     * Returns the total simulation time for a completed simulation.
+     *
+     * Assumes the simulation has ended and the start and end times
+     * for the simulation have been recorded.
+     *
+     * @return Total simulation time in milliseconds.
+     */
+    Long getTotalSimulationTime() {
+        assert isEndOfSimulation();
+        assert simulationStartTime != null;
+        assert simulationEndTime != null;
+
+        return simulationEndTime - simulationStartTime;
+    }
+
     /**
      * Displays current simulation statistics to console.
      */
@@ -345,7 +373,9 @@ public class Scheduler extends Context implements Subsystem {
         logger.log(Logger.LEVEL.INFO, logId, "Displaying simulation statistics ...");
 
         List<String> stats = new LinkedList<>();
-        stats.add("Total simulation time: TODO");
+        if (isEndOfSimulation()) {
+            stats.add("Total simulation time (HH:MM:SS): " + convertMillisToHHMMSS(getTotalSimulationTime()));
+        }
         stats.add("Total elevator movements: " + totalMoveElevatorCommandsSent);
         stats.add("Total gophers handled: " + totalGophersHandled);
 
@@ -354,7 +384,20 @@ public class Scheduler extends Context implements Subsystem {
         }
     }
 
-    /** 
+    private String convertMillisToHHMMSS(long ms) {
+        // Reference: https://www.baeldung.com/java-ms-to-hhmmss
+        Duration duration = Duration.ofMillis(ms);
+        long seconds = duration.getSeconds();
+        long HH = seconds / 3600;
+        long MM = (seconds % 3600) / 60;
+        long SS = seconds % 60;
+        HH = duration.toHours();
+        MM = duration.toMinutesPart();
+        SS = duration.toSecondsPart();
+        return String.format("%02d:%02d:%02d", HH, MM, SS);
+    }
+
+    /**
      * Start the State Machine, with initial state of ReceivingState.
      * Initial state is set in Constructor.
      */
