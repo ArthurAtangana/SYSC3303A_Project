@@ -94,7 +94,18 @@ public class DestinationDispatcher implements Runnable {
         }
 
         // All FloorInputEvents have been dispatched for this simulation.
-        // Send a final message to notify Scheduler the simulation has ended.
-        txToScheduler.send(new EndSimulationEvent("I love my job."));
+        // Notify scheduler simulation should end.
+        //
+        // Scheduler gets stuck in receiving state when last active elevator has a hard fault.
+        // Thus, we need to periodically notify the scheduler to break the scheduler's malaise.
+        while(true) {
+            txToScheduler.send(new EndSimulationEvent("Summer sang in me a little while, that in me sings no more ..."));
+            try {
+                final long END_SIMULATION_NOTIFICATION_PERIOD = 2000; // milliseconds
+                Thread.sleep(END_SIMULATION_NOTIFICATION_PERIOD);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

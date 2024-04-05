@@ -116,7 +116,7 @@ public class ReceivingState extends State {
         // Case: Event is EndSimulationEvent
         // Description: End it all.
         else if (event instanceof EndSimulationEvent) {
-            msg = "Received event to end simulation ... setting flag.";
+            msg = "Received event to end simulation ...";
             ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
             ((Scheduler)context).setSimulationEnding(); // Flag set. Nailed it!
             context.setNextState(new ReceivingState(context)); // Go back to receiving ...

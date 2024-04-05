@@ -38,6 +38,7 @@ public class Scheduler extends Context implements Subsystem {
     private final Receiver receiver;
     private final Map<DestinationEvent, Long> floorRequestsToTime;
     private final ArrayList<ElevatorStateEvent> idleElevators;
+    private int totalElevatorsInService;
     private final Map<Integer, Timer> elevatorTimers; // Elevator number mapping to an elevator timer
     final Logger logger;
     final String logId = "SCHEDULER";
@@ -63,6 +64,7 @@ public class Scheduler extends Context implements Subsystem {
         this.transmitterToFloor = transmitterToFloor;
         floorRequestsToTime = new HashMap<>();
         idleElevators = new ArrayList<>();
+        totalElevatorsInService = config.getNumElevators();
         elevatorTimers = new HashMap<>();
         ELEVATOR_TIMEOUT_DELAY = (long) (config.getTravelTime() * ELEVATOR_TIMEOUT_DELAY_FACTOR);
         totalMoveElevatorCommandsSent = 0;
@@ -302,6 +304,7 @@ public class Scheduler extends Context implements Subsystem {
             public void run() {
                 String msg = "Hard fault detected (possibly gophers) for elevator " + elevNum + ". Taking elevator out of service.";
                 logger.log(Logging.Logger.LEVEL.INFO, logId, msg);
+                totalElevatorsInService--; // Take elevator out of service
                 elevatorTimers.remove(elevNum);
                 totalGophersHandled++;
                 // GUI
@@ -343,7 +346,8 @@ public class Scheduler extends Context implements Subsystem {
      * @return True if end of simulation, false otherwise.
      */
     boolean isEndOfSimulation() {
-        return simulationEnding && areIdleElevators();
+        return simulationEnding
+                && (idleElevators.size() == totalElevatorsInService);
     }
 
     void setSimulationStartTime() {simulationStartTime = System.currentTimeMillis();}
