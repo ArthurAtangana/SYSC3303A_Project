@@ -144,10 +144,7 @@ public class Scheduler extends Context implements Subsystem {
      */
     void transmitToElevator(SystemCommand command) {
        transmitterToElevator.send(command);
-       if (command instanceof MoveElevatorCommand) {
-            totalElevatorMovements++;
-            logger.log(Logger.LEVEL.DEBUG, logId, "Total move elevator commands sent: " + totalElevatorMovements);
-       }
+       if (command instanceof MoveElevatorCommand) {totalElevatorMovements++;}
     }
 
     /**
