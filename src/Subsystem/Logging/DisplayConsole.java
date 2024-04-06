@@ -1,8 +1,8 @@
-package Logging;
+package Subsystem.Logging;
 
 import Configuration.Config;
 import Configuration.Configurator;
-import Logging.CellButton;
+import Subsystem.Logging.CellButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,7 +43,7 @@ public class DisplayConsole {
                           + "************************************************************\n"
                           + "* (づ｡◕‿‿◕｡)づ Ride safe!!                                  *\n"
                           + "************************************************************\n";
-    
+
     /* Enums */
     public enum LEVEL {
         INFO,  // INFO level messages for general prints
@@ -73,6 +73,7 @@ public class DisplayConsole {
     private int elevatorCols;
     private JPanel gridPanel;
     private JPanel legendPanel;
+    private JPanel floorPanel;
     private int msgCol;
     private int msgRow;
     private int msgType;
@@ -142,9 +143,12 @@ public class DisplayConsole {
         // Stick it with buttons
         //System.out.println("Initializing cellButtons: " + this.cellWidth+ " by " + this.cellHeight);
         for (int i = this.floorRows; i > 0; --i) {
-            for (int j = this.elevatorCols; j > 0; --j) {
+            for (int j = this.elevatorCols; j >= 0; --j) {
                 // Create the cell button
                 CellButton btn = new CellButton(i, j);
+                if (j == 0){
+                    btn.setText("Floor " + i);
+                }
                 // Track it in ArrayList for access
                 cellButtons.add(btn);
                 // GUI things
@@ -153,6 +157,9 @@ public class DisplayConsole {
                 // Oh I suppose we better light them up to start.
                 if (i == 1) {
                    btn.setBackground(Color.YELLOW);
+                }
+                if (j == 0){
+                    btn.setBackground(Color.WHITE);
                 }
             }
         }
@@ -300,7 +307,7 @@ public class DisplayConsole {
      * @version Iteration-5
      */
     public static void main(String[] args) {
-        Logging.DisplayConsole displayConsole = new Logging.DisplayConsole();
+        DisplayConsole displayConsole = new DisplayConsole();
         displayConsole.listen();
     }
 
