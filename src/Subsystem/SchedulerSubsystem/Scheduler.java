@@ -379,7 +379,7 @@ public class Scheduler extends Context implements Subsystem {
             stats.add("Total simulation time (HH:MM:SS): " + convertMillisToHHMMSS(getTotalSimulationTime()));
         }
         stats.add("Total elevator movements: " + totalElevatorMovements);
-        stats.add("Total gophers handled: " + totalGophersHandled);
+        stats.add("Total gophers handled (hard faults): " + totalGophersHandled);
 
         for (String stat: stats) {
             logger.log(Logger.LEVEL.INFO, logId, stat);
