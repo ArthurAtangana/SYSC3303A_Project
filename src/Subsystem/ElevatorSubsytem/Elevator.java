@@ -43,7 +43,7 @@ public class Elevator extends Context implements Subsystem {
         this.travelTime = config.getTravelTime();
         this.loadTime = config.getLoadTime();
 
-        this.currentFloor = 0;
+        this.currentFloor = 1;
         this.elevNum = elevNum;
         this.passengerCountMap = new HashMap<>();
         this.transmitterToScheduler = transmitter;
