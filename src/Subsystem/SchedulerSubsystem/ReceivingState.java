@@ -93,8 +93,14 @@ public class ReceivingState extends State {
         else if (event instanceof PassengerLoadEvent plEvent) {
             msg = "Received PassengerLoadEvent.";
             ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
-            // Next State: LoadingPassengerState
-            // Required Constructor Arguments: PassengerLoadEvent
+            // If there are passengers to load, clear the flag to load them
+            if (!plEvent.passengers().isEmpty()) {
+                DestinationEvent servedFloor = new DestinationEvent(plEvent.floorSource(),
+                        plEvent.passengers().get(0).direction(),
+                        null);
+                ((Scheduler) context).removeDestinationEvent(servedFloor);
+            }
+            // Go into load state
             context.setNextState(new LoadingPassengerState(context, plEvent));
         } 
         // Case: Event is ReceiverBindingEvent
