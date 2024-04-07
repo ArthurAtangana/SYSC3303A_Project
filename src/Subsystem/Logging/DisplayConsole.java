@@ -64,8 +64,8 @@ public class DisplayConsole {
 
     private JFrame frame;
     private Container contentPane;
-    private static final int FRAME_HEIGHT = 1000;
-    private static final int FRAME_WIDTH = 1200;
+    private static final int FRAME_HEIGHT = 250;
+    private static final int FRAME_WIDTH = 300;
     private int cellWidth;
     private int cellHeight;
     private ArrayList<CellButton> cellButtons = new ArrayList<CellButton>();
@@ -111,20 +111,29 @@ public class DisplayConsole {
         System.out.println(banner);
 
         /* GUI */
-        frame = new JFrame("Elfevator");
+        frame = new JFrame("Elfevator Solutions for Concierges (No BEng Required)");
         frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         frame.setResizable(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         contentPane = frame.getContentPane();
-        contentPane.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+        contentPane.setPreferredSize(new Dimension(FRAME_WIDTH * 3, FRAME_HEIGHT * 3));
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+
+        // Create grid of elevators
         initializeGridPanel();
         contentPane.add(gridPanel);
+
+        // Make the elevators scrollable ... for people who don't run our app at sports bars
+        JScrollPane scrollPane = new JScrollPane(gridPanel);
+        contentPane.add(scrollPane);
+
+        // Add a legend to GUI, so we know what the kaleidoscope of colour represents
         initializeLegendPanel();
         contentPane.add(legendPanel);
+
+        // Let's go!
         frame.pack();
         frame.setVisible(true);
-
     }
 
     /**
@@ -179,6 +188,14 @@ public class DisplayConsole {
         JButton unloading = new JButton("Unloading");
         JButton transientFault = new JButton("Transient");
         JButton hardFault = new JButton("Hard fault");
+
+        // Buttons must be set to opaque for background colours to display
+        moving.setOpaque(true);
+        idle.setOpaque(true);
+        loading.setOpaque(true);
+        unloading.setOpaque(true);
+        transientFault.setOpaque(true);
+        hardFault.setOpaque(true);
 
         legend.setBackground(Color.WHITE);
         moving.setBackground(Color.GREEN);
