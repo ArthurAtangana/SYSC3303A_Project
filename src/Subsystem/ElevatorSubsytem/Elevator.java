@@ -117,15 +117,20 @@ public class Elevator extends Context implements Subsystem {
         try {
             // Log
             // Only print if not null, or it's just too much.
-            Integer passengerInt = passengerCountMap.get(new DestinationEvent(currentFloor, direction, null));
-            if (passengerInt > 0) {
-                String msg = "Unloading Passenger: " + passengerInt;
+            int sum = 0;
+            Integer passengerInt = 0;
+            while (passengerInt != null) {
+                sum += passengerInt;
+                passengerInt = passengerCountMap.remove(new DestinationEvent(currentFloor, direction, null));
+            }
+            if (sum > 0) {
+                String msg = "Unloading Passenger: " + sum;
                 logger.log(Logger.LEVEL.INFO, logId, msg);
             }
             // GUI
             logger.updateGui(elevNum, this.currentFloor, 5);
             // each passenger takes loadTime to leave the elevator.
-            Thread.sleep(loadTime * passengerCountMap.remove(new DestinationEvent(currentFloor, direction, null)));
+            Thread.sleep(loadTime * sum);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (NullPointerException e) {
