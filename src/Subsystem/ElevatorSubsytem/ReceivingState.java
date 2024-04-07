@@ -1,7 +1,6 @@
 package Subsystem.ElevatorSubsytem;
 
 import Messaging.Messages.Commands.MoveElevatorCommand;
-import Messaging.Messages.Commands.MovePassengersCommand;
 import Messaging.Messages.Commands.UnloadPassengersCommand;
 import Messaging.Messages.SystemMessage;
 import StatePatternLib.Context;
@@ -37,8 +36,6 @@ public class ReceivingState extends State {
     public void doActivity() {
         if (event instanceof MoveElevatorCommand){
             context.setNextState(new MovingState(context, ((MoveElevatorCommand) event).direction()));
-        } else if (event instanceof MovePassengersCommand) {
-            context.setNextState(new LoadingState(context, (MovePassengersCommand) event));
         } else if (event instanceof UnloadPassengersCommand) {
             context.setNextState(new UnloadingState(context));
         } else {
