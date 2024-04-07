@@ -1,0 +1,19 @@
+###############################################################################
+# scenario-13-end-simulation-with-hard-faults.txt                          #
+###############################################################################
+# Input file used to provide inputs to the system. This file is assumed to be #
+# well-formed and is NOT validated at runtime.                                #
+###############################################################################
+# Scenario:                                                                   #
+# Elevator is taken out of service due to hard fault. Simulation recognizes   #
+# elevator is out of service and correctly ends.                              #
+###############################################################################
+#  arrivalTime  | sourceFloor | direction | destinationFloor |   faultCode    #
+# --------------|-------------|-----------|------------------|----------------#
+#      int      |    int      | Direction |       int        |      int       #
+# --------------|-------------|-----------|------------------|----------------#
+#  hh:mm:ss.mmm |     n       | Up | Down |        n         |   0 | 1 | 2    #
+###############################################################################
+
+## Test Sequence ##
+05:05:52.994 1 Up 2 2

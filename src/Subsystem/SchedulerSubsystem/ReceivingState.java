@@ -1,9 +1,6 @@
 package Subsystem.SchedulerSubsystem;
 
-import Messaging.Messages.Events.ElevatorStateEvent;
-import Messaging.Messages.Events.FloorRequestEvent;
-import Messaging.Messages.Events.PassengerLoadEvent;
-import Messaging.Messages.Events.ReceiverBindingEvent;
+import Messaging.Messages.Events.*;
 import Messaging.Messages.SystemMessage;
 import StatePatternLib.Context;
 import StatePatternLib.State;
@@ -44,8 +41,13 @@ public class ReceivingState extends State {
     public void entry() {
         String msg = "ReceivingState:Entry";
         ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
-        // Get the SystemMessage (pop from Receiver buffer)
-        event = ((Scheduler) context).receive();
+
+        if (!((Scheduler) context).isEndOfSimulation()) {
+            // Simulation has not ended, keep receiving events!
+
+            // Get the SystemMessage (pop from Receiver buffer)
+            event = ((Scheduler) context).receive();
+        }
     }
 
     
@@ -60,9 +62,17 @@ public class ReceivingState extends State {
 
         String msg = "";
 
+        // Case: Simulation has ended
+        // Description: Let's get outta here.
+        if (((Scheduler)context).isEndOfSimulation()) {
+            msg = "Simulation ended.";
+            ((Scheduler) context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler) context).logId, msg);
+            ((Scheduler)context).setSimulationEndTime();
+            context.setNextState(new FinalState(context));
+        }
         // Case: Event is ElevatorStateEvent
         // Description: Notification from Elevator conveying its state
-        if (event instanceof ElevatorStateEvent esEvent) {
+        else if (event instanceof ElevatorStateEvent esEvent) {
             msg = "Received ElevatorStateEvent.";
             ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
             // Next State: ProcessingElevatorEventState
@@ -96,6 +106,21 @@ public class ReceivingState extends State {
             // Required Constructor Arguments: ReceiverBindingEvent
             context.setNextState(new BindingReceiverState(context, rbEvent));
         }
+        // Case: Event is StartSimulationEvent
+        // Description: Let's go.
+        else if (event instanceof StartSimulationEvent) {
+            msg = "Received event to start simulation ... recording start time.";
+            ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
+            ((Scheduler)context).setSimulationStartTime();
+        }
+        // Case: Event is EndSimulationEvent
+        // Description: End it all.
+        else if (event instanceof EndSimulationEvent) {
+            msg = "Received event to end simulation ...";
+            ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
+            ((Scheduler)context).setSimulationEnding(); // Flag set. Nailed it!
+            context.setNextState(new ReceivingState(context)); // Go back to receiving ...
+        }
         else {
             InvalidTypeException e = new InvalidTypeException("Event type received cannot be handled by this subsystem.");
             throw new RuntimeException(e);
@@ -107,7 +132,5 @@ public class ReceivingState extends State {
      * Exit activities for this state.
      */
     @Override
-    public void exit() {
-    }
-
+    public void exit() {}
 }
