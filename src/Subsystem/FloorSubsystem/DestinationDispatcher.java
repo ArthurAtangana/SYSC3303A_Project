@@ -87,7 +87,7 @@ public class DestinationDispatcher implements Runnable {
             // Send floor request to scheduler
             DestinationEvent currentFloorEvent = new DestinationEvent(curEvent.sourceFloor(),
                     curEvent.direction(), curEvent.faultType());
-            FloorRequestEvent floorReqEvent = new FloorRequestEvent(currentFloorEvent, curEvent.time());
+            SetFloorRequestEvent floorReqEvent = new SetFloorRequestEvent(currentFloorEvent, curEvent.time());
 
             txToScheduler.send(floorReqEvent);
 

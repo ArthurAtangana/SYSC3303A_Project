@@ -1,16 +1,9 @@
 package Subsystem.SchedulerSubsystem;
 
-import Messaging.Messages.Commands.MoveElevatorCommand;
-import Messaging.Messages.Events.DestinationEvent;
-import Messaging.Messages.Events.ElevatorStateEvent;
-import Messaging.Messages.Events.FloorRequestEvent;
-import Messaging.Messages.Events.PassengerLoadEvent;
-import Messaging.Messages.SystemMessage;
-import Messaging.Messages.Commands.SendPassengersCommand;
 import Messaging.Messages.Commands.MovePassengersCommand;
+import Messaging.Messages.Events.PassengerLoadEvent;
 import StatePatternLib.Context;
 import StatePatternLib.State;
-import com.sun.jdi.InvalidTypeException;
 
 /**
  * Scheduler FSM State: Loading Passenger State.
@@ -28,7 +21,7 @@ public class LoadingPassengerState extends State {
     /* Instance Variables */
     
     // The PassengerLoadEvent to process
-    private PassengerLoadEvent event;
+    private final PassengerLoadEvent event;
 
     /**
      * Parametric constructor.

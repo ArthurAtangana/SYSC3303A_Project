@@ -79,10 +79,10 @@ public class ReceivingState extends State {
             // Required Constructor Arguments: context
             context.setNextState(new ProcessingElevatorEventState(context, esEvent)); 
         }
-        // Case: Event is FloorRequestEvent
+        // Case: Event is SetFloorRequestEvent
         // Description: Request from Floor asking for service
-        else if (event instanceof FloorRequestEvent frEvent) {
-            msg = "Received FloorRequestEvent.";
+        else if (event instanceof SetFloorRequestEvent frEvent) {
+            msg = "Received SetFloorRequestEvent.";
             ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
             // Next State: StoringFloorRequestState
             // Required Constructor Arguments: context

@@ -1,12 +1,6 @@
 package Subsystem.SchedulerSubsystem;
 
-import Messaging.Messages.Commands.MoveElevatorCommand;
-import Messaging.Messages.Events.DestinationEvent;
-import Messaging.Messages.Events.ElevatorStateEvent;
-import Messaging.Messages.Events.FloorRequestEvent;
 import Messaging.Messages.Events.ReceiverBindingEvent;
-import Messaging.Messages.SystemMessage;
-import Messaging.Messages.Commands.SendPassengersCommand;
 import StatePatternLib.Context;
 import StatePatternLib.State;
 import Subsystem.ElevatorSubsytem.Elevator;
@@ -30,7 +24,7 @@ public class BindingReceiverState extends State {
     /* Instance Variables */
     
     // The ReceiverBindingEvent to process
-    private ReceiverBindingEvent event;
+    private final ReceiverBindingEvent event;
 
     /**
      * Parametric constructor.

@@ -7,7 +7,7 @@ import Messaging.Messages.Commands.SystemCommand;
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
-import Messaging.Messages.Events.FloorRequestEvent;
+import Messaging.Messages.Events.SetFloorRequestEvent;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Receivers.SerializableReceiver;
@@ -103,7 +103,7 @@ public class Scheduler extends Context implements Subsystem {
      * @param event Event to process.
      * @return true if it was a new floor request, false otherwise
      */
-    boolean storeFloorRequest(FloorRequestEvent event) {
+    boolean storeFloorRequest(SetFloorRequestEvent event) {
         // Log
         String msg = ("Floor " + event.destinationEvent().destinationFloor() + ": Request made: " + event.destinationEvent().direction() + ".");
         logger.log(Logger.LEVEL.INFO, logId, msg);
@@ -165,14 +165,14 @@ public class Scheduler extends Context implements Subsystem {
     }
 
     /**
-     * Get the closest idle Elevator to an incoming FloorRequestEvent.
+     * Get the closest idle Elevator to an incoming SetFloorRequestEvent.
      *
-     * @param floorRequestEvent The FloorRequestEvent used to determine the
+     * @param floorRequestEvent The SetFloorRequestEvent used to determine the
      * closest idle elevator to send.
      *
      * @return ElevatorStateEvent corresponding to closest idle Elevator.
      */
-    ElevatorStateEvent getClosestIdleElevator(FloorRequestEvent floorRequestEvent) {
+    ElevatorStateEvent getClosestIdleElevator(SetFloorRequestEvent floorRequestEvent) {
 
         // Convenience variable to extract and hold target floor
         int targetFloor = floorRequestEvent.destinationEvent().destinationFloor();
