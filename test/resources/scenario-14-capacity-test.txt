@@ -1,0 +1,32 @@
+###############################################################################
+# scenario-14-capacity-test.txt                                                   #
+###############################################################################
+# Input file used to provide inputs to the system. This file is assumed to be #
+# well-formed and is NOT validated at runtime.                                #
+###############################################################################
+# Scenario Description                                                        #
+# --------------------                                                        #
+# Simulate when there are too many people wanting to board an elevator.       #
+###############################################################################
+#  arrivalTime  | sourceFloor | direction | destinationFloor |   faultCode    #
+# --------------|-------------|-----------|------------------|----------------#
+#      int      |    int      | Direction |       int        |      int       #
+# --------------|-------------|-----------|------------------|----------------#
+#  hh:mm:ss.mmm |     n       | Up | Down |        n         |   0 | 1 | 2    #
+###############################################################################
+
+## Test Sequence ##
+
+# Floor 1: try to load 6 people
+09:05:32.991 1 Up 6 0
+09:05:32.992 1 Up 7 0
+09:05:32.993 1 Up 7 0
+09:05:32.994 1 Up 7 0
+09:05:32.995 1 Up 7 0
+
+# Floor 3: try to load another person while the elevator is moving and full
+# elevator should not stop, but the passenger should be eventually serviced.
+09:05:32.996 3 Up 7 0
+
+# Floor 6: elevator should stop and unload 1 person, and pickup 1 passenger
+09:05:32.997 6 Up 7 0

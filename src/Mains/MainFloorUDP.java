@@ -25,8 +25,8 @@ public class MainFloorUDP {
         TransceiverFactory udpFactory = new TransceiverUDPFactory();
 
         // 3. Create and start floors
-        for (int i = 0; i < (config.getNumFloors()+1); ++i) {
-            Floor floor = new Floor(i, udpFactory.createClientReceiver(i), udpFactory.createClientTransmitter());
+        for (int i = 1; i < (config.getNumFloors() + 1); ++i) {
+            Floor floor = new Floor(config, i, udpFactory.createClientReceiver(i), udpFactory.createClientTransmitter());
             new Thread(floor).start();
         }
 

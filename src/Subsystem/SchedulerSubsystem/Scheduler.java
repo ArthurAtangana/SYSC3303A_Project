@@ -1,12 +1,13 @@
 package Subsystem.SchedulerSubsystem;
 
 import Configuration.Config;
-import Logging.Logger;
+import Subsystem.Logging.Logger;
+import Messaging.Messages.Commands.MoveElevatorCommand;
 import Messaging.Messages.Commands.SystemCommand;
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
-import Messaging.Messages.Events.FloorRequestEvent;
+import Messaging.Messages.Events.SetFloorRequestEvent;
 import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Receivers.SerializableReceiver;
@@ -15,6 +16,7 @@ import StatePatternLib.Context;
 import Subsystem.ElevatorSubsytem.ElevatorUtilities;
 import Subsystem.Subsystem;
 
+import java.time.Duration;
 import java.util.*;
 
 import static java.lang.Math.abs;
@@ -26,6 +28,9 @@ import static java.lang.Math.abs;
  *
  * @version Iteration-4
  * Add elevator timers and hard fault handling.
+ *
+ * @version Iteration-5
+ * Add simulation statistics.
  */
 public class Scheduler extends Context implements Subsystem {
     private final Transmitter<? extends Receiver> transmitterToFloor;
@@ -33,11 +38,24 @@ public class Scheduler extends Context implements Subsystem {
     private final Receiver receiver;
     private final Map<DestinationEvent, Long> floorRequestsToTime;
     private final ArrayList<ElevatorStateEvent> idleElevators;
+    private int totalElevatorsInService;
     private final Map<Integer, Timer> elevatorTimers; // Elevator number mapping to an elevator timer
     final Logger logger;
     final String logId = "SCHEDULER";
     final long ELEVATOR_TIMEOUT_DELAY; // milliseconds
     final double ELEVATOR_TIMEOUT_DELAY_FACTOR = 1.5;
+    final int MAX_CAPACITY;
+
+    /* Simulation Statistics */
+
+    private int totalElevatorMovements; // measured as total elevator move commands sent
+    private int totalGophersHandled;
+    private boolean simulationEnding; // flag indicating whether this simulation is ending
+
+    // Simulation times are measured in milliseconds,
+    // between the current time and midnight, January 1, 1970 UTC.
+    private Long simulationStartTime;
+    private Long simulationEndTime;
 
     public Scheduler(Config config,
                      Receiver receiver,
@@ -48,10 +66,15 @@ public class Scheduler extends Context implements Subsystem {
         this.transmitterToFloor = transmitterToFloor;
         floorRequestsToTime = new HashMap<>();
         idleElevators = new ArrayList<>();
+        totalElevatorsInService = config.getNumElevators();
         elevatorTimers = new HashMap<>();
         ELEVATOR_TIMEOUT_DELAY = (long) (config.getTravelTime() * ELEVATOR_TIMEOUT_DELAY_FACTOR);
+        totalElevatorMovements = 0;
+        totalGophersHandled = 0;
+        simulationEnding = false;
         // Logging
         logger = new Logger(config.getVerbosity());
+        MAX_CAPACITY = config.getElevatorCapacity();
 
         // Initialize first state for this Subsystem's State Machine
         setNextState(new ReceivingState(this));
@@ -78,16 +101,21 @@ public class Scheduler extends Context implements Subsystem {
      * Process event received from the floor.
      *
      * @param event Event to process.
+     * @return true if it was a new floor request, false otherwise
      */
-    void storeFloorRequest(FloorRequestEvent event) {
+    boolean storeFloorRequest(SetFloorRequestEvent event) {
         // Log
         String msg = ("Floor " + event.destinationEvent().destinationFloor() + ": Request made: " + event.destinationEvent().direction() + ".");
         logger.log(Logger.LEVEL.INFO, logId, msg);
         // Store event locally to use in scheduling
-        if (!floorRequestsToTime.containsKey(event.destinationEvent()))
+        if (!floorRequestsToTime.containsKey(event.destinationEvent())) {
             // Only store request if it does not already exist
-            floorRequestsToTime.put(event.destinationEvent(), event.time());
-            // NB: StoringFloorRequestState will now handle idle Elevator removal
+            floorRequestsToTime.put(event.destinationEvent(), System.currentTimeMillis());
+            // NB: StoringFloorRequestState handles idle Elevator removal
+            return true;
+        }
+        return false;
+
     }
 
     /**
@@ -123,7 +151,8 @@ public class Scheduler extends Context implements Subsystem {
      * @param command The SystemCommand to send to the Elevator.
      */
     void transmitToElevator(SystemCommand command) {
-        transmitterToElevator.send(command);
+       transmitterToElevator.send(command);
+       if (command instanceof MoveElevatorCommand) {totalElevatorMovements++;}
     }
 
     /**
@@ -136,14 +165,14 @@ public class Scheduler extends Context implements Subsystem {
     }
 
     /**
-     * Get the closest idle Elevator to an incoming FloorRequestEvent.
+     * Get the closest idle Elevator to an incoming SetFloorRequestEvent.
      *
-     * @param floorRequestEvent The FloorRequestEvent used to determine the
+     * @param floorRequestEvent The SetFloorRequestEvent used to determine the
      * closest idle elevator to send.
      *
      * @return ElevatorStateEvent corresponding to closest idle Elevator.
      */
-    ElevatorStateEvent getClosestIdleElevator(FloorRequestEvent floorRequestEvent) {
+    ElevatorStateEvent getClosestIdleElevator(SetFloorRequestEvent floorRequestEvent) {
 
         // Convenience variable to extract and hold target floor
         int targetFloor = floorRequestEvent.destinationEvent().destinationFloor();
@@ -176,6 +205,8 @@ public class Scheduler extends Context implements Subsystem {
      */
     void addIdleElevator(ElevatorStateEvent event) {
        idleElevators.add(event);
+       // GUI
+        logger.updateGui(event.elevatorNum(),event.currentFloor(),3);
     }
 
     /**
@@ -192,15 +223,21 @@ public class Scheduler extends Context implements Subsystem {
 
         // Create new object for union set to avoid funny business of destination events
         // being added to the scheduler's floor requests!
-        Set<DestinationEvent> union = new HashSet<>();
-        union.addAll(floorRequestsToTime.keySet());
-        union.addAll(e.passengerCountMap().keySet());
+        DestinationEvent currentElevDest = (new DestinationEvent(e.currentFloor(), getElevatorDirection(e), null));
 
+        // Check if unloading:
+        if (isUnloading(e)) {
+            return true;
+        } else if (getCurCapacity(e) == 0) { // If no more capacity, skip load
+            return false;
+        }
+
+        Set<DestinationEvent> union = new HashSet<>(floorRequestsToTime.keySet());
         if (isMovingOppositeToFutureDirection(e)) {
             return false;
         }
         // Fault: Assume null -> matches against any fault which is important for parity with legacy behavior.
-        return union.contains(new DestinationEvent(e.currentFloor(), getElevatorDirection(e), null));
+        return union.contains(currentElevDest);
     }
 
     /**
@@ -247,6 +284,7 @@ public class Scheduler extends Context implements Subsystem {
         if (direction != null){
             return direction;
         }
+        // FIXME: We got this with scenario 12, multi elevator
         if (floorRequestsToTime.isEmpty()){
             throw new RuntimeException("No passenger on elevator and no floor requests");
         }
@@ -277,8 +315,12 @@ public class Scheduler extends Context implements Subsystem {
             @Override
             public void run() {
                 String msg = "Hard fault detected (possibly gophers) for elevator " + elevNum + ". Taking elevator out of service.";
-                logger.log(Logging.Logger.LEVEL.INFO, logId, msg);
+                logger.log(Logger.LEVEL.INFO, logId, msg);
+                totalElevatorsInService--; // Take elevator out of service
                 elevatorTimers.remove(elevNum);
+                totalGophersHandled++;
+                // GUI
+                logger.updateGui(elevNum, 0, 2);
             }
         }
 
@@ -287,7 +329,7 @@ public class Scheduler extends Context implements Subsystem {
         elevatorTimers.put(elevNum, timer);
 
         String msg = "Timer started for elevator " + elevNum + ".";
-        logger.log(Logging.Logger.LEVEL.DEBUG, logId, msg);
+        logger.log(Logger.LEVEL.DEBUG, logId, msg);
     }
 
     /**
@@ -301,11 +343,88 @@ public class Scheduler extends Context implements Subsystem {
             timer.cancel();
             elevatorTimers.remove(elevNum);
             String msg = "Timer killed for elevator " + elevNum + ".";
-            logger.log(Logging.Logger.LEVEL.DEBUG, logId, msg);
+            logger.log(Logger.LEVEL.DEBUG, logId, msg);
         }
     }
 
-    /** 
+    private boolean isUnloading(ElevatorStateEvent e) {
+        return e.passengerCountMap().keySet().stream().anyMatch((DestinationEvent d) -> d.destinationFloor() == e.currentFloor());
+    }
+
+    int getCurCapacity(ElevatorStateEvent event) {
+        // TODO: make unit test (or confirm some other way, not tested yet)
+        // Return int stream to sum on number of passengers, reduce from capacity to find empty spots
+        return MAX_CAPACITY - event.passengerCountMap().values().stream().mapToInt(Integer::intValue).sum();
+    }
+
+    /**
+    /**
+     * Sets the flag to start ending simulation.
+     */
+    void setSimulationEnding() {simulationEnding = true;}
+
+    /**
+     * Checks if this simulation has ended.
+     *
+     * @return True if end of simulation, false otherwise.
+     */
+    boolean isEndOfSimulation() {
+        return simulationEnding
+                && (idleElevators.size() == totalElevatorsInService);
+    }
+
+    void setSimulationStartTime() {simulationStartTime = System.currentTimeMillis();}
+
+    void setSimulationEndTime() {simulationEndTime = System.currentTimeMillis();}
+
+    /**
+     * Returns the total simulation time for a completed simulation.
+     *
+     * Assumes the simulation has ended and the start and end times
+     * for the simulation have been recorded.
+     *
+     * @return Total simulation time in milliseconds.
+     */
+    Long getTotalSimulationTime() {
+        assert isEndOfSimulation();
+        assert simulationStartTime != null;
+        assert simulationEndTime != null;
+
+        return simulationEndTime - simulationStartTime;
+    }
+
+    /**
+     * Displays current simulation statistics to console.
+     */
+    void displaySimulationStatistics() {
+        logger.log(Logger.LEVEL.INFO, logId, "Displaying simulation statistics ...");
+
+        List<String> stats = new LinkedList<>();
+        if (isEndOfSimulation()) {
+            stats.add("Total simulation time (HH:MM:SS): " + convertMillisToHHMMSS(getTotalSimulationTime()));
+        }
+        stats.add("Total elevator movements: " + totalElevatorMovements);
+        stats.add("Total gophers handled (hard faults): " + totalGophersHandled);
+
+        for (String stat: stats) {
+            logger.log(Logger.LEVEL.INFO, logId, stat);
+        }
+    }
+
+    private String convertMillisToHHMMSS(long ms) {
+        // Reference: https://www.baeldung.com/java-ms-to-hhmmss
+        Duration duration = Duration.ofMillis(ms);
+        long seconds = duration.getSeconds();
+        long HH = seconds / 3600;
+        long MM = (seconds % 3600) / 60;
+        long SS = seconds % 60;
+        HH = duration.toHours();
+        MM = duration.toMinutesPart();
+        SS = duration.toSecondsPart();
+        return String.format("%02d:%02d:%02d", HH, MM, SS);
+    }
+
+    /**
      * Start the State Machine, with initial state of ReceivingState.
      * Initial state is set in Constructor.
      */
@@ -315,5 +434,4 @@ public class Scheduler extends Context implements Subsystem {
             currentState.runState();
         }
     }
-
 }

@@ -2,8 +2,6 @@ package Messaging.Messages.Commands;
 
 import Messaging.Messages.Events.DestinationEvent;
 
-import java.io.Serializable;
-
 /**
  * PassengerArrivedCommand Record, Command to floor that a passenger has arrived at the floor
  * with an intended destination.

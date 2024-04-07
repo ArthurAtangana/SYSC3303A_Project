@@ -32,5 +32,4 @@ public class ElevatorUtilities {
         }
         return direction;
     }
-
 }

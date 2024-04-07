@@ -1,6 +1,5 @@
 package Messaging.Messages.Events;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -12,5 +11,6 @@ import java.util.ArrayList;
  * @version Iteration-2
  */
 public record PassengerLoadEvent(int elevNumber,
+                                 int floorSource,
                                  ArrayList<DestinationEvent> passengers) implements SystemEvent {
 }

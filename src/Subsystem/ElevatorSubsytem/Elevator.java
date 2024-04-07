@@ -1,7 +1,6 @@
 package Subsystem.ElevatorSubsytem;
 
 import Configuration.Config;
-import Logging.Logger;
 import Messaging.Messages.Commands.MovePassengersCommand;
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
@@ -12,6 +11,7 @@ import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
 import StatePatternLib.Context;
+import Subsystem.Logging.Logger;
 import Subsystem.Subsystem;
 
 import java.util.HashMap;
@@ -31,10 +31,12 @@ public class Elevator extends Context implements Subsystem {
     private int currentFloor;
     private final long travelTime;
     private final long loadTime;
+    private final long transientTime;
+    private final long doorTime;
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
     private final Transmitter<?> transmitterToScheduler;
     private final Receiver receiver;
-    final Logging.Logger logger;
+    final Logger logger;
     String logId;
     private final int topFloor;
 
@@ -42,8 +44,10 @@ public class Elevator extends Context implements Subsystem {
 
         this.travelTime = config.getTravelTime();
         this.loadTime = config.getLoadTime();
+        this.transientTime = config.getTransientTime();
+        this.doorTime = config.getDoorTime();
 
-        this.currentFloor = 0;
+        this.currentFloor = 1;
         this.elevNum = elevNum;
         this.passengerCountMap = new HashMap<>();
         this.transmitterToScheduler = transmitter;
@@ -51,7 +55,7 @@ public class Elevator extends Context implements Subsystem {
 
         // Logging
         logId = "ELEVATOR " + this.elevNum;
-        logger = new Logging.Logger(config.getVerbosity());
+        logger = new Logger(config.getVerbosity());
 
         // Notify scheduler of new subsystem creation -> could fit in subsystem super class
         this.transmitterToScheduler.send(new ReceiverBindingEvent(receiver, this.getClass()));
@@ -106,22 +110,38 @@ public class Elevator extends Context implements Subsystem {
         // Log
         msg = "Reached floor " + this.currentFloor + ".";
         logger.log(Logger.LEVEL.INFO, logId, msg);
+        // GUI
+        logger.updateGui(elevNum, this.currentFloor, 0);
     }
     void unload(){
         Direction direction = ElevatorUtilities.getPassengersDirection(passengerCountMap.keySet());
         if (direction == null){
             return;
         }
+        String msg = "Opening doors for elevator " + elevNum + ".";
+        logger.log(Logger.LEVEL.INFO, logId, msg);
+        try {
+            Thread.sleep(doorTime);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         try {
             // Log
             // Only print if not null, or it's just too much.
-            Integer passengerInt = passengerCountMap.get(new DestinationEvent(currentFloor, direction, null));
-            if (passengerInt > 0) {
-                String msg = "Unloading Passenger: " + passengerInt;
+            int sum = 0;
+            Integer passengerInt = 0;
+            while (passengerInt != null) {
+                sum += passengerInt;
+                passengerInt = passengerCountMap.remove(new DestinationEvent(currentFloor, direction, null));
+            }
+            if (sum > 0) {
+                msg = "Unloading Passenger: " + sum;
                 logger.log(Logger.LEVEL.INFO, logId, msg);
             }
+            // GUI
+            logger.updateGui(elevNum, this.currentFloor, 5);
             // each passenger takes loadTime to leave the elevator.
-            Thread.sleep(loadTime * passengerCountMap.remove(new DestinationEvent(currentFloor, direction, null)));
+            Thread.sleep(loadTime * sum);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (NullPointerException e) {
@@ -140,6 +160,8 @@ public class Elevator extends Context implements Subsystem {
             // Log
             msg = "Loading Passengers: " + command.newPassengers();
             logger.log(Logger.LEVEL.INFO, logId, msg);
+            // GUI
+            logger.updateGui(elevNum, this.currentFloor, 4);
         }
         // load passengers into the elevator, taking LOAD_TIME per passengers waiting on the floor.
         try {
@@ -152,9 +174,11 @@ public class Elevator extends Context implements Subsystem {
             // if a passenger has a fault, take an extra second to load.
             if (e.faultType() == Fault.TRANSIENT){
                 try {
+                    // GUI
+                    logger.updateGui(elevNum, this.currentFloor, 1);
                     msg = "Passenger " + e + " is holding up the elevator";
                     logger.log(Logger.LEVEL.INFO, logId, msg);
-                    Thread.sleep(1000);
+                    Thread.sleep(transientTime);
                     msg = "Passenger " + e + " has boarded";
                     logger.log(Logger.LEVEL.INFO, logId, msg);
                 } catch (InterruptedException ex) {
@@ -168,6 +192,13 @@ public class Elevator extends Context implements Subsystem {
         // Log
         msg = "Passengers in the elevator: " + passengerCountMap.toString();
         logger.log(Logger.LEVEL.DEBUG, logId, msg);
+        msg = "Closing doors for elevator " + elevNum + ".";
+        logger.log(Logger.LEVEL.INFO, logId, msg);
+        try {
+            Thread.sleep(doorTime);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
     }
     /**

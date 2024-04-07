@@ -38,11 +38,12 @@ public class MainCombinedDMA {
         schedulerThread.start();
 
         // Floor and elevator thread creation
-        for (int i = 0; i < config.getNumFloors()+1; ++i) {
-            new Thread(new Floor(i, dmaFactory.createClientReceiver(i),
+        for (int i = 1; i < config.getNumFloors() + 1; ++i) {
+            new Thread(new Floor(config, i, dmaFactory.createClientReceiver(i),
                     dmaFactory.createClientTransmitter())).start();
         }
-        for (int i = 0; i < config.getNumElevators(); ++i) {
+        //for (int i = 0; i < config.getNumElevators(); ++i) {
+        for (int i = 1; i <= config.getNumElevators(); ++i) {
             new Thread(new Elevator(config, i, dmaFactory.createClientReceiver(i),
                     dmaFactory.createClientTransmitter())).start();
         }
@@ -51,4 +52,3 @@ public class MainCombinedDMA {
         MainUtils.startDispatcher(dmaFactory);
     }
 }
-

@@ -9,7 +9,7 @@
  */
 package unit.Logging;
 
-import Logging.Logger;
+import Subsystem.Logging.Logger;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -74,10 +74,4 @@ public class TransmitterUDP extends Transmitter<ReceiverUDPProxy> {
         }
         return serializedData;
     }
-
-    public SystemMessage receiveReply(){
-        // #TODO
-        // return replyReceiver.receive();
-        return null;
-    }
 }

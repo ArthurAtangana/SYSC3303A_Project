@@ -1,9 +1,7 @@
 package Subsystem.FloorSubsystem;
 
 import Messaging.Messages.Commands.PassengerArrivedCommand;
-import Messaging.Messages.Events.DestinationEvent;
-import Messaging.Messages.Events.FloorInputEvent;
-import Messaging.Messages.Events.FloorRequestEvent;
+import Messaging.Messages.Events.*;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
 
@@ -73,15 +71,23 @@ public class DestinationDispatcher implements Runnable {
      */
     @Override
     public void run() {
+        boolean firstFloorRequest = true; // flag so that at most one start simulation event is sent
+
         while(!eventQueue.isEmpty()) {
             waitEvent();
+
+            if (firstFloorRequest) {
+                // Send event to notify scheduler the simulation has started
+                txToScheduler.send(new StartSimulationEvent("Let's go! (Arthur's voice)"));
+            }
+
             // Could pop from bottom for performance increase... if that's necessary
             FloorInputEvent curEvent = eventQueue.remove(0);
 
             // Send floor request to scheduler
             DestinationEvent currentFloorEvent = new DestinationEvent(curEvent.sourceFloor(),
                     curEvent.direction(), curEvent.faultType());
-            FloorRequestEvent floorReqEvent = new FloorRequestEvent(currentFloorEvent, curEvent.time());
+            SetFloorRequestEvent floorReqEvent = new SetFloorRequestEvent(currentFloorEvent, curEvent.time());
 
             txToScheduler.send(floorReqEvent);
 
@@ -90,6 +96,23 @@ public class DestinationDispatcher implements Runnable {
                     curEvent.direction(), curEvent.faultType());
             PassengerArrivedCommand passengerCmd = new PassengerArrivedCommand(curEvent.sourceFloor(), passengerDestination);
             txToFloor.send(passengerCmd);
+
+            firstFloorRequest = false;
+        }
+
+        // All FloorInputEvents have been dispatched for this simulation.
+        // Notify scheduler simulation should end.
+        //
+        // Scheduler gets stuck in receiving state when last active elevator has a hard fault.
+        // Thus, we need to periodically notify the scheduler to break the scheduler's malaise.
+        while(true) {
+            txToScheduler.send(new EndSimulationEvent("Summer sang in me a little while, that in me sings no more ..."));
+            try {
+                final long END_SIMULATION_NOTIFICATION_PERIOD = 2000; // milliseconds
+                Thread.sleep(END_SIMULATION_NOTIFICATION_PERIOD);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

@@ -2,8 +2,6 @@ package Messaging.Messages.Commands;
 
 import Messaging.Messages.Direction;
 
-import java.io.Serializable;
-
 /**
  * MoveElevatorCommand Record, Command to elevator to move until the next floor is reached.
  *

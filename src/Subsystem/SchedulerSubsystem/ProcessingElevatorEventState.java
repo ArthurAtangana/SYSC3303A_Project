@@ -2,10 +2,13 @@ package Subsystem.SchedulerSubsystem;
 
 import Messaging.Messages.Commands.MoveElevatorCommand;
 import Messaging.Messages.Commands.SendPassengersCommand;
+import Messaging.Messages.Commands.UnloadPassengersCommand;
+import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import StatePatternLib.Context;
 import StatePatternLib.State;
+import Subsystem.Logging.Logger;
 
 /**
  * Scheduler FSM State: Processing Elevator Event State.
@@ -44,7 +47,7 @@ public class ProcessingElevatorEventState extends State {
     @Override
     public void entry() {
         String msg = "ProcessingElevatorEventState:Entry";
-        ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
+        ((Scheduler)context).logger.log(Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
 
         // Received a status update from an elevator ... thus we know its alive and should kill its timer.
         ((Scheduler) context).killElevatorTimer(event.elevatorNum());
@@ -65,7 +68,7 @@ public class ProcessingElevatorEventState extends State {
         if (!((Scheduler)context).hasPendingDestinationEvents() && event.passengerCountMap().isEmpty()) {
 
             String msg = "Elevator " + event.elevatorNum() + " is idle.";
-            ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
+            ((Scheduler)context).logger.log(Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
 
             // Register this Elevator as Idle
             ((Scheduler)context).addIdleElevator(event);
@@ -79,13 +82,17 @@ public class ProcessingElevatorEventState extends State {
         else if (((Scheduler)context).isElevatorStopping(event)) { 
 
             String msg = "Elevator " + event.elevatorNum() + " has stopped.";
-            ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
+            ((Scheduler)context).logger.log(Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
 
             // Notify Floor for service
-            ((Scheduler)context).transmitToFloor(new SendPassengersCommand(event.currentFloor(), event.elevatorNum(), ((Scheduler)context).getElevatorDirection(event)));
+            ((Scheduler) context).transmitToElevator(new UnloadPassengersCommand(event.elevatorNum()));
 
+            int availableSpots = ((Scheduler) context).getCurCapacity(event);
+            assert (availableSpots > 0);
             // Remove the serviced DestinationRequest request
-            ((Scheduler) context).removeDestinationEvent(new DestinationEvent(event.currentFloor(), ((Scheduler) context).getElevatorDirection(event), null));
+            Direction elevatorDirection = ((Scheduler) context).getElevatorDirection(event);
+            ((Scheduler) context).removeDestinationEvent(new DestinationEvent(event.currentFloor(), elevatorDirection, null));
+            ((Scheduler) context).transmitToFloor(new SendPassengersCommand(event.currentFloor(), event.elevatorNum(), elevatorDirection, availableSpots));
 
             // Next State: ReceivingState
             // Required Constructor Arguments: context
@@ -106,14 +113,5 @@ public class ProcessingElevatorEventState extends State {
             // Required Constructor Arguments: context
             context.setNextState(new ReceivingState(context)); 
         }
-
     }
-
-    /**
-     * Exit activities for this state.
-     */
-    @Override
-    public void exit() {
-    }
-
 }

@@ -67,7 +67,5 @@ public class Configurator {
         Configurator configurator = new Configurator(jsonFilename);
         Config config = configurator.getConfig();
         config.printConfig();
-
     }
-
 }

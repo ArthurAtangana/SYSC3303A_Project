@@ -15,6 +15,9 @@ public class Config {
     private final int numElevators;
     private final long travelTime;
     private final long loadTime;
+    private final long doorTime;
+    private final int elevatorCapacity;
+    private final long transientTime;
     private final String inputFilename;
 
     /* Constructors */
@@ -28,6 +31,9 @@ public class Config {
         this.numElevators = 0;
         this.travelTime = 0;
         this.loadTime = 0;
+        this.doorTime = 0;
+        this.elevatorCapacity = 0;
+        this.transientTime = 0;
         this.inputFilename = "";
     }
 
@@ -53,6 +59,12 @@ public class Config {
         return loadTime;
     }
 
+    public long getDoorTime() {return doorTime;}
+
+    public int getElevatorCapacity() {return elevatorCapacity;}
+
+    public long getTransientTime() {return transientTime;}
+
     public String getInputFilename() {
         return inputFilename;
     }
@@ -64,8 +76,9 @@ public class Config {
         System.out.println("-- numElevators: " + getNumElevators());
         System.out.println("-- travelTime: " + getTravelTime() + " [ms]");
         System.out.println("-- loadTime: " + getLoadTime() + " [ms]");
+        System.out.println("-- doorTime: " + getDoorTime() + " [ms]");
+        System.out.println("-- transientTime" + getTransientTime() + " [ms]");
         System.out.println("-- inputFilename: " + getInputFilename());
         System.out.println();
     }
-
 }

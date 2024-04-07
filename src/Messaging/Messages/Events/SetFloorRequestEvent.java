@@ -1,9 +1,7 @@
 package Messaging.Messages.Events;
 
-import java.io.Serializable;
-
 /**
- * FloorRequestEvent record, holds a destination event referring to the source floor
+ * SetFloorRequestEvent record, holds a destination event referring to the source floor
  * and the time the floor received the request.
  * Intended flow: Dispatcher -> Scheduler.
  *
@@ -13,7 +11,7 @@ import java.io.Serializable;
  * @author Alexandre Marques
  * @version Iteration-2
  */
-public record FloorRequestEvent
+public record SetFloorRequestEvent
         (DestinationEvent destinationEvent, long time)
         implements SystemEvent {
 }

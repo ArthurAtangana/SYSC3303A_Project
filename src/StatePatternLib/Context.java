@@ -1,8 +1,5 @@
 package StatePatternLib;
 
-import Messaging.Messages.SystemMessage;
-import Messaging.Transceivers.Receivers.Receiver;
-
 /**
  * Abstract class representing the context of a state machine.
  *

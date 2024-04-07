@@ -1,5 +1,5 @@
 # README
-* Last Edited: 2024/03/29
+* Last Edited: 2024/04/07
 
 ## Table of Contents
 
@@ -7,11 +7,12 @@
 2. [Usage](#usage)
 3. [Description](#description)
 4. [Design Considerations](#design-considerations)
-5. [Scope](#scope)
-6. [Tasks](#tasks)
-7. [Test](#test)
-8. [Resources](#resources)
-9. [Known Issues](#known-issues)
+5. [Statistics](#statistics)
+6. [Scope](#scope)
+7. [Tasks](#tasks)
+8. [Test](#test)
+9. [Resources](#resources)
+10. [Known Issues](#known-issues)
 
 ## Authors
 Group A1:1
@@ -37,10 +38,11 @@ Note: Compiled using JDK - 21 Oracle OpenJDK version 21.0.1
    1. Right click lib folder in root directory
    2. Select add as library
    3. Leave settings as default, select ok
-3. Run the files in the "Mains" package in this order:
-   1. MainSchedulerUDP
-   2. MainElevatorUDP
-   3. MainFloorUDP
+4. Run the files in the "Mains" package in this order:
+   1. MainDisplayConsole
+   2. MainSchedulerUDP
+   3. MainElevatorUDP
+   4. MainFloorUDP
 
 For test execution, see [test section](#test).
 
@@ -88,7 +90,9 @@ See test README for test file structure.
 | SystemMessage           | Messaging              | Interface definition for all messages passed in the system to inherit.                        |
 | Loader                  | SchedulerSubsystem     | Loads appropriate passengers into an elevator.                                                |
 | Scheduler               | SchedulerSubsystem     | Models a scheduler in the simulation.                                                         |
-| Logger                  | Logging                | Provides logging services to subsystems with configurable verbosity                           |
+| Logger                  | Logging                | Provides logging services to subsystems with configurable verbosity.                          |
+| DisplayConsole          | Logging                | Centralizes subsystem logging to single console, and provides GUI for system-wide monitoring. |
+| MainDisplayConsole      | Mains                  | Run console-based TUI and GUI for system-wide monitoring.                                     |
 | MainCombinedDMA         | Mains                  | Run all subsystems in a single process with shared memory communication.                      |
 | MainSchedulerUDP        | Mains                  | Run Scheduler subsystem in a dedicated process with networked communication via UDP.          |
 | MainElevatorUDP         | Mains                  | Run Elevator subsystem in a dedicated process with networked communication via UDP.           |
@@ -109,6 +113,31 @@ the highest throughput possible.If the design can lead to starvation, it is an i
 
 ### Documentation
 - All public methods and classes require javadoc, private methods are optional.
+
+<a id="statistics"></a>
+## Statistics
+All statistics are displayed to console at the end of the simulation.
+The following three subsections describe each statistic tracked in this simulator.
+
+### Total Simulation Time
+The simulation starts when the first the passenger request is received by the Scheduler.
+The simulation ends when all the in-service elevators are idle and there are no more passenger requests.
+Total simulation time is calculated by subtracting the simulation start time from the simulation
+end time.
+
+### Elevator Movements
+Total elevator movements are assumed to mean the total number of floors travelled by all elevators.
+Each MoveElevatorCommand sent by the Scheduler corresponds to an elevator travelling one floor.
+Thus, the system tracks the total floors travelled by all elevators by tracking
+the total number of MoveElevatorCommands sent by the Scheduler. 
+
+### Gophers Handled
+Hard faults are simulated with gophers chewing through the elevator cables,
+causing the elevator cab to plummet through the Earth's crust and disrupt subterranean ecosystems. 
+No rescue mission is mounted because passengers are assumed to be engineering students.
+Since gophers are hard faults,
+the system tracks total gophers handled by tracking total hard faults handled.
+
 
 ## Tasks
 
@@ -195,6 +224,25 @@ the highest throughput possible.If the design can lead to starvation, it is an i
 | Scenario Tests for Fault Handling       |Arthur Atangana  |
 | Parser Validation                       |Arthur Atangana  |
 | Fix: Elevator Bound Handling            |Arthur Atangana  |
+
+### Iteration 5
+
+|          Task                           | Assignee        |
+|-----------------------------------------|-----------------|
+| Display Console TUI/GUI                 |Michael De Santis|
+| Scenario Tests                          |Michael De Santis|
+| Scheduler Statistics                    |Michael De Santis|
+| Scheduler Statistics                    |Braeden Kloke    |
+| Scheduler Terminal State                |Braeden Kloke    |
+| Scenario Tests                          |Braeden Kloke    |
+| Diagrams                                |Victoria Malouf  |
+| Passenger Capacity Handling             |Victoria Malouf  |
+| Passenger Capacity Handling             |Alexandre Marques|
+| Scenario Tests                          |Alexandre Marques|
+| Passenger Capacity Handling             |Arthur Atangana  |
+| Scenario Tests                          |Arthur Atangana  |
+| Display Console GUI                     |Arthur Atangana  |
+
 
 ## Test
 

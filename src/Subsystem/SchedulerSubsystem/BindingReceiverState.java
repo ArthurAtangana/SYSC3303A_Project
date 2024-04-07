@@ -1,16 +1,11 @@
 package Subsystem.SchedulerSubsystem;
 
-import Messaging.Messages.Commands.MoveElevatorCommand;
-import Messaging.Messages.Events.DestinationEvent;
-import Messaging.Messages.Events.ElevatorStateEvent;
-import Messaging.Messages.Events.FloorRequestEvent;
 import Messaging.Messages.Events.ReceiverBindingEvent;
-import Messaging.Messages.SystemMessage;
-import Messaging.Messages.Commands.SendPassengersCommand;
 import StatePatternLib.Context;
 import StatePatternLib.State;
 import Subsystem.ElevatorSubsytem.Elevator;
 import Subsystem.FloorSubsystem.Floor;
+import Subsystem.Logging.Logger;
 import Subsystem.Subsystem;
 import com.sun.jdi.InvalidTypeException;
 
@@ -30,7 +25,7 @@ public class BindingReceiverState extends State {
     /* Instance Variables */
     
     // The ReceiverBindingEvent to process
-    private ReceiverBindingEvent event;
+    private final ReceiverBindingEvent event;
 
     /**
      * Parametric constructor.
@@ -51,7 +46,7 @@ public class BindingReceiverState extends State {
     @Override
     public void entry() {
         String msg = "BindingReceiverState:Entry";
-        ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
+        ((Scheduler)context).logger.log(Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
 
         Class<? extends Subsystem> subsystemType = event.subsystemType();
 
@@ -74,14 +69,6 @@ public class BindingReceiverState extends State {
     }
 
     /**
-     * Do activities for this state.
-     *
-     */
-    @Override
-    public void doActivity() {
-    }
-
-    /**
      * Exit activities for this state.
      */
     @Override
@@ -90,5 +77,4 @@ public class BindingReceiverState extends State {
         // Required Constructor Arguments: context
         context.setNextState(new ReceivingState(context));
     }
-
 }
