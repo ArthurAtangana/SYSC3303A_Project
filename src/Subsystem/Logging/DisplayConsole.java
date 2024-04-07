@@ -113,7 +113,7 @@ public class DisplayConsole {
         /* GUI */
         frame = new JFrame("Elfevator");
         frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         contentPane = frame.getContentPane();
         contentPane.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
