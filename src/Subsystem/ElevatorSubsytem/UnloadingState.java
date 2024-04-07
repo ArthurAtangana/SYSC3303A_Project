@@ -1,5 +1,6 @@
 package Subsystem.ElevatorSubsytem;
 
+import Messaging.Messages.Commands.MovePassengersCommand;
 import StatePatternLib.Context;
 import StatePatternLib.State;
 
@@ -29,6 +30,8 @@ public class UnloadingState extends State {
 
     @Override
     public void exit() {
-        context.setNextState(new ReceivingState(context));
+        // After unload, a load command always comes in.
+        // Avoid requesting a command from scheduler by entering receiving state again
+        context.setNextState(new LoadingState(context, (MovePassengersCommand) ((Elevator) context).receive()));
     }
 }
