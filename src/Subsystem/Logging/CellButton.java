@@ -1,4 +1,5 @@
-package Logging;
+package Subsystem.Logging;
+
 import javax.swing.*;
 import java.awt.*;
 

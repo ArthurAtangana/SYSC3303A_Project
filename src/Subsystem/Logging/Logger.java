@@ -2,6 +2,7 @@ package Logging;
 
 import java.io.IOException;
 import java.net.*;
+import Subsystem.Logging.DisplayConsole;
 
 /**
  * Logger class which handles subsystem logging via console print per process, 
