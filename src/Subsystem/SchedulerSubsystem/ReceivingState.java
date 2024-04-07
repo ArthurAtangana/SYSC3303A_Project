@@ -82,9 +82,6 @@ public class ReceivingState extends State {
         }
         // Case: Event is SetFloorRequestEvent
         // Description: Request from Floor asking for service
-        else if (event instanceof FloorRequestEvent frEvent) {
-            msg = "Received FloorRequestEvent.";
-            ((Scheduler)context).logger.log(Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
         else if (event instanceof SetFloorRequestEvent frEvent) {
             msg = "Received SetFloorRequestEvent.";
             ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
@@ -96,9 +93,15 @@ public class ReceivingState extends State {
         // Description: Notification from Floor of Passengers requiring load
         else if (event instanceof PassengerLoadEvent plEvent) {
             msg = "Received PassengerLoadEvent.";
-            ((Scheduler)context).logger.log(Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
-            // Next State: LoadingPassengerState
-            // Required Constructor Arguments: PassengerLoadEvent
+            ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
+            // If there are passengers to load, clear the flag to load them
+            if (!plEvent.passengers().isEmpty()) {
+                DestinationEvent servedFloor = new DestinationEvent(plEvent.floorSource(),
+                        plEvent.passengers().get(0).direction(),
+                        null);
+                ((Scheduler) context).removeDestinationEvent(servedFloor);
+            }
+            // Go into load state
             context.setNextState(new LoadingPassengerState(context, plEvent));
         } 
         // Case: Event is ReceiverBindingEvent
