@@ -101,16 +101,21 @@ public class Scheduler extends Context implements Subsystem {
      * Process event received from the floor.
      *
      * @param event Event to process.
+     * @return true if it was a new floor request, false otherwise
      */
-    void storeFloorRequest(FloorRequestEvent event) {
+    boolean storeFloorRequest(FloorRequestEvent event) {
         // Log
         String msg = ("Floor " + event.destinationEvent().destinationFloor() + ": Request made: " + event.destinationEvent().direction() + ".");
         logger.log(Logger.LEVEL.INFO, logId, msg);
         // Store event locally to use in scheduling
-        if (!floorRequestsToTime.containsKey(event.destinationEvent()))
+        if (!floorRequestsToTime.containsKey(event.destinationEvent())) {
             // Only store request if it does not already exist
             floorRequestsToTime.put(event.destinationEvent(), System.currentTimeMillis());
-            // NB: StoringFloorRequestState will now handle idle Elevator removal
+            // NB: StoringFloorRequestState handles idle Elevator removal
+            return true;
+        }
+        return false;
+
     }
 
     /**

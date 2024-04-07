@@ -1,14 +1,9 @@
 package Subsystem.SchedulerSubsystem;
 
-import Messaging.Messages.Commands.MoveElevatorCommand;
-import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import Messaging.Messages.Events.FloorRequestEvent;
-import Messaging.Messages.SystemMessage;
-import Messaging.Messages.Commands.SendPassengersCommand;
 import StatePatternLib.Context;
 import StatePatternLib.State;
-import com.sun.jdi.InvalidTypeException;
 
 /**
  * Scheduler FSM State: Storing Floor Request State.
@@ -27,7 +22,7 @@ public class StoringFloorRequestState extends State {
     /* Instance Variables */
     
     // The FloorRequestEvent to process
-    private FloorRequestEvent event;
+    private final FloorRequestEvent event;
 
     /**
      * Parametric constructor.
@@ -59,11 +54,11 @@ public class StoringFloorRequestState extends State {
     public void doActivity() {
 
         // Store the FloorRequestEvent
-        ((Scheduler)context).storeFloorRequest(event);
+        boolean isNewReq = ((Scheduler) context).storeFloorRequest(event);
 
         // Case: There are idle Elevators.
         // Description: An Elevator is immediately available for work.
-        if (((Scheduler)context).areIdleElevators()) {
+        if (((Scheduler) context).areIdleElevators() && isNewReq) {
             // Next State: ProcessingElevatorEventState
             // Required Constructor Arguments: ElevatorStateEvent
             ElevatorStateEvent elevatorStateEvent = ((Scheduler)context).getClosestIdleElevator(event);
