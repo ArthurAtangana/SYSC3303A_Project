@@ -1,0 +1,32 @@
+###############################################################################
+# scenario-16-capacity-transient-stress-test.txt                              #
+###############################################################################
+# Input file used to provide inputs to the system. This file is assumed to be #
+# well-formed and is NOT validated at runtime.                                #
+###############################################################################
+# Scenario Description                                                        #
+# --------------------                                                        #
+# Test the max time for an elevator to update the scheduler on its status.    #
+# unloads max passengers, then loads maximum capacity of which one            #
+# is transient.                                                               #
+###############################################################################
+#  arrivalTime  | sourceFloor | direction | destinationFloor |   faultCode    #
+# --------------|-------------|-----------|------------------|----------------#
+#      int      |    int      | Direction |       int        |      int       #
+# --------------|-------------|-----------|------------------|----------------#
+#  hh:mm:ss.mmm |     n       | Up | Down |        n         |   0 | 1 | 2    #
+###############################################################################
+
+## Test Sequence ##
+# load 5 passengers in 1 elevator
+09:00:00.000 2 Up 7 0
+09:00:00.001 2 Up 7 0
+09:00:00.002 2 Up 7 0
+09:00:00.003 2 Up 7 0
+09:00:00.004 2 Up 7 0
+# unload 5 passengers and loads 5 new ones. they all have a transient fault.
+09:01:20.001 7 Up 8 1
+09:01:20.001 7 Up 8 1
+09:01:20.001 7 Up 8 1
+09:01:20.001 7 Up 8 1
+09:01:20.001 7 Up 8 1

@@ -31,6 +31,8 @@ public class Elevator extends Context implements Subsystem {
     private int currentFloor;
     private final long travelTime;
     private final long loadTime;
+    private final long transientTime;
+    private final long doorTime;
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
     private final Transmitter<?> transmitterToScheduler;
     private final Receiver receiver;
@@ -42,6 +44,8 @@ public class Elevator extends Context implements Subsystem {
 
         this.travelTime = config.getTravelTime();
         this.loadTime = config.getLoadTime();
+        this.transientTime = config.getTransientTime();
+        this.doorTime = config.getDoorTime();
 
         this.currentFloor = 1;
         this.elevNum = elevNum;
@@ -114,18 +118,30 @@ public class Elevator extends Context implements Subsystem {
         if (direction == null){
             return;
         }
+        String msg = "Opening doors for elevator " + elevNum + ".";
+        logger.log(Logger.LEVEL.INFO, logId, msg);
+        try {
+            Thread.sleep(doorTime);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         try {
             // Log
             // Only print if not null, or it's just too much.
-            Integer passengerInt = passengerCountMap.get(new DestinationEvent(currentFloor, direction, null));
-            if (passengerInt > 0) {
-                String msg = "Unloading Passenger: " + passengerInt;
+            int sum = 0;
+            Integer passengerInt = 0;
+            while (passengerInt != null) {
+                sum += passengerInt;
+                passengerInt = passengerCountMap.remove(new DestinationEvent(currentFloor, direction, null));
+            }
+            if (sum > 0) {
+                msg = "Unloading Passenger: " + sum;
                 logger.log(Logger.LEVEL.INFO, logId, msg);
             }
             // GUI
             logger.updateGui(elevNum, this.currentFloor, 5);
             // each passenger takes loadTime to leave the elevator.
-            Thread.sleep(loadTime * passengerCountMap.remove(new DestinationEvent(currentFloor, direction, null)));
+            Thread.sleep(loadTime * sum);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (NullPointerException e) {
@@ -162,7 +178,7 @@ public class Elevator extends Context implements Subsystem {
                     logger.updateGui(elevNum, this.currentFloor, 1);
                     msg = "Passenger " + e + " is holding up the elevator";
                     logger.log(Logger.LEVEL.INFO, logId, msg);
-                    Thread.sleep(2000);
+                    Thread.sleep(transientTime);
                     msg = "Passenger " + e + " has boarded";
                     logger.log(Logger.LEVEL.INFO, logId, msg);
                 } catch (InterruptedException ex) {
@@ -176,6 +192,13 @@ public class Elevator extends Context implements Subsystem {
         // Log
         msg = "Passengers in the elevator: " + passengerCountMap.toString();
         logger.log(Logger.LEVEL.DEBUG, logId, msg);
+        msg = "Closing doors for elevator " + elevNum + ".";
+        logger.log(Logger.LEVEL.INFO, logId, msg);
+        try {
+            Thread.sleep(doorTime);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
     }
     /**
