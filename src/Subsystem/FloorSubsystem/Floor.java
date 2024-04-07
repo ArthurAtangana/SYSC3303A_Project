@@ -241,12 +241,13 @@ public class Floor implements Runnable, Subsystem {
             passengerIndex++;
         }
 
-        transmitterToScheduler.send(new PassengerLoadEvent(sendPassengersCommand.elevNum(), passengersToLoad));
-        passengers.removeAll(passengersToLoad);
-
+        transmitterToScheduler.send(new PassengerLoadEvent(sendPassengersCommand.elevNum(), floorNum, passengersToLoad));
+        for (DestinationEvent passenger : passengersToLoad) {
+            passengers.remove(passenger); // Remove one passenger instance matching a passenger to load
+        }
         // Check if we need to renotify the scheduler that passengers are still waiting at this location
         if (passengers.stream().anyMatch((DestinationEvent d) -> d.direction() == currentDirection)) {
-            transmitterToScheduler.send(new FloorRequestEvent(
+            transmitterToScheduler.send(new SetFloorRequestEvent(
                     new DestinationEvent(floorNum, currentDirection, null),
                     0)); // Time doesn't matter: it's not being dispatched by dispatcher
         }

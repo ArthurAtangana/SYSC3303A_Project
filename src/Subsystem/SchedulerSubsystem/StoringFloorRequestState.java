@@ -1,7 +1,7 @@
 package Subsystem.SchedulerSubsystem;
 
 import Messaging.Messages.Events.ElevatorStateEvent;
-import Messaging.Messages.Events.FloorRequestEvent;
+import Messaging.Messages.Events.SetFloorRequestEvent;
 import StatePatternLib.Context;
 import StatePatternLib.State;
 import Subsystem.Logging.Logger;
@@ -21,16 +21,16 @@ import Subsystem.Logging.Logger;
 public class StoringFloorRequestState extends State {
 
     /* Instance Variables */
-    
-    // The FloorRequestEvent to process
-    private final FloorRequestEvent event;
+
+    // The SetFloorRequestEvent to process
+    private final SetFloorRequestEvent event;
 
     /**
      * Parametric constructor.
      *
      * @param context Context of state machine that this is a state of.
      */
-    public StoringFloorRequestState(Context context, FloorRequestEvent event) {
+    public StoringFloorRequestState(Context context, SetFloorRequestEvent event) {
         super(context);
         // Initialize the ElevatorStateEvent that needs processing in this state.
         this.event = event;
@@ -48,13 +48,13 @@ public class StoringFloorRequestState extends State {
     /**
      * Do activities for this state.
      *
-     * In this state, we just store the FloorRequestEvent, and select next state
+     * In this state, we just store the SetFloorRequestEvent, and select next state
      * based on if we have any idle Elevators.
      */
     @Override
     public void doActivity() {
 
-        // Store the FloorRequestEvent
+        // Store the SetFloorRequestEvent
         boolean isNewReq = ((Scheduler) context).storeFloorRequest(event);
 
         // Case: There are idle Elevators.

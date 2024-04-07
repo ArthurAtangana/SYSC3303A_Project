@@ -25,7 +25,7 @@ public class BindingReceiverState extends State {
     /* Instance Variables */
     
     // The ReceiverBindingEvent to process
-    private ReceiverBindingEvent event;
+    private final ReceiverBindingEvent event;
 
     /**
      * Parametric constructor.
