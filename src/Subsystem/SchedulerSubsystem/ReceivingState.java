@@ -63,7 +63,7 @@ public class ReceivingState extends State {
         // Case: Event is ElevatorStateEvent
         // Description: Notification from Elevator conveying its state
         if (event instanceof ElevatorStateEvent esEvent) {
-            msg = "Received ElevatorStateEvent.";
+            msg = "Received ElevatorStateEvent: " + esEvent;
             ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
             // Next State: ProcessingElevatorEventState
             // Required Constructor Arguments: context

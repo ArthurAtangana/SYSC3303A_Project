@@ -30,3 +30,7 @@
 
 # Floor 6: elevator should stop and unload 1 person, and pickup 1 passenger
 09:05:32.997 6 Up 7 0
+
+
+
+# Look at floor requests coming in, race condition in scheduler

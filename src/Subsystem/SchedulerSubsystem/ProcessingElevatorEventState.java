@@ -3,6 +3,7 @@ package Subsystem.SchedulerSubsystem;
 import Messaging.Messages.Commands.MoveElevatorCommand;
 import Messaging.Messages.Commands.SendPassengersCommand;
 import Messaging.Messages.Commands.UnloadPassengersCommand;
+import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
 import Messaging.Messages.Events.ElevatorStateEvent;
 import StatePatternLib.Context;
@@ -88,11 +89,10 @@ public class ProcessingElevatorEventState extends State {
             int availableSpots = ((Scheduler) context).getCurCapacity(event);
             assert (availableSpots > 0);
             // Remove the serviced DestinationRequest request
-            ((Scheduler) context).removeDestinationEvent(new DestinationEvent(event.currentFloor(), ((Scheduler) context).getElevatorDirection(event), null));
-            // FIXME: someone sent a new destination event
-            //  This person gets loaded -> causes race condition problem
-            //  LABELED NOT CRITICAL ISSUE
-            ((Scheduler) context).transmitToFloor(new SendPassengersCommand(event.currentFloor(), event.elevatorNum(), ((Scheduler) context).getElevatorDirection(event), availableSpots));
+            Direction elevatorDirection = ((Scheduler) context).getElevatorDirection(event);
+            ((Scheduler) context).removeDestinationEvent(new DestinationEvent(event.currentFloor(), elevatorDirection, null));
+            ((Scheduler) context).transmitToFloor(new SendPassengersCommand(event.currentFloor(), event.elevatorNum(), elevatorDirection, availableSpots));
+
 
             // Next State: ReceivingState
             // Required Constructor Arguments: context
@@ -102,8 +102,12 @@ public class ProcessingElevatorEventState extends State {
         // Case: Elevator indicates it is Moving.
         // Description: Keep calm, carry on. It'll be okay. You'll get there buddy.
         else {
+            String msg = "Elevator " + event.elevatorNum() + " keeps moving.";
+            ((Scheduler) context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler) context).logId, msg);
 
             // Request Elevator to keep moving
+            msg = "SENDING MOVE COMMAND";
+            ((Scheduler) context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler) context).logId, msg);
             ((Scheduler)context).transmitToElevator(new MoveElevatorCommand(event.elevatorNum(), ((Scheduler)context).getElevatorDirection(event)));
 
             // Start timer ... assume hard fault occurred in transit if this timer goes off.
