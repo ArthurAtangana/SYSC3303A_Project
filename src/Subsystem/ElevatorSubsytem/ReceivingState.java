@@ -28,9 +28,6 @@ public class ReceivingState extends State {
 
         ((Elevator) context).sendStateUpdate();
         event = ((Elevator) context).receive();
-
-        msg = "Received event: " + event;
-        ((Elevator)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Elevator)context).logId, msg);
     }
 
     @Override

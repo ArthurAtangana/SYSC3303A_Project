@@ -110,6 +110,8 @@ public class Elevator extends Context implements Subsystem {
     void unload(){
         Direction direction = ElevatorUtilities.getPassengersDirection(passengerCountMap.keySet());
         if (direction == null){
+            String msg = "No passengers in elevator.";
+            logger.log(Logger.LEVEL.DEBUG, logId, msg);
             return;
         }
         try {
@@ -125,7 +127,8 @@ public class Elevator extends Context implements Subsystem {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (NullPointerException e) {
-            // no passengers to unload, do nothing.
+            String msg = "No passengers unloaded.";
+            logger.log(Logger.LEVEL.DEBUG, logId, msg);
         }
     }
     /**
