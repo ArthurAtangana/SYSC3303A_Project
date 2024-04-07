@@ -242,7 +242,9 @@ public class Floor implements Runnable, Subsystem {
         }
 
         transmitterToScheduler.send(new PassengerLoadEvent(sendPassengersCommand.elevNum(), passengersToLoad));
-        passengers.removeAll(passengersToLoad);
+        for (DestinationEvent passenger : passengersToLoad) {
+            passengers.remove(passenger); // Remove one passenger instance matching a passenger to load
+        }
 
         // Check if we need to renotify the scheduler that passengers are still waiting at this location
         if (passengers.stream().anyMatch((DestinationEvent d) -> d.direction() == currentDirection)) {
