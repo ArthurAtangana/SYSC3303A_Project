@@ -3,6 +3,7 @@ package Subsystem.ElevatorSubsytem;
 import Messaging.Messages.Commands.MovePassengersCommand;
 import StatePatternLib.Context;
 import StatePatternLib.State;
+import Subsystem.Logging.Logger;
 
 /**
  * Class representing the state for an elevator loading / unloading passengers.
@@ -21,7 +22,7 @@ public class LoadingState extends State {
     @Override
     public void entry() {
         String msg = "LoadingState:Entry";
-        ((Elevator)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Elevator)context).logId, msg);
+        ((Elevator)context).logger.log(Logger.LEVEL.DEBUG, ((Elevator)context).logId, msg);
     }
     @Override
     public void doActivity() {

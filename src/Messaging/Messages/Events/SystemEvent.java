@@ -10,4 +10,4 @@ import Messaging.Messages.SystemMessage;
  * @author Alexandre Marques
  * @version Iteration-2
  */
-public interface SystemEvent extends SystemMessage { }
+public interface SystemEvent extends SystemMessage {}

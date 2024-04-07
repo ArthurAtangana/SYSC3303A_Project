@@ -5,6 +5,7 @@ import Messaging.Messages.Commands.UnloadPassengersCommand;
 import Messaging.Messages.SystemMessage;
 import StatePatternLib.Context;
 import StatePatternLib.State;
+import Subsystem.Logging.Logger;
 import com.sun.jdi.InvalidTypeException;
 
 /**
@@ -23,13 +24,13 @@ public class ReceivingState extends State {
     @Override
     public void entry() {
         String msg = "ReceivingState:Entry";
-        ((Elevator)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Elevator)context).logId, msg);
+        ((Elevator)context).logger.log(Logger.LEVEL.DEBUG, ((Elevator)context).logId, msg);
 
         ((Elevator) context).sendStateUpdate();
         event = ((Elevator) context).receive();
 
         msg = "Received event: " + event;
-        ((Elevator)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Elevator)context).logId, msg);
+        ((Elevator)context).logger.log(Logger.LEVEL.DEBUG, ((Elevator)context).logId, msg);
     }
 
     @Override

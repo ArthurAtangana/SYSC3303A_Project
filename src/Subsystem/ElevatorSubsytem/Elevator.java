@@ -1,7 +1,6 @@
 package Subsystem.ElevatorSubsytem;
 
 import Configuration.Config;
-import Logging.Logger;
 import Messaging.Messages.Commands.MovePassengersCommand;
 import Messaging.Messages.Direction;
 import Messaging.Messages.Events.DestinationEvent;
@@ -12,6 +11,7 @@ import Messaging.Messages.SystemMessage;
 import Messaging.Transceivers.Receivers.Receiver;
 import Messaging.Transceivers.Transmitters.Transmitter;
 import StatePatternLib.Context;
+import Subsystem.Logging.Logger;
 import Subsystem.Subsystem;
 
 import java.util.HashMap;
@@ -36,7 +36,7 @@ public class Elevator extends Context implements Subsystem {
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
     private final Transmitter<?> transmitterToScheduler;
     private final Receiver receiver;
-    final Logging.Logger logger;
+    final Logger logger;
     String logId;
     private final int topFloor;
 
@@ -55,7 +55,7 @@ public class Elevator extends Context implements Subsystem {
 
         // Logging
         logId = "ELEVATOR " + this.elevNum;
-        logger = new Logging.Logger(config.getVerbosity());
+        logger = new Logger(config.getVerbosity());
 
         // Notify scheduler of new subsystem creation -> could fit in subsystem super class
         this.transmitterToScheduler.send(new ReceiverBindingEvent(receiver, this.getClass()));

@@ -81,5 +81,4 @@ public class Config {
         System.out.println("-- inputFilename: " + getInputFilename());
         System.out.println();
     }
-
 }

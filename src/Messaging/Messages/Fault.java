@@ -10,7 +10,6 @@ public enum Fault {
     TRANSIENT,
     HARD;
 
-
     public static Fault fromInt(int faultInt){
         Fault res;
         switch (faultInt){
