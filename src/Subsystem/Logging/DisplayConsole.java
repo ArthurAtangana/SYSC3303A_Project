@@ -299,16 +299,4 @@ public class DisplayConsole {
         }
 
     }
-
-    /**
-     * Main method for this class.
-     *
-     * @author M. Desantis
-     * @version Iteration-5
-     */
-    public static void main(String[] args) {
-        DisplayConsole displayConsole = new DisplayConsole();
-        displayConsole.listen();
-    }
-
 }

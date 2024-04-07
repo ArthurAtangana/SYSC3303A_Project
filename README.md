@@ -38,12 +38,11 @@ Note: Compiled using JDK - 21 Oracle OpenJDK version 21.0.1
    1. Right click lib folder in root directory
    2. Select add as library
    3. Leave settings as default, select ok
-3. Initiate system-wide monitoring display console:
-   1. Run process for `src/Subsystem/Logging/DisplayConsole`
 4. Run the files in the "Mains" package in this order:
-   1. MainSchedulerUDP
-   2. MainElevatorUDP
-   3. MainFloorUDP
+   1. MainDisplayConsole
+   2. MainSchedulerUDP
+   3. MainElevatorUDP
+   4. MainFloorUDP
 
 For test execution, see [test section](#test).
 
