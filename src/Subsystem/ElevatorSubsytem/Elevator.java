@@ -31,6 +31,8 @@ public class Elevator extends Context implements Subsystem {
     private int currentFloor;
     private final long travelTime;
     private final long loadTime;
+    private final long transientTime;
+    private final long doorTime;
     private final HashMap<DestinationEvent, Integer> passengerCountMap;
     private final Transmitter<?> transmitterToScheduler;
     private final Receiver receiver;
@@ -42,6 +44,8 @@ public class Elevator extends Context implements Subsystem {
 
         this.travelTime = config.getTravelTime();
         this.loadTime = config.getLoadTime();
+        this.transientTime = config.getTransientTime();
+        this.doorTime = config.getDoorTime();
 
         this.currentFloor = 1;
         this.elevNum = elevNum;
@@ -162,7 +166,7 @@ public class Elevator extends Context implements Subsystem {
                     logger.updateGui(elevNum, this.currentFloor, 1);
                     msg = "Passenger " + e + " is holding up the elevator";
                     logger.log(Logger.LEVEL.INFO, logId, msg);
-                    Thread.sleep(2000);
+                    Thread.sleep(transientTime);
                     msg = "Passenger " + e + " has boarded";
                     logger.log(Logger.LEVEL.INFO, logId, msg);
                 } catch (InterruptedException ex) {
@@ -176,6 +180,13 @@ public class Elevator extends Context implements Subsystem {
         // Log
         msg = "Passengers in the elevator: " + passengerCountMap.toString();
         logger.log(Logger.LEVEL.DEBUG, logId, msg);
+        msg = "Closing doors for elevator " + elevNum + ".";
+        logger.log(Logger.LEVEL.INFO, logId, msg);
+        try {
+            Thread.sleep(doorTime);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
     }
     /**

@@ -233,7 +233,7 @@ public class Floor implements Runnable, Subsystem {
                 passengersToLoad.add(passenger);
                 // Increment our count for prints
                 // Log: Indicate a discrete passenger has entered elevator.
-                msg = "Passenger is entering Elevator " + sendPassengersCommand.elevNum() + " for service " + passenger.direction() + " to Floor " + passenger.destinationFloor() + ".";
+                msg = "Passenger is queueing to enter Elevator " + sendPassengersCommand.elevNum() + " to go " + passenger.direction() + " to Floor " + passenger.destinationFloor() + ".";
                 logger.log(Logger.LEVEL.INFO, logId, msg);
                 // Remove 1 capacity because passenger added elevator
                 curCapacity--;
