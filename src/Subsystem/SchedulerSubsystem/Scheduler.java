@@ -308,6 +308,15 @@ public class Scheduler extends Context implements Subsystem {
         }
     }
 
+    /**
+     * Returns the number of available spots left for passengers on the current elevator.
+     * @param event ElevatorState event.
+     * @return current capacity of the elevator.
+     */
+    int getCurCapacity(ElevatorStateEvent event) {
+        return MAX_CAPACITY - event.passengerCountMap().values().stream().mapToInt(Integer::intValue).sum();
+    }
+
     /** 
      * Start the State Machine, with initial state of ReceivingState.
      * Initial state is set in Constructor.
