@@ -7,4 +7,5 @@
   "doorTime": 3000,
   "elevatorCapacity": 5,
   "transientTime": 20000,
+  "inputFilename": "test/resources/scenario-6-combined-fault-test.txt"
 }
