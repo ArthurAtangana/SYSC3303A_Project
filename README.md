@@ -1,5 +1,5 @@
 # README
-* Last Edited: 2024/04/02
+* Last Edited: 2024/04/07
 
 ## Table of Contents
 
@@ -91,7 +91,8 @@ See test README for test file structure.
 | Loader                  | SchedulerSubsystem     | Loads appropriate passengers into an elevator.                                                |
 | Scheduler               | SchedulerSubsystem     | Models a scheduler in the simulation.                                                         |
 | Logger                  | Logging                | Provides logging services to subsystems with configurable verbosity.                          |
-| DisplayConsole          | Logging                | Centralizes subsystem logging to single console for system-wide monitoring.                   |
+| DisplayConsole          | Logging                | Centralizes subsystem logging to single console, and provides GUI for system-wide monitoring. |
+| MainDisplayConsole      | Mains                  | Run console-based TUI and GUI for system-wide monitoring.                                     |
 | MainCombinedDMA         | Mains                  | Run all subsystems in a single process with shared memory communication.                      |
 | MainSchedulerUDP        | Mains                  | Run Scheduler subsystem in a dedicated process with networked communication via UDP.          |
 | MainElevatorUDP         | Mains                  | Run Elevator subsystem in a dedicated process with networked communication via UDP.           |
@@ -228,11 +229,19 @@ the system tracks total gophers handled by tracking total hard faults handled.
 
 |          Task                           | Assignee        |
 |-----------------------------------------|-----------------|
-| Display Console                         |Michael De Santis|
-|                                         |Braeden Kloke    |
-|                                         |Victoria Malouf  |
-|                                         |Alexandre Marques|
-|                                         |Arthur Atangana  |
+| Display Console TUI/GUI                 |Michael De Santis|
+| Scenario Tests                          |Michael De Santis|
+| Scheduler Statistics                    |Michael De Santis|
+| Scheduler Statistics                    |Braeden Kloke    |
+| Scheduler Terminal State                |Braeden Kloke    |
+| Scenario Tests                          |Braeden Kloke    |
+| Diagrams                                |Victoria Malouf  |
+| Passenger Capacity Handling             |Victoria Malouf  |
+| Passenger Capacity Handling             |Alexandre Marques|
+| Scenario Tests                          |Alexandre Marques|
+| Passenger Capacity Handling             |Arthur Atangana  |
+| Scenario Tests                          |Arthur Atangana  |
+| Display Console GUI                     |Arthur Atangana  |
 
 
 ## Test
