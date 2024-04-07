@@ -23,7 +23,8 @@ public class MainElevatorUDP {
         TransceiverFactory udpFactory = new TransceiverUDPFactory();
 
         // 3. Create and start elevator threads
-        for (int i = 0; i < config.getNumElevators(); ++i) {
+        //for (int i = 0; i < config.getNumElevators(); ++i) {
+        for (int i = 1; i <= config.getNumElevators(); ++i) {
             new Thread(new Elevator(config, i, udpFactory.createClientReceiver(i),
                     udpFactory.createClientTransmitter())).start();
         }

@@ -106,6 +106,8 @@ public class Elevator extends Context implements Subsystem {
         // Log
         msg = "Reached floor " + this.currentFloor + ".";
         logger.log(Logger.LEVEL.INFO, logId, msg);
+        // GUI
+        logger.updateGui(elevNum, this.currentFloor, 0);
     }
     void unload(){
         Direction direction = ElevatorUtilities.getPassengersDirection(passengerCountMap.keySet());
@@ -120,6 +122,8 @@ public class Elevator extends Context implements Subsystem {
                 String msg = "Unloading Passenger: " + passengerInt;
                 logger.log(Logger.LEVEL.INFO, logId, msg);
             }
+            // GUI
+            logger.updateGui(elevNum, this.currentFloor, 5);
             // each passenger takes loadTime to leave the elevator.
             Thread.sleep(loadTime * passengerCountMap.remove(new DestinationEvent(currentFloor, direction, null)));
         } catch (InterruptedException e) {
@@ -140,6 +144,8 @@ public class Elevator extends Context implements Subsystem {
             // Log
             msg = "Loading Passengers: " + command.newPassengers();
             logger.log(Logger.LEVEL.INFO, logId, msg);
+            // GUI
+            logger.updateGui(elevNum, this.currentFloor, 4);
         }
         // load passengers into the elevator, taking LOAD_TIME per passengers waiting on the floor.
         try {
@@ -152,9 +158,11 @@ public class Elevator extends Context implements Subsystem {
             // if a passenger has a fault, take an extra second to load.
             if (e.faultType() == Fault.TRANSIENT){
                 try {
+                    // GUI
+                    logger.updateGui(elevNum, this.currentFloor, 1);
                     msg = "Passenger " + e + " is holding up the elevator";
                     logger.log(Logger.LEVEL.INFO, logId, msg);
-                    Thread.sleep(1000);
+                    Thread.sleep(2000);
                     msg = "Passenger " + e + " has boarded";
                     logger.log(Logger.LEVEL.INFO, logId, msg);
                 } catch (InterruptedException ex) {

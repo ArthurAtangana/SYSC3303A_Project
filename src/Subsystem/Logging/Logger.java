@@ -2,10 +2,12 @@ package Logging;
 
 import java.io.IOException;
 import java.net.*;
+import Subsystem.Logging.DisplayConsole;
 
 /**
  * Logger class which handles subsystem logging via console print per process, 
- * and also sends log messages to a centralized DisplayConsole via UDP.
+ * and also sends log messages to a centralized DisplayConsole via UDP. Also
+ * updates our GUI.
  *
  * @author M. Desantis
  * @version Iteration-5
@@ -33,6 +35,9 @@ public class Logger {
      *   0: indicates no messages should be logged (suppress output)
      *   1: indicates only INFO level messages should be logged
      *   2: indicates INFO and DEBUG messages should be logged
+     *
+     * @author M. Desantis
+     * @version Iteration-5
      */
     public Logger(int verbosity) {
         this.verbosity = verbosity;
@@ -48,6 +53,42 @@ public class Logger {
     }
 
     /* Methods */
+
+    /**
+     * Message for GUI update. 
+     *
+     * @param elevator The elevator number.
+     * @param floor The floor number.
+     * @param type types: 1  for transient, 2 for hard, 3 for idle, 4 for loading, 5 for unloading.
+     *
+     * @author M. Desantis
+     * @version Iteration-5
+     */
+    public void updateGui(int elevator, int floor, int type) {
+
+        // Packet for DisplayConsole
+        byte[] data;
+        //String msg = "" + elevator + floor;
+        String msg = String.format("%02d", elevator) + String.format("%02d", floor) + type;
+        data = msg.getBytes();
+        DatagramPacket txPacket;
+
+        // Create packet
+        try {
+            txPacket = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), DisplayConsole.RX_PORT);
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Send to DisplayConsole via UDP
+        try {
+            txSocket.send(txPacket);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+    }
 
     /**
      * Log a message by printing to console, specifying the log level, the 
@@ -114,6 +155,9 @@ public class Logger {
 
     /**
      * Main method for this class. Just a quick test.
+     *
+     * @author M. Desantis
+     * @version Iteration-5
      */
     public static void main(String[] args) {
         // Quick test
