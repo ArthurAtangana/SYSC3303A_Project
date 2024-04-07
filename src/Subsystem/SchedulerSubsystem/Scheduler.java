@@ -1,7 +1,7 @@
 package Subsystem.SchedulerSubsystem;
 
 import Configuration.Config;
-import Logging.Logger;
+import Subsystem.Logging.Logger;
 import Messaging.Messages.Commands.MoveElevatorCommand;
 import Messaging.Messages.Commands.SystemCommand;
 import Messaging.Messages.Direction;
@@ -315,7 +315,7 @@ public class Scheduler extends Context implements Subsystem {
             @Override
             public void run() {
                 String msg = "Hard fault detected (possibly gophers) for elevator " + elevNum + ". Taking elevator out of service.";
-                logger.log(Logging.Logger.LEVEL.INFO, logId, msg);
+                logger.log(Logger.LEVEL.INFO, logId, msg);
                 totalElevatorsInService--; // Take elevator out of service
                 elevatorTimers.remove(elevNum);
                 totalGophersHandled++;
@@ -329,7 +329,7 @@ public class Scheduler extends Context implements Subsystem {
         elevatorTimers.put(elevNum, timer);
 
         String msg = "Timer started for elevator " + elevNum + ".";
-        logger.log(Logging.Logger.LEVEL.DEBUG, logId, msg);
+        logger.log(Logger.LEVEL.DEBUG, logId, msg);
     }
 
     /**
@@ -343,7 +343,7 @@ public class Scheduler extends Context implements Subsystem {
             timer.cancel();
             elevatorTimers.remove(elevNum);
             String msg = "Timer killed for elevator " + elevNum + ".";
-            logger.log(Logging.Logger.LEVEL.DEBUG, logId, msg);
+            logger.log(Logger.LEVEL.DEBUG, logId, msg);
         }
     }
 
@@ -434,5 +434,4 @@ public class Scheduler extends Context implements Subsystem {
             currentState.runState();
         }
     }
-
 }

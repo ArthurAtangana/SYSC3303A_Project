@@ -1,7 +1,6 @@
 package Subsystem.FloorSubsystem;
 
 import Configuration.Config;
-import Logging.Logger;
 import Messaging.Messages.Commands.PassengerArrivedCommand;
 import Messaging.Messages.Commands.SendPassengersCommand;
 import Messaging.Messages.Direction;
@@ -12,6 +11,7 @@ import Messaging.Transceivers.Receivers.ReceiverComposite;
 import Messaging.Transceivers.Receivers.ReceiverDMA;
 import Messaging.Transceivers.Transmitters.Transmitter;
 import Messaging.Transceivers.Transmitters.TransmitterDMA;
+import Subsystem.Logging.Logger;
 import Subsystem.Subsystem;
 import com.sun.jdi.InvalidTypeException;
 
@@ -53,7 +53,7 @@ public class Floor implements Runnable, Subsystem {
 
         // Logging
         logId = "FLOOR " + this.floorNum;
-        logger = new Logging.Logger(config.getVerbosity());
+        logger = new Logger(config.getVerbosity());
 
         // Start elevator location at 0 until an update is received
         floorLamp = 0;

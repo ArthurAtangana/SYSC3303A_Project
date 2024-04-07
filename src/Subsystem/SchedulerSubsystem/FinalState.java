@@ -1,6 +1,5 @@
 package Subsystem.SchedulerSubsystem;
 
-import Logging.Logger;
 import StatePatternLib.Context;
 import StatePatternLib.State;
 

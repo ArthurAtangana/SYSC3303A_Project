@@ -56,5 +56,4 @@ public class CellButton extends JButton {
         this.setBackground(Color.BLACK);
         this.setOpaque(true);
     }
-
 }

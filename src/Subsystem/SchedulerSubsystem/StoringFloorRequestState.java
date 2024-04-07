@@ -4,6 +4,7 @@ import Messaging.Messages.Events.ElevatorStateEvent;
 import Messaging.Messages.Events.FloorRequestEvent;
 import StatePatternLib.Context;
 import StatePatternLib.State;
+import Subsystem.Logging.Logger;
 
 /**
  * Scheduler FSM State: Storing Floor Request State.
@@ -41,7 +42,7 @@ public class StoringFloorRequestState extends State {
     @Override
     public void entry() {
         String msg = "StoringFloorRequestState:Entry";
-        ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
+        ((Scheduler)context).logger.log(Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
     }
 
     /**
@@ -71,14 +72,5 @@ public class StoringFloorRequestState extends State {
             // Required Constructor Arguments: context
             context.setNextState(new ReceivingState(context)); 
         }
-
     }
-
-    /**
-     * Exit activities for this state.
-     */
-    @Override
-    public void exit() {
-    }
-
 }

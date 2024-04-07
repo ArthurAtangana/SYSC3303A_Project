@@ -2,7 +2,6 @@ package Subsystem.Logging;
 
 import Configuration.Config;
 import Configuration.Configurator;
-import Subsystem.Logging.CellButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -314,6 +313,5 @@ public class DisplayConsole {
                 System.out.println(msg);
             }
         }
-
     }
 }

@@ -10,6 +10,7 @@ import Messaging.Messages.Commands.SendPassengersCommand;
 import Messaging.Messages.Commands.MovePassengersCommand;
 import StatePatternLib.Context;
 import StatePatternLib.State;
+import Subsystem.Logging.Logger;
 import com.sun.jdi.InvalidTypeException;
 
 /**
@@ -48,7 +49,7 @@ public class LoadingPassengerState extends State {
     @Override
     public void entry() {
         String msg = "LoadingPassengerState:Entry";
-        ((Scheduler)context).logger.log(Logging.Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
+        ((Scheduler)context).logger.log(Logger.LEVEL.DEBUG, ((Scheduler)context).logId, msg);
     }
 
     /**
@@ -73,5 +74,4 @@ public class LoadingPassengerState extends State {
         // Required Constructor Arguments: context
         context.setNextState(new ReceivingState(context));
     }
-
 }
