@@ -44,6 +44,7 @@ public class Scheduler extends Context implements Subsystem {
     final String logId = "SCHEDULER";
     final long ELEVATOR_TIMEOUT_DELAY; // milliseconds
     final double ELEVATOR_TIMEOUT_DELAY_FACTOR = 1.5;
+    final int MAX_CAPACITY;
 
     /* Simulation Statistics */
 
@@ -73,6 +74,7 @@ public class Scheduler extends Context implements Subsystem {
         simulationEnding = false;
         // Logging
         logger = new Logger(config.getVerbosity());
+        MAX_CAPACITY = config.getElevatorCapacity();
 
         // Initialize first state for this Subsystem's State Machine
         setNextState(new ReceivingState(this));
@@ -107,7 +109,7 @@ public class Scheduler extends Context implements Subsystem {
         // Store event locally to use in scheduling
         if (!floorRequestsToTime.containsKey(event.destinationEvent()))
             // Only store request if it does not already exist
-            floorRequestsToTime.put(event.destinationEvent(), event.time());
+            floorRequestsToTime.put(event.destinationEvent(), System.currentTimeMillis());
             // NB: StoringFloorRequestState will now handle idle Elevator removal
     }
 
@@ -216,15 +218,21 @@ public class Scheduler extends Context implements Subsystem {
 
         // Create new object for union set to avoid funny business of destination events
         // being added to the scheduler's floor requests!
-        Set<DestinationEvent> union = new HashSet<>();
-        union.addAll(floorRequestsToTime.keySet());
-        union.addAll(e.passengerCountMap().keySet());
+        DestinationEvent currentElevDest = (new DestinationEvent(e.currentFloor(), getElevatorDirection(e), null));
 
+        // Check if unloading:
+        if (isUnloading(e)) {
+            return true;
+        } else if (getCurCapacity(e) == 0) { // If no more capacity, skip load
+            return false;
+        }
+
+        Set<DestinationEvent> union = new HashSet<>(floorRequestsToTime.keySet());
         if (isMovingOppositeToFutureDirection(e)) {
             return false;
         }
         // Fault: Assume null -> matches against any fault which is important for parity with legacy behavior.
-        return union.contains(new DestinationEvent(e.currentFloor(), getElevatorDirection(e), null));
+        return union.contains(currentElevDest);
     }
 
     /**
@@ -271,6 +279,7 @@ public class Scheduler extends Context implements Subsystem {
         if (direction != null){
             return direction;
         }
+        // FIXME: We got this with scenario 12, multi elevator
         if (floorRequestsToTime.isEmpty()){
             throw new RuntimeException("No passenger on elevator and no floor requests");
         }
@@ -333,6 +342,17 @@ public class Scheduler extends Context implements Subsystem {
         }
     }
 
+    private boolean isUnloading(ElevatorStateEvent e) {
+        return e.passengerCountMap().keySet().stream().anyMatch((DestinationEvent d) -> d.destinationFloor() == e.currentFloor());
+    }
+
+    int getCurCapacity(ElevatorStateEvent event) {
+        // TODO: make unit test (or confirm some other way, not tested yet)
+        // Return int stream to sum on number of passengers, reduce from capacity to find empty spots
+        return MAX_CAPACITY - event.passengerCountMap().values().stream().mapToInt(Integer::intValue).sum();
+    }
+
+    /**
     /**
      * Sets the flag to start ending simulation.
      */

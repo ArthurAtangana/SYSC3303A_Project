@@ -15,6 +15,7 @@ public class Config {
     private final int numElevators;
     private final long travelTime;
     private final long loadTime;
+    private final int elevatorCapacity;
     private final String inputFilename;
 
     /* Constructors */
@@ -28,6 +29,7 @@ public class Config {
         this.numElevators = 0;
         this.travelTime = 0;
         this.loadTime = 0;
+        this.elevatorCapacity = 0;
         this.inputFilename = "";
     }
 
@@ -52,6 +54,8 @@ public class Config {
     public long getLoadTime() {
         return loadTime;
     }
+
+    public int getElevatorCapacity() {return elevatorCapacity;}
 
     public String getInputFilename() {
         return inputFilename;
