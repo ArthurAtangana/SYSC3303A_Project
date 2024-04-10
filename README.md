@@ -296,7 +296,8 @@ To add the included libraries in the project's `lib/` directory for build, use t
 All JAR files in the `lib/` directory should now be included in the project for import and build.
 
 ## Resources
-Resources for this project, such as system configuration and input files, are included in the `res/` directory. 
+Resources for this project, such as system configuration and input files, are included in the `res/` directory. \
+The demo video can be accessed through the following [youtube link](https://www.youtube.com/watch?v=pLXReiRYMrM)
 
 ### System Input
 System input files are text files used to simulate input into the system, and contain newline separated input strings adherent to the form specified in the project requirements.
