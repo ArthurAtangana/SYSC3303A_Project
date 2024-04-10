@@ -228,7 +228,7 @@ public class Scheduler extends Context implements Subsystem {
         // Check if unloading:
         if (isUnloading(e)) {
             return true;
-        } else if (getCurCapacity(e) == 0) { // If no more capacity, skip load
+        } else if (getCurCapacity(e, MAX_CAPACITY) == 0) { // If no more capacity, skip load
             return false;
         }
 
@@ -284,7 +284,6 @@ public class Scheduler extends Context implements Subsystem {
         if (direction != null){
             return direction;
         }
-        // FIXME: We got this with scenario 12, multi elevator
         if (floorRequestsToTime.isEmpty()){
             throw new RuntimeException("No passenger on elevator and no floor requests");
         }
@@ -351,10 +350,20 @@ public class Scheduler extends Context implements Subsystem {
         return e.passengerCountMap().keySet().stream().anyMatch((DestinationEvent d) -> d.destinationFloor() == e.currentFloor());
     }
 
-    int getCurCapacity(ElevatorStateEvent event) {
-        // TODO: make unit test (or confirm some other way, not tested yet)
+    /**
+     * Returns current capacity of the elevator.
+     * @param event ElevatorStateEvent used to get current number of passengers.
+     * @param maximumCapacity THe maximum capacity of the elevator.
+     * @return The number of available spots left on the elevator
+     * @throws RuntimeException if current capacity is greater than the maximum capacity.
+     */
+    public static int getCurCapacity(ElevatorStateEvent event, int maximumCapacity) {
         // Return int stream to sum on number of passengers, reduce from capacity to find empty spots
-        return MAX_CAPACITY - event.passengerCountMap().values().stream().mapToInt(Integer::intValue).sum();
+        int currentPassengers = event.passengerCountMap().values().stream().mapToInt(Integer::intValue).sum();
+        if (currentPassengers > maximumCapacity) {
+            throw new RuntimeException("Elevator capacity exceeded!!");
+        }
+        return maximumCapacity - currentPassengers;
     }
 
     /**

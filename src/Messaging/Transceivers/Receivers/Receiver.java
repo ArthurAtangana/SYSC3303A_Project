@@ -7,13 +7,10 @@ import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
- * TODO: docs,
- *  - note the receive function may be reworked/renamed once UDP is fully implemented
- * TODO: Explain in docs why its abstract: Has no way to receive as is.
- *  - Strategy pattern could make sense? Not worth imo
+ * Receiver abstract class, defines methods required to enqueue/dequeue system messages
+ * and determine if a message is intended for this receiver instance.
  */
 public abstract class Receiver implements Serializable {
-    // Message buffer TODO: replace w/ priority queue class (prioritizes based on message class)
     private final LinkedList<SystemMessage> msgBuf;
     private final int key;
 

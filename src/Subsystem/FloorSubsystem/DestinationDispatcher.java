@@ -23,21 +23,22 @@ public class DestinationDispatcher implements Runnable {
     private final Transmitter<? extends Receiver> txToFloor;
 
     /**
-     * The default DestinationDispatcher construtor.
-     * TODO: docs
+     * The default DestinationDispatcher constructor.
      *
      * @param events The list of input events to dispatch, can be unsorted.
+     * @param txScheduler The transmitter to the scheduler.
+     * @param txToFloor The transmitter to the floor.
      */
     public DestinationDispatcher(ArrayList<FloorInputEvent> events,
                                  Transmitter<? extends Receiver> txScheduler,
                                  Transmitter<? extends Receiver> txToFloor) {
         this.txToScheduler = txScheduler;
-         this.eventQueue = events;
+        this.eventQueue = events;
         this.txToFloor = txToFloor;
         // Sort based on time int (low to high)
-         this.eventQueue.sort(Comparator.comparingLong(FloorInputEvent::time));
-         // Set baseline time
-         lastEventTime = eventQueue.get(0).time();
+        this.eventQueue.sort(Comparator.comparingLong(FloorInputEvent::time));
+        // Set baseline time
+        lastEventTime = eventQueue.get(0).time();
     }
 
     /**

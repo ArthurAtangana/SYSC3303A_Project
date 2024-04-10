@@ -1,5 +1,7 @@
 package Subsystem;
 
-// FIXME: Temporary interface, to be replaced by abstract parent classes
+/**
+ * Interface for the subsystems in the elevator simulation (FloorSubsystem, ElevatorSubsystem, SchedulerSubsystem)
+ */
 public interface Subsystem {
 }

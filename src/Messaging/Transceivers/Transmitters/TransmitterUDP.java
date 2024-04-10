@@ -22,7 +22,6 @@ public class TransmitterUDP extends Transmitter<ReceiverUDPProxy> {
     /**
      * Initializes a UDP DatagramSocket that will send SystemMessages to its receivers.
      */
-    // TODO: Late bind, instead of bind on port (make use of super class)
     public TransmitterUDP() {
         // IMPORTANT: The class written here has to be the same as the concrete generic in the class definition "<>"
         super(ReceiverUDPProxy.class);
