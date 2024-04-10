@@ -209,7 +209,6 @@ public class Floor implements Runnable, Subsystem {
      *
      * @param sendPassengersCommand Passenger load event received from the scheduler.
      */
-    // TODO: Check if this can be unsynced? LABELED NOT CRITICAL
     private synchronized void sendPassengers(SendPassengersCommand sendPassengersCommand) {
         ArrayList<DestinationEvent> passengersToLoad = new ArrayList<>();
         Direction currentDirection = sendPassengersCommand.dir();

@@ -87,7 +87,8 @@ public class ProcessingElevatorEventState extends State {
             // Notify Floor for service
             ((Scheduler) context).transmitToElevator(new UnloadPassengersCommand(event.elevatorNum()));
 
-            int availableSpots = ((Scheduler) context).getCurCapacity(event);
+            int maxCapacity = ((Scheduler) context).MAX_CAPACITY;
+            int availableSpots = ((Scheduler) context).getCurCapacity(event, maxCapacity);
             assert (availableSpots > 0);
             // Remove the serviced DestinationRequest request
             Direction elevatorDirection = ((Scheduler) context).getElevatorDirection(event);

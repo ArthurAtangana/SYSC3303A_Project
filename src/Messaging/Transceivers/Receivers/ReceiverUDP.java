@@ -87,7 +87,6 @@ public class ReceiverUDP extends ReceiverUDPProxy implements Runnable {
      * @param message DatagramPacket byte array.
      * @return SystemMessage object.
      */
-    // TODO: may be put into a helper class
     private SystemMessage deserializeSystemMessage(byte[] message) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(message);
         SystemMessage deserializedMessage = null;
