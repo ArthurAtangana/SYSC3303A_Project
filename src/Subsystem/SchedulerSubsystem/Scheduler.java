@@ -284,7 +284,6 @@ public class Scheduler extends Context implements Subsystem {
         if (direction != null){
             return direction;
         }
-        // FIXME: We got this with scenario 12, multi elevator
         if (floorRequestsToTime.isEmpty()){
             throw new RuntimeException("No passenger on elevator and no floor requests");
         }
